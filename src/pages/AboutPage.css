@@ -1,0 +1,132 @@
+.about-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #050507;
+  color: #ffffff;
+  padding: 120px 80px 80px 80px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+@media (max-width: 800px) {
+  .about-page {
+    padding: 100px 24px 80px 24px;
+  }
+}
+
+.about-content {
+  max-width: 900px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 70px;
+}
+
+@media (max-width: 800px) {
+  .about-content {
+    gap: 50px;
+  }
+}
+
+.about-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+}
+
+.about-bio-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+@media (max-width: 800px) {
+  .about-bio-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.about-bio-text {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(14px, 2vw, 16px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  text-align: justify;
+}
+
+.about-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.about-section-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+.about-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.about-list-row:first-child {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.about-item-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.about-item-value {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.about-item-value:hover {
+  color: #ffffff;
+}
+
+.about-arrow {
+  display: inline-block;
+  font-size: 11px;
+  margin-left: 4px;
+  transition: transform 0.3s ease;
+}
+
+.about-item-value:hover .about-arrow {
+  transform: translate(2px, -2px);
+}
