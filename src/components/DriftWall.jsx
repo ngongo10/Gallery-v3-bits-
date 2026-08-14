@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { buildSrc, buildSrcSet, defaultSizes } from '../utils/cloudinary';
 import './DriftWall.css';
 
 const DEFAULT_ITEMS = Array.from({ length: 15 }, (_, i) => {
@@ -228,9 +229,13 @@ const DriftWall = ({
   );
 
   const renderTile = (item, id, colIndex) => {
+    const src = buildSrc(item.image, { w: tileWidth * 2, dprAuto: true });
+    const srcset = buildSrcSet(item.image, [Math.round(tileWidth/2), tileWidth, tileWidth*2, tileWidth*3]);
+    const sizes = defaultSizes(tileWidth);
+
     const inner = (
       <span className="drift-wall__inner">
-        <img src={item.image} alt={item.title ?? ''} loading="eager" decoding="sync" draggable={false} />
+        <img src={src} srcSet={srcset} sizes={sizes} alt={item.title ?? ''} loading="lazy" decoding="async" draggable={false} />
         <span className="drift-wall__overlay" aria-hidden="true" />
       </span>
     );
