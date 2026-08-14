@@ -3,113 +3,105 @@ import './GooeyNav.css';
 
 const GooeyNav = ({
   items,
-  animationTime = 600,
-  particleCount = 15,
-  particleDistances = [90, 10],
-  particleR = 100,
-  timeVariance = 300,
-  colors = [1, 2, 3, 1, 2, 3, 1, 4],
+  animationTime = 500,
+  particleCount = 12,
+  particleDistances = [80, 20],
+  particleR = 90,
+  timeVariance = 250,
+  colors = [1, 2, 3, 4],
   activeIndex: controlledIndex = 0
 }) => {
   const containerRef = useRef(null);
   const navRef = useRef(null);
-  const filterRef = useRef(null);
-  const textRef = useRef(null);
+  const pillRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(controlledIndex);
   const prevIndexRef = useRef(controlledIndex);
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
 
   const getXY = (distance, pointIndex, totalPoints) => {
-    const angle = ((360 + noise(8)) / totalPoints) * pointIndex * (Math.PI / 180);
+    const angle = ((360 + noise(6)) / totalPoints) * pointIndex * (Math.PI / 180);
     return [distance * Math.cos(angle), distance * Math.sin(angle)];
   };
 
-  const createParticle = (i, t, d, r) => {
-    let rotate = noise(r / 10);
+  const createParticle = (i, d, r) => {
+    const rotate = noise(r / 8);
+    const delay = noise(timeVariance);
     return {
       start: getXY(d[0], particleCount - i, particleCount),
-      end: getXY(d[1] + noise(7), particleCount - i, particleCount),
-      time: t,
-      scale: 1 + noise(0.2),
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rotate: rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10
+      end: getXY(d[1] + noise(5), particleCount - i, particleCount),
+      scale: 0.8 + Math.random() * 0.4,
+      color: colors[i % colors.length],
+      rotate: rotate > 0 ? (rotate + r / 15) * 8 : (rotate - r / 15) * 8,
+      delay
     };
   };
 
-  const makeParticles = element => {
+  const makeParticles = (element, liEl) => {
+    if (!element) return;
     const d = particleDistances;
     const r = particleR;
-    const bubbleTime = animationTime * 2 + timeVariance;
-    element.style.setProperty('--time', `${bubbleTime}ms`);
+
+    // Get position relative to container
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    const liRect = liEl.getBoundingClientRect();
+    const centerX = liRect.left - containerRect.x + liRect.width / 2;
+    const centerY = liRect.top - containerRect.y + liRect.height / 2;
 
     for (let i = 0; i < particleCount; i++) {
-      const t = animationTime * 2 + noise(timeVariance * 2);
-      const p = createParticle(i, t, d, r);
-      element.classList.remove('active');
+      const p = createParticle(i, d, r);
+      const t = animationTime + p.delay;
 
       setTimeout(() => {
         const particle = document.createElement('span');
-        const point = document.createElement('span');
-        particle.classList.add('particle');
+        particle.className = 'nav-particle';
+        particle.style.setProperty('--center-x', `${centerX}px`);
+        particle.style.setProperty('--center-y', `${centerY}px`);
         particle.style.setProperty('--start-x', `${p.start[0]}px`);
         particle.style.setProperty('--start-y', `${p.start[1]}px`);
         particle.style.setProperty('--end-x', `${p.end[0]}px`);
         particle.style.setProperty('--end-y', `${p.end[1]}px`);
-        particle.style.setProperty('--time', `${p.time}ms`);
+        particle.style.setProperty('--time', `${animationTime}ms`);
         particle.style.setProperty('--scale', `${p.scale}`);
-        particle.style.setProperty('--color', `var(--color-${p.color}, white)`);
+        particle.style.setProperty('--color', `var(--color-${p.color})`);
         particle.style.setProperty('--rotate', `${p.rotate}deg`);
 
-        point.classList.add('point');
-        particle.appendChild(point);
         element.appendChild(particle);
-        requestAnimationFrame(() => {
-          element.classList.add('active');
-        });
+        requestAnimationFrame(() => particle.classList.add('active'));
+
         setTimeout(() => {
           try {
             element.removeChild(particle);
-          } catch {
-            // Do nothing
+          } catch (e) {
+            // Particle already removed
           }
         }, t);
-      }, 30);
+      }, 20);
     }
   };
 
-  const updateEffectPosition = element => {
-    if (!containerRef.current || !filterRef.current || !textRef.current) return;
+  const updatePillPosition = (liEl) => {
+    if (!pillRef.current || !containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
-    const pos = element.getBoundingClientRect();
+    const liRect = liEl.getBoundingClientRect();
 
-    const styles = {
-      left: `${pos.x - containerRect.x}px`,
-      top: `${pos.y - containerRect.y}px`,
-      width: `${pos.width}px`,
-      height: `${pos.height}px`
-    };
-    Object.assign(filterRef.current.style, styles);
-    Object.assign(textRef.current.style, styles);
-    textRef.current.innerText = element.innerText;
+    pillRef.current.style.setProperty(
+      '--pill-left',
+      `${liRect.left - containerRect.left}px`
+    );
+    pillRef.current.style.setProperty(
+      '--pill-top',
+      `${liRect.top - containerRect.top}px`
+    );
+    pillRef.current.style.setProperty('--pill-width', `${liRect.width}px`);
+    pillRef.current.style.setProperty('--pill-height', `${liRect.height}px`);
   };
 
   const triggerAnimation = (liEl) => {
-    if (!filterRef.current || !textRef.current) return;
-
-    updateEffectPosition(liEl);
-
-    // Clear existing particles
-    const particles = filterRef.current.querySelectorAll('.particle');
-    particles.forEach(p => filterRef.current.removeChild(p));
-
-    // Retrigger text color animation
-    textRef.current.classList.remove('active');
-    void textRef.current.offsetWidth;
-    textRef.current.classList.add('active');
-
-    // Fire particles
-    makeParticles(filterRef.current);
+    updatePillPosition(liEl);
+    if (containerRef.current) {
+      makeParticles(containerRef.current, liEl);
+    }
   };
 
   // Handle external controlledIndex change
@@ -129,18 +121,19 @@ const GooeyNav = ({
     if (!navRef.current || !containerRef.current) return;
     const activeLi = navRef.current.querySelectorAll('li')[activeIndex];
     if (activeLi) {
-      updateEffectPosition(activeLi);
-      textRef.current?.classList.add('active');
+      updatePillPosition(activeLi);
     }
 
     const resizeObserver = new ResizeObserver(() => {
       const currentActiveLi = navRef.current?.querySelectorAll('li')[activeIndex];
       if (currentActiveLi) {
-        updateEffectPosition(currentActiveLi);
+        updatePillPosition(currentActiveLi);
       }
     });
 
-    resizeObserver.observe(containerRef.current);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
     return () => resizeObserver.disconnect();
   }, [activeIndex]);
 
@@ -152,6 +145,7 @@ const GooeyNav = ({
 
   return (
     <div className="gooey-nav-container" ref={containerRef}>
+      <span className="nav-pill" ref={pillRef} />
       <nav>
         <ul ref={navRef}>
           {items.map((item, index) => (
@@ -161,7 +155,6 @@ const GooeyNav = ({
               onClick={e => {
                 const liEl = e.currentTarget;
                 handleClick(liEl, index);
-                // Trigger external navigation after animation starts
                 if (item.onClick) item.onClick();
               }}
             >
@@ -183,8 +176,6 @@ const GooeyNav = ({
           ))}
         </ul>
       </nav>
-      <span className="effect filter" ref={filterRef} />
-      <span className="effect text" ref={textRef} />
     </div>
   );
 };
