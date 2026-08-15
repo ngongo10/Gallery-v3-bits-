@@ -1,15 +1,24 @@
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import HomePage from './pages/HomePage';
 import GalleryPage from './pages/GalleryPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import LoaderScreen from './components/LoaderScreen';
 import GooeyNav from './components/GooeyNav';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import './App.css';
 
 /** Must match OptionWheel reel-spin exit (~1100ms). */
 const HOME_EXIT_MS = 1200;
+
+function isMobileDevice() {
+  if (typeof window === 'undefined') return false;
+  return (
+    window.matchMedia('(max-width: 768px)').matches ||
+    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+  );
+}
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -20,12 +29,23 @@ function App() {
 
   const [isExitingHome, setIsExitingHome] = useState(false);
   const exitTimerRef = useRef(null);
+  const loaderDoneRef = useRef(false);
+  const mobile = useMemo(() => isMobileDevice(), []);
 
   useEffect(() => () => {
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
   }, []);
 
-  const navItems = [
+  const handleLoaderComplete = useCallback(() => {
+    if (loaderDoneRef.current) return;
+    loaderDoneRef.current = true;
+    // Defer one frame so loader unmount + home mount aren't in the same paint
+    requestAnimationFrame(() => {
+      setIsLoading(false);
+    });
+  }, []);
+
+  const navItems = useMemo(() => [
     {
       label: 'Home',
       href: '#home',
@@ -54,16 +74,14 @@ function App() {
         setCurrentPage('contact');
       }
     }
-  ];
+  ], []);
 
   const handleCategorySelect = useCallback((category) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setSelectedCategory(category);
-    // Phase 1: play OptionWheel focus-collapse + home exit fully
     setIsExitingHome(true);
 
-    // Phase 2: only mount Gallery after exit finishes
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
     exitTimerRef.current = setTimeout(() => {
       setCurrentPage('gallery');
@@ -75,7 +93,6 @@ function App() {
     if (isTransitioning) return;
     setIsTransitioning(true);
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-    // Hide GalleryPage and restore HomePage
     setCurrentPage('home');
     setTimeout(() => {
       setIsExitingHome(false);
@@ -86,38 +103,34 @@ function App() {
 
   return (
     <div className="app">
-
-
-      {/* Full Preloader Screen */}
       {isLoading && (
-        <LoaderScreen onComplete={() => setIsLoading(false)} />
+        <LoaderScreen onComplete={handleLoaderComplete} />
       )}
 
       {!isLoading && (
-        <>
-          {/* Navigation */}
+        <ErrorBoundary>
           {currentPage !== 'gallery' && (
-<div
-  style={{
-    position: 'absolute',
-    top: '2rem',
-    right: '2rem',
-    zIndex: 100
-  }}
->              <GooeyNav
+            <div
+              style={{
+                position: 'absolute',
+                top: '2rem',
+                right: '2rem',
+                zIndex: 100
+              }}
+            >
+              <GooeyNav
                 items={navItems}
-                particleCount={10}
-                particleDistances={[90, 10]}
-                particleR={800}
+                particleCount={mobile ? 0 : 10}
+                particleDistances={mobile ? [0, 0] : [90, 10]}
+                particleR={mobile ? 0 : 800}
                 initialActiveIndex={navActiveIndex}
                 animationTime={600}
-                timeVariance={1700}
+                timeVariance={mobile ? 0 : 1700}
                 colors={[1, 2, 3, 1, 2, 3, 1, 4]}
               />
             </div>
           )}
 
-          {/* Main Pages — hide home once gallery is mounted (exit already finished) */}
           {currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
             <div className={`page-wrapper ${isExitingHome ? 'is-gallery-active' : ''}`}>
               <HomePage
@@ -127,16 +140,12 @@ function App() {
             </div>
           )}
 
-          {currentPage === 'about' && (
-            <AboutPage />
-          )}
-          {currentPage === 'contact' && (
-            <ContactPage />
-          )}
+          {currentPage === 'about' && <AboutPage />}
+          {currentPage === 'contact' && <ContactPage />}
           {currentPage === 'gallery' && selectedCategory && (
             <GalleryPage category={selectedCategory} onBack={handleBack} />
           )}
-        </>
+        </ErrorBoundary>
       )}
     </div>
   );

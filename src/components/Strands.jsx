@@ -232,65 +232,88 @@ export default function Strands({
     const ctn = ctnDom.current;
     if (!ctn) return;
 
-    const renderer = new Renderer({
-      alpha: true,
-      premultipliedAlpha: true,
-      antialias: true
-    });
+    let renderer;
+    try {
+      renderer = new Renderer({
+        alpha: true,
+        premultipliedAlpha: true,
+        antialias: false,
+        dpr: Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 1.5)
+      });
+    } catch {
+      // WebGL unavailable / context lost on some mobiles — skip effect
+      return undefined;
+    }
     const gl = renderer.gl;
+    if (!gl) return undefined;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
     gl.canvas.style.backgroundColor = 'transparent';
 
-    const geometry = new Triangle(gl);
-    if (geometry.attributes.uv) {
-      delete geometry.attributes.uv;
+    let geometry;
+    let program;
+    let mesh;
+    let renderTarget;
+    let glassProgram;
+    let glassMesh;
+    try {
+      geometry = new Triangle(gl);
+      if (geometry.attributes.uv) {
+        delete geometry.attributes.uv;
+      }
+
+      program = new Program(gl, {
+        vertex: VERT,
+        fragment: FRAG,
+        uniforms: {
+          uTime: { value: 0 },
+          uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
+          uColors: { value: buildPalette(propsRef.current.colors) },
+          uColorCount: { value: Math.min(propsRef.current.colors.length, MAX_COLORS) },
+          uStrandCount: { value: Math.min(propsRef.current.count, MAX_STRANDS) },
+          uSpeed: { value: speed },
+          uAmplitude: { value: amplitude },
+          uWaviness: { value: waviness },
+          uThickness: { value: thickness },
+          uGlow: { value: glow },
+          uTaper: { value: taper },
+          uSpread: { value: spread },
+          uHueShift: { value: hueShift },
+          uIntensity: { value: intensity },
+          uOpacity: { value: opacity },
+          uScale: { value: scale },
+          uSaturation: { value: saturation }
+        }
+      });
+
+      mesh = new Mesh(gl, { geometry, program });
+
+      renderTarget = new RenderTarget(gl, {
+        width: Math.max(ctn.offsetWidth, 1),
+        height: Math.max(ctn.offsetHeight, 1)
+      });
+
+      glassProgram = new Program(gl, {
+        vertex: VERT,
+        fragment: GLASS_FRAG,
+        uniforms: {
+          uScene: { value: renderTarget.texture },
+          uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
+          uRadius: { value: 0.46 * glassSize },
+          uRefraction: { value: refraction },
+          uDispersion: { value: dispersion }
+        }
+      });
+      glassMesh = new Mesh(gl, { geometry, program: glassProgram });
+    } catch {
+      try {
+        gl.getExtension('WEBGL_lose_context')?.loseContext();
+      } catch {
+        /* ignore */
+      }
+      return undefined;
     }
-
-    const program = new Program(gl, {
-      vertex: VERT,
-      fragment: FRAG,
-      uniforms: {
-        uTime: { value: 0 },
-        uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
-        uColors: { value: buildPalette(propsRef.current.colors) },
-        uColorCount: { value: Math.min(propsRef.current.colors.length, MAX_COLORS) },
-        uStrandCount: { value: Math.min(propsRef.current.count, MAX_STRANDS) },
-        uSpeed: { value: speed },
-        uAmplitude: { value: amplitude },
-        uWaviness: { value: waviness },
-        uThickness: { value: thickness },
-        uGlow: { value: glow },
-        uTaper: { value: taper },
-        uSpread: { value: spread },
-        uHueShift: { value: hueShift },
-        uIntensity: { value: intensity },
-        uOpacity: { value: opacity },
-        uScale: { value: scale },
-        uSaturation: { value: saturation }
-      }
-    });
-
-    const mesh = new Mesh(gl, { geometry, program });
-
-    const renderTarget = new RenderTarget(gl, {
-      width: ctn.offsetWidth,
-      height: ctn.offsetHeight
-    });
-
-    const glassProgram = new Program(gl, {
-      vertex: VERT,
-      fragment: GLASS_FRAG,
-      uniforms: {
-        uScene: { value: renderTarget.texture },
-        uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
-        uRadius: { value: 0.46 * glassSize },
-        uRefraction: { value: refraction },
-        uDispersion: { value: dispersion }
-      }
-    });
-    const glassMesh = new Mesh(gl, { geometry, program: glassProgram });
 
     ctn.appendChild(gl.canvas);
 

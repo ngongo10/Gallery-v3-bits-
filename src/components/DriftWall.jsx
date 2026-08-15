@@ -81,7 +81,9 @@ const DriftWall = ({
     const unit = tileHeight + gap;
     return columnItems.map(col => {
       const copyHeight = Math.max(unit, col.length * unit);
-      const copies = Math.max(2, Math.ceil((containerHeight * 1.6) / copyHeight) + 1);
+      const raw = Math.ceil((containerHeight * 1.6) / copyHeight) + 1;
+      // Fewer duplicated strips = fewer <img> nodes on phones
+      const copies = Math.min(Math.max(2, raw), containerHeight < 900 ? 2 : 4);
       return { copyHeight, copies };
     });
   }, [columnItems, tileHeight, gap, containerHeight]);
@@ -229,8 +231,9 @@ const DriftWall = ({
   );
 
   const renderTile = (item, id, colIndex) => {
-    const src = buildSrc(item.image, { w: tileWidth * 2, dprAuto: true });
-    const srcset = buildSrcSet(item.image, [Math.round(tileWidth/2), tileWidth, tileWidth*2, tileWidth*3]);
+    const srcW = Math.min(Math.round(tileWidth * 2), 360);
+    const src = buildSrc(item.image, { w: srcW });
+    const srcset = buildSrcSet(item.image, [Math.round(tileWidth), srcW]);
     const sizes = defaultSizes(tileWidth);
 
     const inner = (

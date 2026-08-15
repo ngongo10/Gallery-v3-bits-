@@ -5,6 +5,32 @@
   overflow: hidden;
 }
 
+/* Lightweight blurred cover — shown immediately on mobile */
+.home-cover-bg {
+  position: absolute;
+  inset: -40px;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) brightness(0.35) saturate(1.1);
+  transform: scale(1.12);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    background-image 0.45s ease,
+    filter 0.7s ease;
+}
+
+.home-cover-bg.is-revealed {
+  opacity: 1;
+}
+
+.home-cover-bg.is-changing {
+  opacity: 0.25;
+  filter: blur(36px) brightness(0.25);
+}
+
 /* ─── DriftWall background ─── */
 .home-driftwall {
   position: absolute;
@@ -135,6 +161,7 @@
   pointer-events: none;
 }
 
+.is-gallery-active .home-cover-bg,
 .is-gallery-active .home-driftwall {
   opacity: 0 !important;
   transform: scale(0.88) translateY(60px) rotateY(-12deg) translateZ(-80px) !important;
