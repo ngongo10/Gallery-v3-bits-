@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import OptionWheel from '../components/OptionWheel';
 import DriftWall from '../components/DriftWall';
 import { categories, allItems } from '../data/portfolio';
-import { buildSrc } from '../utils/cloudinary';
 import './HomePage.css';
 
 function isMobileDevice() {
@@ -19,7 +18,6 @@ const HomePage = ({ onCategorySelect, isExiting = false }) => {
   const [isChanging, setIsChanging] = useState(false);
   const changeTimerRef = useRef(null);
   const isMobile = useMemo(() => isMobileDevice(), []);
-  const [showWall, setShowWall] = useState(!isMobile);
   const [isLoaded, setIsLoaded] = useState(false);
 
   const categoryLabels = categories.map(c => c.label);
@@ -37,17 +35,11 @@ const HomePage = ({ onCategorySelect, isExiting = false }) => {
 
   useEffect(() => {
     const reveal = setTimeout(() => setIsLoaded(true), 50);
-    // Phones: mount DriftWall after first paint so OptionWheel stays responsive
-    let wallTimer;
-    if (isMobile) {
-      wallTimer = setTimeout(() => setShowWall(true), 900);
-    }
     return () => {
       clearTimeout(reveal);
-      clearTimeout(wallTimer);
       clearTimeout(changeTimerRef.current);
     };
-  }, [isMobile]);
+  }, []);
 
   const handleCategorySelect = (itemOrCat) => {
     let target = selectedCategory;
@@ -69,47 +61,33 @@ const HomePage = ({ onCategorySelect, isExiting = false }) => {
       : categoryItems.concat(allItems.slice(0, 8));
   const driftItems = isMobile ? baseItems.slice(0, 4) : baseItems;
 
-  const coverUrl = buildSrc(
-    selectedCategory.cover || selectedCategory.items?.[0]?.image,
-    { w: isMobile ? 720 : 1200 }
-  );
-
   return (
     <div className="home-page">
-      {/* Lightweight cover while DriftWall is deferred / as fallback */}
-      <div
-        className={`home-cover-bg${isLoaded ? ' is-revealed' : ''}${isChanging ? ' is-changing' : ''}`}
-        style={{ backgroundImage: coverUrl ? `url("${coverUrl}")` : 'none' }}
-        aria-hidden="true"
-      />
-
-      {showWall && (
-        <div className={`home-driftwall${isLoaded ? ' is-revealed' : ''}${isChanging ? ' is-changing' : ''}`}>
-          <DriftWall
-            key={selectedCategory.id}
-            items={driftItems}
-            columns={isMobile ? 1 : 2}
-            tileWidth={isMobile ? 110 : 144}
-            tileHeight={isMobile ? 140 : 172}
-            gap={isMobile ? 12 : 18}
-            tilt={isMobile ? 12 : 30}
-            turn={isMobile ? -12 : -30}
-            perspective={isMobile ? 600 : 900}
-            depth={isMobile ? 120 : 400}
-            speed={isChanging ? 120 : isMobile ? 28 : 58}
-            direction="up"
-            variance={0.35}
-            parallax={isMobile ? 0.4 : 2}
-            lift={isMobile ? 36 : 108}
-            fade={0.25}
-            dim={0.35}
-            overlayColor="#060010"
-            radius={8}
-            roll={isMobile ? 0 : 5}
-            onTileClick={handleCategorySelect}
-          />
-        </div>
-      )}
+      <div className={`home-driftwall${isLoaded ? ' is-revealed' : ''}${isChanging ? ' is-changing' : ''}`}>
+        <DriftWall
+          key={selectedCategory.id}
+          items={driftItems}
+          columns={isMobile ? 1 : 2}
+          tileWidth={isMobile ? 110 : 144}
+          tileHeight={isMobile ? 140 : 172}
+          gap={isMobile ? 12 : 18}
+          tilt={isMobile ? 12 : 30}
+          turn={isMobile ? -12 : -30}
+          perspective={isMobile ? 600 : 900}
+          depth={isMobile ? 120 : 400}
+          speed={isChanging ? 120 : isMobile ? 28 : 58}
+          direction="up"
+          variance={0.35}
+          parallax={isMobile ? 0.4 : 2}
+          lift={isMobile ? 36 : 108}
+          fade={0.25}
+          dim={0.35}
+          overlayColor="#060010"
+          radius={8}
+          roll={isMobile ? 0 : 5}
+          onTileClick={handleCategorySelect}
+        />
+      </div>
 
       <div className="home-wheel">
         <OptionWheel
