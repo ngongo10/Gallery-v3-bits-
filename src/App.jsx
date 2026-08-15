@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import HomePage from './pages/HomePage';
 import GalleryPage from './pages/GalleryPage';
 import AboutPage from './pages/AboutPage';
@@ -8,6 +8,9 @@ import GooeyNav from './components/GooeyNav';
 
 import './App.css';
 
+/** Must match OptionWheel reel-spin exit (~1100ms). */
+const HOME_EXIT_MS = 1200;
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState('home');
@@ -16,24 +19,62 @@ function App() {
   const [navActiveIndex, setNavActiveIndex] = useState(0);
 
   const [isExitingHome, setIsExitingHome] = useState(false);
+  const exitTimerRef = useRef(null);
+
+  useEffect(() => () => {
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+  }, []);
+
+  const navItems = [
+    {
+      label: 'Home',
+      href: '#home',
+      onClick: () => {
+        if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+        setNavActiveIndex(0);
+        setIsExitingHome(false);
+        setSelectedCategory(null);
+        setIsTransitioning(false);
+        setCurrentPage('home');
+      }
+    },
+    {
+      label: 'About',
+      href: '#about',
+      onClick: () => {
+        setNavActiveIndex(1);
+        setCurrentPage('about');
+      }
+    },
+    {
+      label: 'Contact',
+      href: '#contact',
+      onClick: () => {
+        setNavActiveIndex(2);
+        setCurrentPage('contact');
+      }
+    }
+  ];
 
   const handleCategorySelect = useCallback((category) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setSelectedCategory(category);
-    // Phase 1: Trigger OptionWheel retract & DriftWall hide animation on HomePage
+    // Phase 1: play OptionWheel focus-collapse + home exit fully
     setIsExitingHome(true);
 
-    // Phase 2: Wait 950ms for OptionWheel & DriftWall to completely finish hiding before mounting GalleryPage
-    setTimeout(() => {
+    // Phase 2: only mount Gallery after exit finishes
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+    exitTimerRef.current = setTimeout(() => {
       setCurrentPage('gallery');
       setIsTransitioning(false);
-    }, 950);
+    }, HOME_EXIT_MS);
   }, [isTransitioning]);
 
   const handleBack = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
     // Hide GalleryPage and restore HomePage
     setCurrentPage('home');
     setTimeout(() => {
@@ -42,33 +83,6 @@ function App() {
       setIsTransitioning(false);
     }, 100);
   }, [isTransitioning]);
-
-  const navItems = [
-    {
-      label: 'Works',
-      href: '#',
-      onClick: () => {
-        setNavActiveIndex(0);
-        setCurrentPage('home');
-      }
-    },
-    {
-      label: 'About',
-      href: '#',
-      onClick: () => {
-        setNavActiveIndex(1);
-        setCurrentPage('about');
-      }
-    },
-    {
-      label: 'Contact',
-      href: '#',
-      onClick: () => {
-        setNavActiveIndex(2);
-        setCurrentPage('contact');
-      }
-    }
-  ];
 
   return (
     <div className="app">
@@ -81,32 +95,35 @@ function App() {
 
       {!isLoading && (
         <>
-          {/* Persistent Header: JUBISATAKA Brand & GooeyNav */}
+          {/* Navigation */}
           {currentPage !== 'gallery' && (
-            <>
-              <div className="home-brand">
-                <h1 className="home-brand-name">JUBISATAKA</h1>
-              </div>
-
-              <div className="home-nav">
-                <GooeyNav
-                  items={navItems}
-                  particleCount={15}
-                  particleDistances={[90, 10]}
-                  particleR={100}
-                  activeIndex={navActiveIndex}
-                  animationTime={600}
-                  timeVariance={300}
-                  colors={[1, 2, 3, 1, 2, 3, 1, 4]}
-                />
-              </div>
-            </>
+<div
+  style={{
+    position: 'absolute',
+    top: '2rem',
+    right: '2rem',
+    zIndex: 100
+  }}
+>              <GooeyNav
+                items={navItems}
+                particleCount={10}
+                particleDistances={[90, 10]}
+                particleR={800}
+                initialActiveIndex={navActiveIndex}
+                animationTime={600}
+                timeVariance={1700}
+                colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+              />
+            </div>
           )}
 
-          {/* Main Pages */}
-          {currentPage !== 'about' && currentPage !== 'contact' && (
-            <div className={`page-wrapper ${isExitingHome || currentPage === 'gallery' ? 'is-gallery-active' : ''}`}>
-              <HomePage onCategorySelect={handleCategorySelect} />
+          {/* Main Pages — hide home once gallery is mounted (exit already finished) */}
+          {currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
+            <div className={`page-wrapper ${isExitingHome ? 'is-gallery-active' : ''}`}>
+              <HomePage
+                onCategorySelect={handleCategorySelect}
+                isExiting={isExitingHome}
+              />
             </div>
           )}
 

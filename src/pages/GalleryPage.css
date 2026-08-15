@@ -8,20 +8,42 @@
   flex-direction: column;
   overflow: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  opacity: 0;
+  transform: scale(1.08);
+  filter: blur(12px) brightness(0.55);
+  transition:
+    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ─── Blurred Background for Non-Fullscreen Images ─── */
+.gallery-page.gallery-page--entered {
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0) brightness(1);
+}
+
+/* ─── Blurred backdrop behind photos (MorphSlider + INFO) ─── */
 .gallery-blurred-bg {
   position: absolute;
-  inset: -40px;
+  inset: -60px;
   background-size: cover;
   background-position: center;
-  filter: blur(50px) brightness(0.35) saturate(1.2);
-  transform: scale(1.1);
-  opacity: 0.7;
+  background-repeat: no-repeat;
+  filter: blur(64px) brightness(0.32) saturate(1.35);
+  transform: scale(1.15);
+  opacity: 0.85;
   pointer-events: none;
   z-index: 1;
-  transition: background-image 0.8s ease, opacity 0.8s ease;
+  transition: background-image 0.8s ease;
+}
+
+.gallery-blurred-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(5, 5, 7, 0.35);
+  pointer-events: none;
 }
 
 /* ─── Back Button ─── */
@@ -130,6 +152,7 @@
 .gallery-slider-wrap {
   position: absolute;
   inset: 0;
+  z-index: 2;
   opacity: 1;
   transform: scale(1);
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -146,11 +169,12 @@
 .gallery-detail-view {
   position: absolute;
   inset: 0;
+  z-index: 5;
   opacity: 0;
   transform: translateY(30px);
   pointer-events: none;
   transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  background: #050507;
+  background: transparent;
   display: flex;
   flex-direction: row;
 }

@@ -1,23 +1,16 @@
 import { useState, useEffect, useRef } from 'react';
 import OptionWheel from '../components/OptionWheel';
 import DriftWall from '../components/DriftWall';
-import GooeyNav from '../components/GooeyNav';
 import { categories, allItems } from '../data/portfolio';
 import './HomePage.css';
 
-const HomePage = ({ onCategorySelect }) => {
+const HomePage = ({ onCategorySelect, isExiting = false }) => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isChanging, setIsChanging] = useState(false);
   const changeTimerRef = useRef(null);
 
   const categoryLabels = categories.map(c => c.label);
-
-  const navItems = [
-    { label: 'Works', href: '#', onClick: () => {} },
-    { label: 'About', href: '#', onClick: () => {} },
-    { label: 'Contact', href: '#', onClick: () => {} },
-  ];
 
   const handleWheelChange = (index) => {
     setIsChanging(true);
@@ -108,7 +101,8 @@ const HomePage = ({ onCategorySelect }) => {
           smoothing={180}
           inset={0}
           loop={false}
-          draggable
+          draggable={!isExiting}
+          exiting={isExiting}
           onChange={handleWheelChange}
           onItemClick={(idx) => handleCategorySelect(categories[idx])}
         />

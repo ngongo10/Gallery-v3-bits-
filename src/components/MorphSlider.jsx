@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Renderer, Triangle, Program, Mesh, Texture } from 'ogl';
 import { gsap } from 'gsap';
+
 import './MorphSlider.css';
 
 const TRANSITIONS = { melt: 0, ripple: 1, shear: 2, swirl: 3 };
@@ -99,7 +100,8 @@ mat2 rot(float a) {
   return mat2(c, -s, s, c);
 }
 
-vec2 containUV(vec2 uv, vec2 res, vec2 img) {
+/* object-fit: contain — full image visible inside the viewport */
+vec2 fitUV(vec2 uv, vec2 res, vec2 img) {
   float rA = res.x / max(res.y, 1.0);
   float iA = img.x / max(img.y, 1.0);
   vec2 s = vec2(1.0);
@@ -112,17 +114,15 @@ vec2 containUV(vec2 uv, vec2 res, vec2 img) {
   return (uv - 0.5) * s + 0.5;
 }
 
-vec2 coverUV(vec2 uv, vec2 res, vec2 img) {
-  float rA = res.x / max(res.y, 1.0);
-  float iA = img.x / max(img.y, 1.0);
-  vec2 s = vec2(1.0);
-  float ratio = rA / max(iA, 0.0001);
-  if (ratio > 1.0) {
-    s.y = 1.0 / ratio;
-  } else {
-    s.x = ratio;
-  }
-  return (uv - 0.5) * s + 0.5;
+vec4 sampleFit(sampler2D tex, vec2 uv, float ca) {
+  bool inside = uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0;
+  if (!inside) return vec4(0.0);
+  vec3 col = vec3(
+    texture2D(tex, clamp(uv + vec2(ca, 0.0), 0.0, 1.0)).r,
+    texture2D(tex, clamp(uv, 0.0, 1.0)).g,
+    texture2D(tex, clamp(uv - vec2(ca, 0.0), 0.0, 1.0)).b
+  );
+  return vec4(col, 1.0);
 }
 
 void main() {
@@ -175,52 +175,20 @@ void main() {
     }
   }
 
-  vec2 sC_contain = containUV(uvC, uResolution, uCurrentSize);
-  vec2 sN_contain = containUV(uvN, uResolution, uNextSize);
-
-  vec2 sC_cover = coverUV(uvC, uResolution, uCurrentSize);
-  vec2 sN_cover = coverUV(uvN, uResolution, uNextSize);
+  vec2 sC = fitUV(uvC, uResolution, uCurrentSize);
+  vec2 sN = fitUV(uvN, uResolution, uNextSize);
 
   float ca = uReduce < 0.5 ? uAberration * env * 0.03 : 0.0;
 
-  // Background blur — efficient 5-tap cross pattern (fast, visually soft)
-  float bR = 0.045;
-  vec3 bgC = texture2D(tCurrent, sC_cover).rgb * 0.36
-           + texture2D(tCurrent, sC_cover + vec2( bR,  0.0)).rgb * 0.16
-           + texture2D(tCurrent, sC_cover + vec2(-bR,  0.0)).rgb * 0.16
-           + texture2D(tCurrent, sC_cover + vec2(0.0,  bR)).rgb * 0.16
-           + texture2D(tCurrent, sC_cover + vec2(0.0, -bR)).rgb * 0.16;
-  vec3 bgN = texture2D(tNext, sN_cover).rgb * 0.36
-           + texture2D(tNext, sN_cover + vec2( bR,  0.0)).rgb * 0.16
-           + texture2D(tNext, sN_cover + vec2(-bR,  0.0)).rgb * 0.16
-           + texture2D(tNext, sN_cover + vec2(0.0,  bR)).rgb * 0.16
-           + texture2D(tNext, sN_cover + vec2(0.0, -bR)).rgb * 0.16;
-  vec3 bgCol = mix(bgC, bgN, m) * 0.3;
+  vec4 colC = sampleFit(tCurrent, sC, ca);
+  vec4 colN = sampleFit(tNext, sN, ca);
 
-  // Foreground full image (contain fit)
-  bool inBoundsC = sC_contain.x >= 0.0 && sC_contain.x <= 1.0 && sC_contain.y >= 0.0 && sC_contain.y <= 1.0;
-  bool inBoundsN = sN_contain.x >= 0.0 && sN_contain.x <= 1.0 && sN_contain.y >= 0.0 && sN_contain.y <= 1.0;
-
-  vec3 fgC = vec3(
-    texture2D(tCurrent, clamp(sC_contain, 0.0, 1.0) + vec2(ca, 0.0)).r,
-    texture2D(tCurrent, clamp(sC_contain, 0.0, 1.0)).g,
-    texture2D(tCurrent, clamp(sC_contain, 0.0, 1.0) - vec2(ca, 0.0)).b
-  );
-  vec3 fgN = vec3(
-    texture2D(tNext, clamp(sN_contain, 0.0, 1.0) + vec2(ca, 0.0)).r,
-    texture2D(tNext, clamp(sN_contain, 0.0, 1.0)).g,
-    texture2D(tNext, clamp(sN_contain, 0.0, 1.0) - vec2(ca, 0.0)).b
-  );
-
-  vec3 fgCol = mix(fgC, fgN, m);
-  float maskFg = mix(inBoundsC ? 1.0 : 0.0, inBoundsN ? 1.0 : 0.0, m);
-
-  vec3 col = mix(bgCol, fgCol, maskFg);
+  vec4 col = mix(colC, colN, m);
 
   float vig = smoothstep(1.25, 0.25, length(uv - 0.5));
-  col = mix(col, uOverlay, (1.0 - vig) * 0.28);
+  col.rgb = mix(col.rgb, uOverlay, (1.0 - vig) * 0.28 * col.a);
 
-  gl_FragColor = vec4(col, 1.0);
+  gl_FragColor = col;
 }
 `;
 
@@ -239,7 +207,10 @@ function makeFallbackTexture(gl) {
 function hexToRgb(hex) {
   let h = (hex || '#000000').replace('#', '');
   if (h.length === 3) {
-    h = h.split('').map(c => c + c).join('');
+    h = h
+      .split('')
+      .map(c => c + c)
+      .join('');
   }
   const n = parseInt(h, 16);
   return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
@@ -261,18 +232,20 @@ class MorphEngine {
     this.tween = null;
 
     this.renderer = new Renderer({
-      alpha: false,
-      antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, dprCap)
+      alpha: true,
+      antialias: true,
+      dpr: Math.min(window.devicePixelRatio || 1, dprCap),
+      premultipliedAlpha: false
     });
     this.gl = this.renderer.gl;
-    this.gl.clearColor(0.05, 0.05, 0.06, 1);
+    this.gl.clearColor(0, 0, 0, 0);
 
     this.canvas = this.gl.canvas;
     this.canvas.className = 'morph-slider-canvas';
     container.appendChild(this.canvas);
 
     this.geometry = new Triangle(this.gl);
+
     this.textures = this.items.map(() => makeFallbackTexture(this.gl));
     this.sizes = this.items.map(() => [1, 1]);
 
@@ -301,12 +274,14 @@ class MorphEngine {
     });
 
     this.mesh = new Mesh(this.gl, { geometry: this.geometry, program: this.program });
+
     this.boundContextLost = this.onContextLost.bind(this);
     this.canvas.addEventListener('webglcontextlost', this.boundContextLost, false);
 
     this.resizeObserver = new ResizeObserver(() => this.resize());
     this.resizeObserver.observe(container);
     this.resize();
+
     this.loadTextures();
 
     this.boundLoop = this.loop.bind(this);
@@ -412,8 +387,13 @@ class MorphEngine {
     this.announce(target);
   }
 
-  next() { this.goTo(1); }
-  prev() { this.goTo(-1); }
+  next() {
+    this.goTo(1);
+  }
+
+  prev() {
+    this.goTo(-1);
+  }
 
   setPointer(x, y) {
     this.program.uniforms.uPointer.value = [x, y];
@@ -516,16 +496,23 @@ export default function MorphSlider({
   showControls = true,
   showIndicators = true,
   className = '',
-  onIndexChange = null,
+  onIndexChange,
   ...props
 }) {
   const containerRef = useRef(null);
   const engineRef = useRef(null);
   const [index, setIndex] = useState(startIndex);
   const [hovering, setHovering] = useState(false);
+  const onIndexChangeRef = useRef(onIndexChange);
+  onIndexChangeRef.current = onIndexChange;
 
   const optsRef = useRef();
   optsRef.current = { transition, duration, ease, intensity, scale, aberration, drift, overlayColor, loop };
+
+  const handleIndexChange = useCallback(i => {
+    setIndex(i);
+    onIndexChangeRef.current?.(i);
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return undefined;
@@ -535,12 +522,9 @@ export default function MorphSlider({
       items,
       startIndex,
       reducedMotion,
-      dprCap: 1,
+      dprCap: 2,
       getOptions: () => optsRef.current,
-      onIndexChange: (newIdx) => {
-        setIndex(newIdx);
-        if (onIndexChange) onIndexChange(newIdx);
-      }
+      onIndexChange: handleIndexChange
     });
     engineRef.current = engine;
     setIndex(startIndex);
@@ -550,7 +534,7 @@ export default function MorphSlider({
       engineRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, startIndex]);
+  }, [items, startIndex, handleIndexChange]);
 
   const handleNext = useCallback(() => engineRef.current?.next(), []);
   const handlePrev = useCallback(() => engineRef.current?.prev(), []);
@@ -577,7 +561,9 @@ export default function MorphSlider({
       engineRef.current?.setPointer(px, 1 - py);
       active = engineRef.current?.beginDrag() ?? false;
       if (active && el.setPointerCapture) {
-        try { el.setPointerCapture(e.pointerId); } catch {}
+        try {
+          el.setPointerCapture(e.pointerId);
+        } catch {}
       }
     };
     const onMove = e => {
@@ -606,8 +592,13 @@ export default function MorphSlider({
 
   const onKeyDown = useCallback(
     e => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); handleNext(); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); handlePrev(); }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        handleNext();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handlePrev();
+      }
     },
     [handleNext, handlePrev]
   );
@@ -656,12 +647,26 @@ export default function MorphSlider({
         <div className="morph-slider-controls">
           <button type="button" className="morph-slider-btn" aria-label="Previous slide" onClick={handlePrev}>
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-              <path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M15 5l-7 7 7 7"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
           <button type="button" className="morph-slider-btn" aria-label="Next slide" onClick={handleNext}>
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-              <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M9 5l7 7-7 7"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </button>
         </div>

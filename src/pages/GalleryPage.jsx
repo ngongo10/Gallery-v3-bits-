@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import MorphSlider from '../components/MorphSlider';
 import './GalleryPage.css';
 
@@ -13,19 +13,23 @@ const GalleryPage = ({ category, onBack }) => {
   const [showDetailMode, setShowDetailMode] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
 
-  if (!category) return null;
-  const items = category.items || [];
+  const items = category?.items || [];
+  const morphItems = useMemo(
+    () => items.map(({ image, caption }) => ({ image, caption })),
+    [items]
+  );
 
-  // Entrance animation
+  // Lens bloom entrance
   useEffect(() => {
+    if (!category) return;
     const el = pageRef.current;
     if (!el) return;
-    el.style.opacity = '0';
-    el.style.transform = 'translateX(60px)';
+    el.classList.remove('gallery-page--entered');
+    // Double rAF so the browser paints the start state before transitioning
     requestAnimationFrame(() => {
-      el.style.transition = 'opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)';
-      el.style.opacity = '1';
-      el.style.transform = 'translateX(0)';
+      requestAnimationFrame(() => {
+        el.classList.add('gallery-page--entered');
+      });
     });
   }, [category]);
 
@@ -62,6 +66,8 @@ const GalleryPage = ({ category, onBack }) => {
       target.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
+
+  if (!category) return null;
 
   return (
     <div className="gallery-page" ref={pageRef}>
@@ -104,7 +110,7 @@ const GalleryPage = ({ category, onBack }) => {
         </div>
       )}
 
-      {/* Blurred background image backdrop for images that do not fit full screen */}
+      {/* Blurred backdrop behind photos — MorphSlider + INFO */}
       <div
         className="gallery-blurred-bg"
         style={{
@@ -113,23 +119,20 @@ const GalleryPage = ({ category, onBack }) => {
         aria-hidden="true"
       />
 
-      {/* MODE 1: Standard MorphSlider Gallery */}
+      {/* MODE 1: MorphSlider (React Bits) */}
       <div className={`gallery-slider-wrap${showDetailMode ? ' hide-slider' : ''}`}>
         <MorphSlider
-          items={items}
+          items={morphItems}
           transition="melt"
-          intensity={0.45}
-          aberration={0.0}
-          drift={0.0}
-          autoplay={false}
+          intensity={1.2}
+          aberration={0.35}
+          drift={0}
+          autoplay
           overlayColor="#000000"
-          duration={0.9}
-          scale={3.0}
-          loop={true}
-          radius={0}
+          scale={2.5}
           showCaptions={false}
-          showControls={true}
-          showIndicators={true}
+          radius={0}
+          onIndexChange={setActivePhotoIndex}
         />
       </div>
 

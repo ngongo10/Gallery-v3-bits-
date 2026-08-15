@@ -31,6 +31,7 @@ const OptionWheel = ({
   inset = 80,
   loop = false,
   draggable = true,
+  exiting = false,
   soundUrl = '',
   soundVolume = 0.5,
   className = ''
@@ -272,7 +273,25 @@ const OptionWheel = ({
         else if (d < -cfg.count / 2) d += cfg.count;
       }
       applyTarget(cur + d, true);
-      onItemClickRef.current?.(index, cfg.items[index]);
+
+      const open = () => onItemClickRef.current?.(index, cfg.items[index]);
+
+      // Wait until the clicked item is centered before opening — avoids
+      // starting the exit spin mid-scroll (especially for bottom items).
+      if (Math.abs(d) < 0.01) {
+        open();
+        return;
+      }
+
+      const deadline = performance.now() + 700;
+      const waitSettle = () => {
+        if (Math.abs(posRef.current - targetRef.current) < 0.04 || performance.now() > deadline) {
+          open();
+          return;
+        }
+        requestAnimationFrame(waitSettle);
+      };
+      requestAnimationFrame(waitSettle);
     },
     [applyTarget]
   );
@@ -292,6 +311,89 @@ const OptionWheel = ({
   useEffect(() => {
     applyTarget(targetRef.current, false);
   }, [items, fontSize, spacing, curve, tilt, blur, fade, minOpacity, side, loop, smoothing, applyTarget]);
+
+  useEffect(() => {
+    if (!exiting) {
+      rootRef.current?.classList.remove('option-wheel--exiting');
+      return;
+    }
+
+    if (rafRef.current != null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+
+    rootRef.current?.classList.add('option-wheel--exiting');
+
+    const cfg = cfgRef.current;
+    const n = Math.max(cfg.count, 1);
+    // Snap to settled/selected index so spin always starts from the centered item
+    const startPos = Math.round(targetRef.current);
+    posRef.current = startPos;
+    // One full reel turn — same motion as mouse-wheel scroll
+    const endPos = startPos + n;
+    const duration = 1100;
+    const t0 = performance.now();
+
+    const easeOut = t => 1 - (1 - t) ** 2.6;
+
+    const paint = (pos, fade) => {
+      const els = itemRefs.current;
+      const mirror = cfg.side === 'right' ? -1 : 1;
+      const tiltRad = (cfg.tilt * Math.PI) / 180;
+      const R = tiltRad > 0.0005 ? cfg.rowH / tiltRad : 0;
+
+      for (let i = 0; i < n; i++) {
+        const el = els[i];
+        if (!el) continue;
+        // Wrap during exit so the reel spins continuously like a scroll flick
+        let d = i - pos;
+        d = ((d % n) + n) % n;
+        if (d > n / 2) d -= n;
+        const dist = Math.abs(d);
+        let x = 0;
+        let y = d * cfg.rowH;
+        let rot = 0;
+        if (R > 0) {
+          const ang = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, d * tiltRad));
+          y = R * Math.sin(ang);
+          x = -mirror * R * (1 - Math.cos(ang)) * cfg.curve;
+          rot = (mirror * ang * 180) / Math.PI;
+        }
+        el.style.transform = `translate(${x.toFixed(2)}px, calc(${y.toFixed(2)}px - 50%)) rotate(${rot.toFixed(3)}deg)`;
+        const baseOp = Math.max(cfg.minOpacity, 1 - dist * cfg.fade);
+        el.style.opacity = String(Math.max(0, baseOp * fade));
+        const blurAmt = dist * cfg.blur + (fade < 1 ? (1 - fade) * 8 : 0);
+        el.style.filter = blurAmt > 0.05 ? `blur(${blurAmt.toFixed(2)}px)` : 'none';
+        el.style.setProperty('--ow-p', Math.max(0, 1 - Math.min(dist, 1)).toFixed(4));
+      }
+    };
+
+    const tick = now => {
+      const t = Math.min(1, (now - t0) / duration);
+      const e = easeOut(t);
+      const pos = startPos + (endPos - startPos) * e;
+      posRef.current = pos;
+      // Fade out in the last stretch so the reel doesn't hard-cut
+      const fade = t > 0.72 ? 1 - (t - 0.72) / 0.28 : 1;
+      paint(pos, fade);
+
+      if (t < 1) {
+        rafRef.current = requestAnimationFrame(tick);
+      } else {
+        rafRef.current = null;
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (rafRef.current != null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
+  }, [exiting]);
 
   useEffect(
     () => () => {
@@ -315,11 +417,11 @@ const OptionWheel = ({
         '--ow-font-size': `${fontSize}rem`,
         '--ow-inset': `${inset}px`
       }}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerEnd}
-      onPointerCancel={handlePointerEnd}
-      onKeyDown={handleKeyDown}
+      onPointerDown={exiting ? undefined : handlePointerDown}
+      onPointerMove={exiting ? undefined : handlePointerMove}
+      onPointerUp={exiting ? undefined : handlePointerEnd}
+      onPointerCancel={exiting ? undefined : handlePointerEnd}
+      onKeyDown={exiting ? undefined : handleKeyDown}
     >
       {items.map((label, index) => (
         <div

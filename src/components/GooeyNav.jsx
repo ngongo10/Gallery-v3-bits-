@@ -1,181 +1,170 @@
-import { useRef, useEffect, useState } from 'react';
+﻿import { useRef, useEffect, useState } from 'react';
 import './GooeyNav.css';
 
 const GooeyNav = ({
   items,
-  animationTime = 500,
-  particleCount = 12,
-  particleDistances = [80, 20],
-  particleR = 90,
-  timeVariance = 250,
-  colors = [1, 2, 3, 4],
-  activeIndex: controlledIndex = 0
+  animationTime = 600,
+  particleCount = 15,
+  particleDistances = [90, 10],
+  particleR = 100,
+  timeVariance = 300,
+  colors = [1, 2, 3, 1, 2, 3, 1, 4],
+  initialActiveIndex = 0
 }) => {
   const containerRef = useRef(null);
   const navRef = useRef(null);
-  const pillRef = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(controlledIndex);
-  const prevIndexRef = useRef(controlledIndex);
+  const filterRef = useRef(null);
+  const textRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
 
   const getXY = (distance, pointIndex, totalPoints) => {
-    const angle = ((360 + noise(6)) / totalPoints) * pointIndex * (Math.PI / 180);
+    const angle = ((360 + noise(8)) / totalPoints) * pointIndex * (Math.PI / 180);
     return [distance * Math.cos(angle), distance * Math.sin(angle)];
   };
 
-  const createParticle = (i, d, r) => {
-    const rotate = noise(r / 8);
-    const delay = noise(timeVariance);
+  const createParticle = (i, t, d, r) => {
+    let rotate = noise(r / 10);
     return {
       start: getXY(d[0], particleCount - i, particleCount),
-      end: getXY(d[1] + noise(5), particleCount - i, particleCount),
-      scale: 0.8 + Math.random() * 0.4,
-      color: colors[i % colors.length],
-      rotate: rotate > 0 ? (rotate + r / 15) * 8 : (rotate - r / 15) * 8,
-      delay
+      end: getXY(d[1] + noise(7), particleCount - i, particleCount),
+      time: t,
+      scale: 1 + noise(0.2),
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rotate: rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10
     };
   };
 
-  const makeParticles = (element, liEl) => {
-    if (!element) return;
+  const makeParticles = element => {
     const d = particleDistances;
     const r = particleR;
-
-    // Get position relative to container
-    const containerRect = containerRef.current?.getBoundingClientRect();
-    const liRect = liEl.getBoundingClientRect();
-    const centerX = liRect.left - containerRect.x + liRect.width / 2;
-    const centerY = liRect.top - containerRect.y + liRect.height / 2;
+    const bubbleTime = animationTime * 2 + timeVariance;
+    element.style.setProperty('--time', `${bubbleTime}ms`);
 
     for (let i = 0; i < particleCount; i++) {
-      const p = createParticle(i, d, r);
-      const t = animationTime + p.delay;
+      const t = animationTime * 2 + noise(timeVariance * 2);
+      const p = createParticle(i, t, d, r);
+      element.classList.remove('active');
 
       setTimeout(() => {
         const particle = document.createElement('span');
-        particle.className = 'nav-particle';
-        particle.style.setProperty('--center-x', `${centerX}px`);
-        particle.style.setProperty('--center-y', `${centerY}px`);
+        const point = document.createElement('span');
+        particle.classList.add('particle');
         particle.style.setProperty('--start-x', `${p.start[0]}px`);
         particle.style.setProperty('--start-y', `${p.start[1]}px`);
         particle.style.setProperty('--end-x', `${p.end[0]}px`);
         particle.style.setProperty('--end-y', `${p.end[1]}px`);
-        particle.style.setProperty('--time', `${animationTime}ms`);
+        particle.style.setProperty('--time', `${p.time}ms`);
         particle.style.setProperty('--scale', `${p.scale}`);
-        particle.style.setProperty('--color', `var(--color-${p.color})`);
+        particle.style.setProperty('--color', `var(--color-${p.color}, white)`);
         particle.style.setProperty('--rotate', `${p.rotate}deg`);
 
+        point.classList.add('point');
+        particle.appendChild(point);
         element.appendChild(particle);
-        requestAnimationFrame(() => particle.classList.add('active'));
-
+        requestAnimationFrame(() => {
+          element.classList.add('active');
+        });
         setTimeout(() => {
           try {
             element.removeChild(particle);
-          } catch (e) {
-            // Particle already removed
+          } catch {
+            // Do nothing
           }
         }, t);
-      }, 20);
+      }, 30);
     }
   };
 
-  const updatePillPosition = (liEl) => {
-    if (!pillRef.current || !containerRef.current) return;
+  const updateEffectPosition = element => {
+    if (!containerRef.current || !filterRef.current || !textRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
-    const liRect = liEl.getBoundingClientRect();
+    const pos = element.getBoundingClientRect();
 
-    pillRef.current.style.setProperty(
-      '--pill-left',
-      `${liRect.left - containerRect.left}px`
-    );
-    pillRef.current.style.setProperty(
-      '--pill-top',
-      `${liRect.top - containerRect.top}px`
-    );
-    pillRef.current.style.setProperty('--pill-width', `${liRect.width}px`);
-    pillRef.current.style.setProperty('--pill-height', `${liRect.height}px`);
+    const styles = {
+      left: `${pos.x - containerRect.x}px`,
+      top: `${pos.y - containerRect.y}px`,
+      width: `${pos.width}px`,
+      height: `${pos.height}px`
+    };
+    Object.assign(filterRef.current.style, styles);
+    Object.assign(textRef.current.style, styles);
+    textRef.current.innerText = element.innerText;
   };
 
-  const triggerAnimation = (liEl) => {
-    updatePillPosition(liEl);
-    if (containerRef.current) {
-      makeParticles(containerRef.current, liEl);
+  const handleClick = (e, index) => {
+    e.preventDefault?.();
+    const liEl = e.currentTarget.closest?.('li') || e.currentTarget;
+
+    items[index]?.onClick?.();
+
+    if (activeIndex === index) return;
+
+    setActiveIndex(index);
+    updateEffectPosition(liEl);
+
+    if (filterRef.current) {
+      const particles = filterRef.current.querySelectorAll('.particle');
+      particles.forEach(p => filterRef.current.removeChild(p));
+    }
+
+    if (textRef.current) {
+      textRef.current.classList.remove('active');
+
+      void textRef.current.offsetWidth;
+      textRef.current.classList.add('active');
+    }
+
+    if (filterRef.current) {
+      makeParticles(filterRef.current);
     }
   };
 
-  // Handle external controlledIndex change
-  useEffect(() => {
-    if (controlledIndex === prevIndexRef.current) return;
-    prevIndexRef.current = controlledIndex;
-
-    const liEl = navRef.current?.querySelectorAll('li')[controlledIndex];
-    if (liEl) {
-      setActiveIndex(controlledIndex);
-      triggerAnimation(liEl);
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      const liEl = e.currentTarget.parentElement;
+      if (liEl) {
+        handleClick({ currentTarget: liEl }, index);
+      }
     }
-  }, [controlledIndex]);
+  };
 
-  // Initial position + resize sync
   useEffect(() => {
     if (!navRef.current || !containerRef.current) return;
     const activeLi = navRef.current.querySelectorAll('li')[activeIndex];
     if (activeLi) {
-      updatePillPosition(activeLi);
+      updateEffectPosition(activeLi);
+      textRef.current?.classList.add('active');
     }
 
     const resizeObserver = new ResizeObserver(() => {
       const currentActiveLi = navRef.current?.querySelectorAll('li')[activeIndex];
       if (currentActiveLi) {
-        updatePillPosition(currentActiveLi);
+        updateEffectPosition(currentActiveLi);
       }
     });
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
+    resizeObserver.observe(containerRef.current);
     return () => resizeObserver.disconnect();
   }, [activeIndex]);
 
-  const handleClick = (liEl, index) => {
-    if (activeIndex === index) return;
-    setActiveIndex(index);
-    triggerAnimation(liEl);
-  };
-
   return (
     <div className="gooey-nav-container" ref={containerRef}>
-      <span className="nav-pill" ref={pillRef} />
       <nav>
         <ul ref={navRef}>
           {items.map((item, index) => (
-            <li
-              key={index}
-              className={activeIndex === index ? 'active' : ''}
-              onClick={e => {
-                const liEl = e.currentTarget;
-                handleClick(liEl, index);
-                if (item.onClick) item.onClick();
-              }}
-            >
-              <a
-                href={item.href}
-                onClick={e => e.preventDefault()}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    const liEl = e.currentTarget.parentElement;
-                    handleClick(liEl, index);
-                    if (item.onClick) item.onClick();
-                  }
-                }}
-              >
+            <li key={index} className={activeIndex === index ? 'active' : ''}>
+              <a href={item.href} onClick={e => handleClick(e, index)} onKeyDown={e => handleKeyDown(e, index)}>
                 {item.label}
               </a>
             </li>
           ))}
         </ul>
       </nav>
+      <span className="effect filter" ref={filterRef} />
+      <span className="effect text" ref={textRef} />
     </div>
   );
 };

@@ -7,7 +7,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: visible;
+  overflow: hidden;
   cursor: grab;
   user-select: none;
   touch-action: none;
@@ -43,4 +43,15 @@
 
 .option-wheel__item--selected {
   font-weight: 400;
+}
+
+/* Reel spin exit — same motion as mouse-wheel scroll */
+.option-wheel--exiting {
+  pointer-events: none;
+  cursor: default;
+}
+
+.option-wheel--exiting .option-wheel__item {
+  pointer-events: none;
+  transition: none !important;
 }
