@@ -12,6 +12,17 @@ const GalleryPage = ({ category, onBack }) => {
   const imageRefs = useRef([]);
   const [showDetailMode, setShowDetailMode] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const items = category?.items || [];
   const morphItems = useMemo(
@@ -25,13 +36,17 @@ const GalleryPage = ({ category, onBack }) => {
     const el = pageRef.current;
     if (!el) return;
     el.classList.remove('gallery-page--entered');
+    if (isMobile) {
+      el.classList.add('gallery-page--entered');
+      return;
+    }
     // Double rAF so the browser paints the start state before transitioning
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         el.classList.add('gallery-page--entered');
       });
     });
-  }, [category]);
+  }, [category, isMobile]);
 
   // Scroll spy when in Detail Mode
   useEffect(() => {
@@ -70,7 +85,7 @@ const GalleryPage = ({ category, onBack }) => {
   if (!category) return null;
 
   return (
-    <div className="gallery-page" ref={pageRef}>
+    <div className={`gallery-page${isMobile ? ' gallery-page--mobile' : ''}`} ref={pageRef}>
       {/* Back button */}
       <button
         className="gallery-back-btn"
@@ -124,12 +139,12 @@ const GalleryPage = ({ category, onBack }) => {
         <MorphSlider
           items={morphItems}
           transition="melt"
-          intensity={1.2}
-          aberration={0.35}
+          intensity={isMobile ? 0.5 : 1.2}
+          aberration={isMobile ? 0 : 0.35}
           drift={0}
-          autoplay
+          autoplay={!isMobile}
           overlayColor="#000000"
-          scale={2.5}
+          scale={isMobile ? 1.2 : 2.5}
           showCaptions={false}
           radius={0}
           onIndexChange={setActivePhotoIndex}

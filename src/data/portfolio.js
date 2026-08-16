@@ -1,7 +1,7 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-08-14T15:21:14.092124Z
+// Generated: 2026-08-16T00:33:10.765594Z
 
-const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/a9rfzg6k/image/upload/f_auto,q_auto';
+const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
   if (!path.startsWith("/")) return path;
   const publicPath = path.startsWith("/images/") ? path.substring(8) : path.substring(1);
@@ -10,39 +10,39 @@ const cloudinaryUrl = (path) => {
 
 export const categories = [
   {
-    "id": "graduation-photography",
-    "label": "Graduation Photography",
+    "id": "graduation",
+    "label": "Graduation",
     "cover": cloudinaryUrl("/1108237420833724861") ,
     "items": [
       {
-        "id": "graduation-photography-0",
+        "id": "graduation-0",
         "image": cloudinaryUrl("/1108237420833724861") ,
-        "caption": "Graduation Photography #1",
+        "caption": "Graduation #1",
       },
       {
-        "id": "graduation-photography-1",
+        "id": "graduation-1",
         "image": cloudinaryUrl("/1108237420833724981") ,
-        "caption": "Graduation Photography #2",
+        "caption": "Graduation #2",
       },
       {
-        "id": "graduation-photography-2",
+        "id": "graduation-2",
         "image": cloudinaryUrl("/1108237420833724993") ,
-        "caption": "Graduation Photography #3",
+        "caption": "Graduation #3",
       },
       {
-        "id": "graduation-photography-3",
+        "id": "graduation-3",
         "image": cloudinaryUrl("/1108237420833725109") ,
-        "caption": "Graduation Photography #4",
+        "caption": "Graduation #4",
       },
       {
-        "id": "graduation-photography-4",
+        "id": "graduation-4",
         "image": cloudinaryUrl("/1108237420833725186") ,
-        "caption": "Graduation Photography #5",
+        "caption": "Graduation #5",
       },
       {
-        "id": "graduation-photography-5",
+        "id": "graduation-5",
         "image": cloudinaryUrl("/20210505-DSC01007") ,
-        "caption": "Graduation Photography #6",
+        "caption": "Graduation #6",
       },
     ]
   },
@@ -453,46 +453,46 @@ export const categories = [
 
 export const allItems = [
   {
-    "id": "graduation-photography-0",
+    "id": "graduation-0",
     "image": cloudinaryUrl("/1108237420833724861") ,
-    "title": "Graduation Photography #1",
-    "category": "graduation-photography",
-    "categoryLabel": "Graduation Photography",
+    "title": "Graduation #1",
+    "category": "graduation",
+    "categoryLabel": "Graduation",
   },
   {
-    "id": "graduation-photography-1",
+    "id": "graduation-1",
     "image": cloudinaryUrl("/1108237420833724981") ,
-    "title": "Graduation Photography #2",
-    "category": "graduation-photography",
-    "categoryLabel": "Graduation Photography",
+    "title": "Graduation #2",
+    "category": "graduation",
+    "categoryLabel": "Graduation",
   },
   {
-    "id": "graduation-photography-2",
+    "id": "graduation-2",
     "image": cloudinaryUrl("/1108237420833724993") ,
-    "title": "Graduation Photography #3",
-    "category": "graduation-photography",
-    "categoryLabel": "Graduation Photography",
+    "title": "Graduation #3",
+    "category": "graduation",
+    "categoryLabel": "Graduation",
   },
   {
-    "id": "graduation-photography-3",
+    "id": "graduation-3",
     "image": cloudinaryUrl("/1108237420833725109") ,
-    "title": "Graduation Photography #4",
-    "category": "graduation-photography",
-    "categoryLabel": "Graduation Photography",
+    "title": "Graduation #4",
+    "category": "graduation",
+    "categoryLabel": "Graduation",
   },
   {
-    "id": "graduation-photography-4",
+    "id": "graduation-4",
     "image": cloudinaryUrl("/1108237420833725186") ,
-    "title": "Graduation Photography #5",
-    "category": "graduation-photography",
-    "categoryLabel": "Graduation Photography",
+    "title": "Graduation #5",
+    "category": "graduation",
+    "categoryLabel": "Graduation",
   },
   {
-    "id": "graduation-photography-5",
+    "id": "graduation-5",
     "image": cloudinaryUrl("/20210505-DSC01007") ,
-    "title": "Graduation Photography #6",
-    "category": "graduation-photography",
-    "categoryLabel": "Graduation Photography",
+    "title": "Graduation #6",
+    "category": "graduation",
+    "categoryLabel": "Graduation",
   },
   {
     "id": "grass-0",

@@ -1,63 +1,110 @@
-# React + Vite
+# Hướng dẫn đồng bộ ảnh — Portfolio Sinh (gallery) v3
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Ảnh trên website lấy từ Cloudinary. File `src/data/portfolio.js` trong project được tạo lại từ Cloudinary mỗi lần sync.
 
-Currently, two official plugins are available:
+Thư mục project:
+`C:\Users\needf\Documents\Portfolio Sinh (gallery) v3`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 1. Thêm / thay ảnh (khuyên dùng)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Cách A — Làm trực tiếp trên Cloudinary
 
-## Expanding the Oxlint configuration
+1. Vào Cloudinary → Media Library.
+2. Vào đúng folder album (vd. `portrait`, `Graduation Photography`).
+3. Upload ảnh mới, hoặc thay / xóa ảnh cũ.
+4. Album mới = tạo folder mới trên Cloudinary.
+5. Sync lại project (mục 3).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+### Cách B — Upload từ máy
 
-## Cloudinary sync helper
+1. Xếp ảnh theo album:
+   ```
+   public/images/
+     Portrait/
+       anh1.jpg
+     Graduation Photography/
+       anh1.jpg
+   ```
+2. Mở PowerShell trong thư mục project.
+3. Chạy:
+   ```powershell
+   . .\set_cloudinary_env.ps1
+   python .\upload_images_to_cloudinary.py --yes
+   python .\update_cloudinary_portfolio.py
+   ```
+4. Reload website.
 
-This repo includes helper scripts to keep `src/data/portfolio.js` and `public/images` in sync with your Cloudinary account.
+---
 
-- `update_cloudinary_portfolio.py`: regenerate `src/data/portfolio.js` from Cloudinary folders.
-- `upload_images_to_cloudinary.py`: upload images from `public/images` to Cloudinary and generate a snapshot.
-- `sync_from_cloudinary.py`: (new) list Cloudinary images and optionally download them to `public/images`, delete local files not on Cloudinary, and regenerate `src/data/portfolio.js`.
+## 2. Xóa ảnh hoặc folder trên Cloudinary
 
-Usage example (dry-run):
+| Bạn làm trên Cloudinary | App trước khi sync | Sau khi sync |
+|-------------------------|--------------------|--------------|
+| Xóa vài ảnh             | Ảnh đó bị gãy (404)| Biến mất khỏi album |
+| Xóa cả folder (album)   | Album vẫn hiện, ảnh gãy | Album biến mất khỏi wheel / gallery |
+| Thêm ảnh / folder mới   | Chưa thấy          | Xuất hiện sau sync |
 
-```bash
-python sync_from_cloudinary.py --download --delete-local
-```
+Lưu ý: Xóa trên Cloudinary không tự cập nhật website. Phải chạy sync (mục 3).
 
-Add `--yes` to apply deletions/downloads for real.
+Cover của album = ảnh đầu tiên trong folder.
 
-Quick manual sync steps
- - Set Cloudinary env for the session (PowerShell):
+---
+
+## 3. Sync project (bắt buộc sau mọi thay đổi)
+
+Mở PowerShell tại thư mục project, rồi chạy:
 
 ```powershell
+cd "C:\Users\needf\Documents\Portfolio Sinh (gallery) v3"
 . .\set_cloudinary_env.ps1
-```
-
-- Regenerate `src/data/portfolio.js` from Cloudinary (no downloads):
-
-```powershell
 python .\update_cloudinary_portfolio.py
 ```
 
-- Generate portfolio from an explicit list of public_ids:
+Script sẽ ghi lại `src\data\portfolio.js`.
 
-```powershell
-python .\generate_portfolio_from_ids.py
-```
+Sau đó:
+- Reload trang web (hoặc chạy lại `npm run dev` nếu chưa chạy).
+- Kiểm tra OptionWheel + Gallery xem album / ảnh đã đúng chưa.
 
-- Backup and remove local `public/images` (run after you confirm Cloudinary has all images):
+---
 
-```powershell
-$ts = (Get-Date -Format "yyyyMMdd-HHmm")
-Move-Item .\public\images ".\public\images_backup_$ts"
-# After verifying backup, remove permanently:
-Remove-Item -Recurse -Force ".\public\images_backup_$ts"
-```
+## 4. Các script liên quan
 
-Security note: keep API secrets out of source control. Use `.env` (and add it to `.gitignore`) or platform secrets for CI.
+| Script | Việc làm |
+|--------|----------|
+| `set_cloudinary_env.ps1` | Nạp API key Cloudinary cho phiên PowerShell hiện tại |
+| `update_cloudinary_portfolio.py` | Đọc folder trên Cloudinary → tạo lại `portfolio.js` |
+| `upload_images_to_cloudinary.py` | Upload từ `public/images` lên Cloudinary |
+| `sync_from_cloudinary.py` | Đồng bộ ngược (tải / xóa local cho khớp Cloudinary) |
+
+---
+
+## 5. Quy tắc nhanh
+
+1. Cloudinary là nguồn chính — đừng sửa tay `portfolio.js` lâu dài (lần sync sau sẽ ghi đè).
+2. Mỗi album = 1 folder trên Cloudinary.
+3. Mọi thay đổi ảnh → chạy lại `update_cloudinary_portfolio.py`.
+4. Folder trống / đã xóa sẽ không còn trong website sau khi sync.
+
+---
+
+## 6. Checklist khi cập nhật ảnh
+
+- [ ] Upload / xóa / đổi folder trên Cloudinary (hoặc upload từ `public/images`)
+- [ ] Chạy `. .\set_cloudinary_env.ps1`
+- [ ] Chạy `python .\update_cloudinary_portfolio.py`
+- [ ] Reload app và kiểm tra Home + Gallery
+
+---
+
+## 7. Ghi chú kỹ thuật
+
+- `src/data/portfolio.js` là file sinh ra, không phải file nguồn lâu dài.
+- `public/images` là thư mục local dùng cho upload / backup / đồng bộ khi cần.
+- Luôn sync sau khi đổi folder hoặc ảnh trên Cloudinary để tránh gallery stale.
+- Nếu cần đồng bộ ngược với Cloudinary, có thể dùng `sync_from_cloudinary.py` với các tùy chọn `--download` và `--delete-local` sau khi kiểm tra kỹ.
+
+Security note: giữ API secret ra khỏi source control; ưu tiên `.env` hoặc biến môi trường của platform.
 
