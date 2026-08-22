@@ -127,9 +127,25 @@ const GalleryPage = ({ category, onBack }) => {
   }, []);
 
   const items = category?.items || [];
+  
+  // Mobile image optimizer: use w_800 on mobile to prevent Safari WebGL OOM crash
+  const getOptimizedUrl = useCallback((url, forMobile = false) => {
+    if (!url || !forMobile) return url;
+    if (url.includes('res.cloudinary.com')) {
+      const parts = url.split('/upload/');
+      if (parts.length === 2) {
+        return `${parts[0]}/upload/f_auto,q_auto,w_800,c_limit/${parts[1].replace(/^(f_auto,q_auto,[^/]+\/)/, '')}`;
+      }
+    }
+    return url;
+  }, []);
+
   const morphItems = useMemo(
-    () => items.map(({ image, caption }) => ({ image, caption })),
-    [items]
+    () => items.map(({ image, caption }) => ({
+      image: getOptimizedUrl(image, isMobile),
+      caption
+    })),
+    [items, isMobile, getOptimizedUrl]
   );
 
   // Lens bloom entrance
@@ -165,7 +181,7 @@ const GalleryPage = ({ category, onBack }) => {
             }
           });
         },
-        { root: leftColRef.current, threshold: 0.5 }
+        { root: isMobile ? null : leftColRef.current, threshold: 0.3 }
       );
       observer.observe(el);
       observers.push(observer);
@@ -174,7 +190,7 @@ const GalleryPage = ({ category, onBack }) => {
     return () => {
       observers.forEach((obs) => obs.disconnect());
     };
-  }, [showDetailMode, category]);
+  }, [showDetailMode, category, isMobile]);
 
   // Sync scroll: left col drives right col
   const handleLeftScroll = useCallback(() => {
@@ -263,31 +279,35 @@ const GalleryPage = ({ category, onBack }) => {
         </div>
       )}
 
-      {/* Blurred backdrop behind photos — MorphSlider + INFO */}
-      <div
-        className="gallery-blurred-bg"
-        style={{
-          backgroundImage: items[activePhotoIndex]?.image ? `url("${items[activePhotoIndex].image}")` : 'none'
-        }}
-        aria-hidden="true"
-      />
-
-      {/* MODE 1: MorphSlider (React Bits) */}
-      <div className={`gallery-slider-wrap${showDetailMode ? ' hide-slider' : ''}`}>
-        <MorphSlider
-          items={morphItems}
-          transition="melt"
-          intensity={isMobile ? 0.5 : 1.2}
-          aberration={isMobile ? 0 : 0.35}
-          drift={0}
-          autoplay={!isMobile}
-          overlayColor="#000000"
-          scale={isMobile ? 1.2 : 2.5}
-          showCaptions={false}
-          radius={0}
-          onIndexChange={setActivePhotoIndex}
+      {/* Blurred backdrop behind photos — MorphSlider + INFO (only on desktop to save mobile memory) */}
+      {!isMobile && (
+        <div
+          className="gallery-blurred-bg"
+          style={{
+            backgroundImage: items[activePhotoIndex]?.image ? `url("${items[activePhotoIndex].image}")` : 'none'
+          }}
+          aria-hidden="true"
         />
-      </div>
+      )}
+
+      {/* MODE 1: MorphSlider (React Bits) - Unmount when showDetailMode on mobile to free WebGL VRAM */}
+      {(!isMobile || !showDetailMode) && (
+        <div className={`gallery-slider-wrap${showDetailMode ? ' hide-slider' : ''}`}>
+          <MorphSlider
+            items={morphItems}
+            transition="melt"
+            intensity={isMobile ? 0.4 : 1.2}
+            aberration={isMobile ? 0 : 0.35}
+            drift={0}
+            autoplay={!isMobile}
+            overlayColor="#000000"
+            scale={isMobile ? 1.1 : 2.5}
+            showCaptions={false}
+            radius={0}
+            onIndexChange={setActivePhotoIndex}
+          />
+        </div>
+      )}
 
       {/* MODE 2: Detail Mode Layout */}
       {/* Thumbnail Rail on LEFT (Dot on left, thumbnail on right) */}
@@ -341,7 +361,7 @@ const GalleryPage = ({ category, onBack }) => {
                 >
                   <div className="chry-image-wrapper medium-size">
                     <img
-                      src={photo.image}
+                      src={getOptimizedUrl(photo.image, true)}
                       alt={`${category.label} ${i + 1}`}
                       className="chry-gallery-image"
                       loading="lazy"
