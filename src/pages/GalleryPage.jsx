@@ -1,15 +1,117 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import MorphSlider from '../components/MorphSlider';
 import './GalleryPage.css';
+
+/* ─── Typewriter Component (Cho ảnh 1) ─── */
+const TypewriterText = ({ text = '', trigger = false, speed = 28 }) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [hasStarted, setHasStarted] = useState(false);
+
+  useEffect(() => {
+    if (trigger && !hasStarted) {
+      setHasStarted(true);
+    }
+  }, [trigger, hasStarted]);
+
+  useEffect(() => {
+    if (!hasStarted) {
+      setDisplayedText('');
+      return;
+    }
+
+    let currentIndex = 0;
+    setDisplayedText('');
+
+    const interval = setInterval(() => {
+      currentIndex += 1;
+      setDisplayedText(text.slice(0, currentIndex));
+      if (currentIndex >= text.length) {
+        clearInterval(interval);
+      }
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [hasStarted, text, speed]);
+
+  if (!hasStarted) return null;
+
+  return (
+    <span>
+      {displayedText}
+      {displayedText.length < text.length && (
+        <span className="typewriter-cursor">|</span>
+      )}
+    </span>
+  );
+};
+
+/* ─── Matrix + Typewriter Component (Cho ảnh thứ 2 trở đi) ─── */
+const MATRIX_CHARS = 'アイウエオカキクケコサシスセソタチツテト0123456789ABCDEF$#%&*<>[]{}@!?/\\';
+
+const MatrixTypewriterText = ({ text = '', trigger = false, speed = 35 }) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [hasStarted, setHasStarted] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+
+  useEffect(() => {
+    if (trigger && !hasStarted) {
+      setHasStarted(true);
+    }
+  }, [trigger, hasStarted]);
+
+  useEffect(() => {
+    if (!hasStarted || !text) {
+      setDisplayedText('');
+      return;
+    }
+
+    let step = 0;
+    const maxSteps = text.length * 3; // Mỗi ký tự sẽ scramble vài vòng trước khi cố định
+
+    const interval = setInterval(() => {
+      step++;
+      const resolvedIndex = Math.floor(step / 3);
+
+      if (resolvedIndex >= text.length) {
+        setDisplayedText(text);
+        setIsDone(true);
+        clearInterval(interval);
+        return;
+      }
+
+      // Tạo chuỗi kết hợp: Phần đã giải mã + 1 ký tự Matrix đang scramble
+      let currentOutput = text.slice(0, resolvedIndex);
+      const randomChar = MATRIX_CHARS[Math.floor(Math.random() * MATRIX_CHARS.length)];
+      currentOutput += randomChar;
+
+      setDisplayedText(currentOutput);
+    }, speed);
+
+    return () => clearInterval(interval);
+  }, [hasStarted, text, speed]);
+
+  if (!hasStarted) return null;
+
+  return (
+    <span className="matrix-typewriter">
+      {displayedText}
+      {!isDone && <span className="matrix-cursor typewriter-cursor">_</span>}
+    </span>
+  );
+};
 
 /* ─── Category descriptions ─── */
 const CATEGORY_DESC = {
   'portrait': 'Faces, feelings, and fleeting expressions in soft light.',
+  'run-away': 'Một chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.',
 };
 
 const GalleryPage = ({ category, onBack }) => {
   const pageRef = useRef(null);
   const imageRefs = useRef([]);
+  const leftColRef = useRef(null);
+  const rightColRef = useRef(null);
+  const isSyncingRef = useRef(false);
   const [showDetailMode, setShowDetailMode] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
@@ -48,7 +150,7 @@ const GalleryPage = ({ category, onBack }) => {
     });
   }, [category, isMobile]);
 
-  // Scroll spy when in Detail Mode
+  // Scroll spy when in Detail Mode (update active index by IntersectionObserver on left column)
   useEffect(() => {
     if (!showDetailMode) return;
 
@@ -63,7 +165,7 @@ const GalleryPage = ({ category, onBack }) => {
             }
           });
         },
-        { threshold: 0.5 }
+        { root: leftColRef.current, threshold: 0.5 }
       );
       observer.observe(el);
       observers.push(observer);
@@ -73,6 +175,42 @@ const GalleryPage = ({ category, onBack }) => {
       observers.forEach((obs) => obs.disconnect());
     };
   }, [showDetailMode, category]);
+
+  // Sync scroll: left col drives right col
+  const handleLeftScroll = useCallback(() => {
+    const left = leftColRef.current;
+    const right = rightColRef.current;
+    if (!left || !right || isSyncingRef.current) return;
+    isSyncingRef.current = true;
+    const ratio = left.scrollTop / (left.scrollHeight - left.clientHeight || 1);
+    right.scrollTop = ratio * (right.scrollHeight - right.clientHeight);
+    requestAnimationFrame(() => { isSyncingRef.current = false; });
+  }, []);
+
+  // Sync scroll: right col drives left col
+  const handleRightScroll = useCallback(() => {
+    const left = leftColRef.current;
+    const right = rightColRef.current;
+    if (!left || !right || isSyncingRef.current) return;
+    isSyncingRef.current = true;
+    const ratio = right.scrollTop / (right.scrollHeight - right.clientHeight || 1);
+    left.scrollTop = ratio * (left.scrollHeight - left.clientHeight);
+    requestAnimationFrame(() => { isSyncingRef.current = false; });
+  }, []);
+
+  // Attach / detach scroll listeners when detail mode changes
+  useEffect(() => {
+    const left = leftColRef.current;
+    const right = rightColRef.current;
+    if (!showDetailMode || !left || !right) return;
+
+    left.addEventListener('scroll', handleLeftScroll, { passive: true });
+    right.addEventListener('scroll', handleRightScroll, { passive: true });
+    return () => {
+      left.removeEventListener('scroll', handleLeftScroll);
+      right.removeEventListener('scroll', handleRightScroll);
+    };
+  }, [showDetailMode, handleLeftScroll, handleRightScroll]);
 
   // Handle clicking a thumbnail in thumbnail rail
   const handleThumbnailClick = (index) => {
@@ -176,9 +314,10 @@ const GalleryPage = ({ category, onBack }) => {
           })}
         </div>
 
-        {/* Main Section: Medium/Large Image Column on Left + Text Description on Right */}
+        {/* Main Section: Image Column on Left + Scroll-synced Text Column on Right */}
         <div className="chry-gallery-container split-container">
-          <div className="chry-image-column left-column">
+          {/* Left: scrollable image column */}
+          <div className="chry-image-column left-column" ref={leftColRef}>
             {items.map((photo, i) => (
               <div
                 key={photo.id || i}
@@ -196,27 +335,39 @@ const GalleryPage = ({ category, onBack }) => {
             ))}
           </div>
 
-          {/* Text Information Column on Right */}
-          <div className="chry-text-column right-column">
-            <div className="chry-story-card">
-              <span className="chry-intro-tag">ALBUM STORY</span>
-              <h2 className="chry-intro-title">{category.label}</h2>
-              <p className="chry-intro-desc">
-                {CATEGORY_DESC[category?.id] ?? 'Visual art portfolio collection captured by JUBISATAKA.'}
-              </p>
-              <div className="chry-story-divider" />
-
-              {/* Active Image Details */}
-              <div className="chry-active-meta">
-                <span className="meta-number">{String(activePhotoIndex + 1).padStart(2, '0')}</span>
-                <span className="meta-title">
-                  {items[activePhotoIndex]?.caption ?? `${category.label} #${activePhotoIndex + 1}`}
-                </span>
-                <p className="meta-sub">
-                  Captured by JUBISATAKA. High resolution visual artwork collection.
-                </p>
+          {/* Right: scroll-synced text column — 1 block per photo, same height as image wrapper */}
+          <div className="chry-text-column right-column" ref={rightColRef}>
+            {items.map((photo, i) => (
+              <div key={photo.id || i} className="chry-text-block">
+                {/* Album header only in first block */}
+                {i === 0 && (
+                  <div className="chry-story-header">
+                    <span className="chry-intro-tag">ALBUM STORY</span>
+                    <h2 className="chry-intro-title">{category.label}</h2>
+                    <p className="chry-intro-desc">
+                      <TypewriterText
+                        text={category.description ?? CATEGORY_DESC[category?.id] ?? 'Visual art portfolio collection captured by JUBISATAKA.'}
+                        trigger={showDetailMode && activePhotoIndex === 0}
+                        speed={24}
+                      />
+                    </p>
+                    <div className="chry-story-divider" />
+                  </div>
+                )}
+                {/* Custom story text for subsequent photos if provided (Matrix + Typewriter effect) */}
+                {photo.storyText && (
+                  <div className="chry-photo-story">
+                    <p className="chry-intro-desc">
+                      <MatrixTypewriterText
+                        text={photo.storyText}
+                        trigger={showDetailMode && activePhotoIndex === i}
+                        speed={30}
+                      />
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
+            ))}
           </div>
         </div>
 

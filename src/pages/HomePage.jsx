@@ -62,7 +62,7 @@ const HomePage = ({ onCategorySelect, isExiting = false }) => {
   const driftItems = isMobile ? baseItems.slice(0, 4) : baseItems;
 
   return (
-    <div className="home-page">
+    <div className={`home-page${isMobile ? ' home-page--mobile' : ''}`}>
       <div className={`home-driftwall${isLoaded ? ' is-revealed' : ''}${isChanging ? ' is-changing' : ''}`}>
         <DriftWall
           key={selectedCategory.id}
@@ -95,8 +95,8 @@ const HomePage = ({ onCategorySelect, isExiting = false }) => {
           defaultSelected={0}
           textColor="rgba(255,255,255,0.3)"
           activeColor="#ffffff"
-          side="left"
-          fontSize={isMobile ? 2.1 : 2.8}
+          side={isMobile ? 'right' : 'left'}
+          fontSize={isMobile ? 1.65 : 2.8}
           spacing={1.5}
           curve={1}
           tilt={isMobile ? 4 : 7}
@@ -104,7 +104,7 @@ const HomePage = ({ onCategorySelect, isExiting = false }) => {
           fade={0.3}
           minOpacity={0.04}
           smoothing={isMobile ? 140 : 180}
-          inset={0}
+          inset={isMobile ? 8 : 0}
           loop={false}
           draggable={!isExiting}
           exiting={isExiting}

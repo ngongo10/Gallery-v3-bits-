@@ -153,6 +153,7 @@ export const categories = [
   {
     "id": "run-away",
     "label": "Run away",
+    "description": "Một chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.",
     "cover": cloudinaryUrl("/IMG20240619111217") ,
     "items": [
       {
@@ -194,6 +195,7 @@ export const categories = [
         "id": "run-away-7",
         "image": cloudinaryUrl("/IMG20240627160749") ,
         "caption": "Run away #8",
+        "storyText": "Có thể phải hơn thế nữa",
       },
       {
         "id": "run-away-8",
@@ -220,6 +222,7 @@ export const categories = [
   {
     "id": "tiec-bai-bien",
     "label": "Tiệc bãi biển",
+    "description": "Chỉ là 1 bộ ảnh Cosplayer.",
     "cover": cloudinaryUrl("/20210504-DSC00542") ,
     "items": [
       {

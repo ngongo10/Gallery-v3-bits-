@@ -211,7 +211,7 @@ def main():
         lines = [
             '// Portfolio data generated from Cloudinary folders',
             f'// Generated: {datetime.utcnow().isoformat()}Z',
-            "const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/a9rfzg6k/image/upload/f_auto,q_auto';",
+            "const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';",
             'const cloudinaryUrl = (path) => {',
             '  if (!path.startsWith("/")) return path;',
             '  const publicPath = path.startsWith("/images/") ? path.substring(8) : path.substring(1);',
@@ -300,7 +300,7 @@ def main():
         '// Portfolio data generated from Cloudinary folders',
         f'// Generated: {datetime.utcnow().isoformat()}Z',
         '',
-        "const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/a9rfzg6k/image/upload/f_auto,q_auto';",
+        "const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';",
         'const cloudinaryUrl = (path) => {',
         '  if (!path.startsWith("/")) return path;',
         '  const publicPath = path.startsWith("/images/") ? path.substring(8) : path.substring(1);',

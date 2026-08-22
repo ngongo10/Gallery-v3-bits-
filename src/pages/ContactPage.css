@@ -1,20 +1,55 @@
 .contact-page {
-  position: relative;
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
   width: 100%;
   background-color: #050507;
   color: #ffffff;
-  padding: 120px 80px 80px 80px;
+  padding: 120px 80px 80px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 @media (max-width: 800px) {
   .contact-page {
-    padding: 100px 24px 80px 24px;
+    padding: 96px 20px 48px;
+  }
+
+  .contact-shop-content {
+    gap: 28px;
+  }
+
+  .contact-page-title {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+  }
+
+  .contact-shop-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .contact-shop-card {
+    gap: 12px;
+  }
+
+  .contact-shop-frame {
+    aspect-ratio: 16 / 10;
+    border-radius: 10px;
+  }
+
+  .contact-shop-item-title {
+    font-size: 14px;
+  }
+
+  .contact-shop-item-sub {
+    font-size: 12px;
+    line-height: 1.5;
   }
 }
 
@@ -145,8 +180,53 @@
 }
 
 @media (max-width: 600px) {
+  .contact-modal-overlay {
+    align-items: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px;
+  }
+
+  .contact-modal-card {
+    padding: 24px 20px;
+    margin: auto 0;
+    border-radius: 12px;
+  }
+
+  .contact-modal-close {
+    top: 16px;
+    right: 16px;
+  }
+
   .contact-modal-content {
     grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 8px;
+  }
+
+  .contact-modal-img-wrap {
+    aspect-ratio: 16 / 10;
+  }
+
+  .contact-modal-title {
+    font-size: 1.35rem;
+  }
+
+  .contact-modal-detail {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
+
+  .contact-modal-purchase {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .contact-modal-btn {
+    width: 100%;
+    text-align: center;
   }
 }
 

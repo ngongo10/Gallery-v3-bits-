@@ -305,13 +305,37 @@
   box-shadow: 0 12px 45px rgba(0, 0, 0, 0.7);
 }
 
-/* Right Text Column (Positioned higher up) */
+/* Right Text Column — scroll-synced with left image column */
 .chry-text-column.right-column {
   flex: 0 0 38%;
   height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  padding: 100px 60px 140px 20px; /* same top/bottom padding as left column */
   display: flex;
-  align-items: flex-start;
-  padding: 130px 60px 80px 20px;
+  flex-direction: column;
+  gap: 80px; /* same gap as left column */
+}
+
+.chry-text-column.right-column::-webkit-scrollbar {
+  display: none;
+}
+
+/* Album header inside first text block */
+.chry-story-header {
+  max-width: 420px;
+  color: #ffffff;
+}
+
+/* Per-photo text block — same height as image wrapper, align to top edge */
+.chry-text-block {
+  height: 68vh; /* same as .chry-image-wrapper.medium-size */
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  max-width: 420px;
 }
 
 .chry-story-card {
@@ -343,6 +367,28 @@
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.65);
   margin: 0 0 24px 0;
+  min-height: 1.7em;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  color: rgba(255, 255, 255, 0.85);
+  animation: typewriterBlink 0.8s infinite;
+}
+
+.matrix-cursor {
+  color: #00ff66;
+  font-weight: bold;
+}
+
+.matrix-typewriter {
+  letter-spacing: 0.02em;
+}
+
+@keyframes typewriterBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .chry-story-divider {
@@ -414,6 +460,12 @@
     flex: 1 1 auto;
     padding: 20px 24px 80px 24px;
     height: auto;
+    overflow-y: visible;
+  }
+
+  .chry-text-block {
+    height: auto;
+    margin-bottom: 40px;
   }
 
   .chry-thumbnail-rail.left-rail {
