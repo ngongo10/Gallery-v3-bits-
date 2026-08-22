@@ -53,18 +53,6 @@ const AboutPage = () => {
                 @jubi_sataka138 <span className="about-arrow">↗</span>
               </a>
             </div>
-
-            <div className="about-list-row">
-              <span className="about-item-label">ZALO</span>
-              <a
-                href="https://zalo.me/0348007036"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="about-item-value"
-              >
-                0348007036 <span className="about-arrow">↗</span>
-              </a>
-            </div>
           </div>
         </div>
       </div>
