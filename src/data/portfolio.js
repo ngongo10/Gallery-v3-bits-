@@ -153,7 +153,7 @@ export const categories = [
   {
     "id": "run-away",
     "label": "Run away",
-    "description": "Một chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.",
+    "description": "Hồi Ký 1:\nMột chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.",
     "cover": cloudinaryUrl("/IMG20240619111217") ,
     "items": [
       {
