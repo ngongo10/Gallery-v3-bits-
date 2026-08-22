@@ -84,7 +84,7 @@ const HomePage = ({ onCategorySelect, isExiting = false }) => {
           dim={0.35}
           overlayColor="#060010"
           radius={8}
-          roll={isMobile ? 0 : 5}
+          roll={isMobile ? 7.5 : 5}
           onTileClick={handleCategorySelect}
         />
       </div>
