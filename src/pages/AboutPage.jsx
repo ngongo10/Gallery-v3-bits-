@@ -15,7 +15,7 @@ const AboutPage = () => {
           </div>
           <div className="about-bio-col">
             <p className="about-bio-text">
-              His work explores identity, mood, and cinematic aesthetics through meticulous composition, vivid color harmony, and GPU-accelerated interactive web presentation.
+              His work explores identity, mood, and cinematic aesthetics through meticulous composition and vivid color harmony.
             </p>
           </div>
         </div>
@@ -25,27 +25,32 @@ const AboutPage = () => {
           <div className="about-list">
             <div className="about-list-row">
               <span className="about-item-label">EMAIL</span>
-              <a href="mailto:contact@ngothanhsinh.com" className="about-item-value">
-                contact@ngothanhsinh.com <span className="about-arrow">↗</span>
+              <a href="mailto:ngothanhsinh138@gmail.com" className="about-item-value">
+                ngothanhsinh138@gmail.com <span className="about-arrow">↗</span>
               </a>
             </div>
 
             <div className="about-list-row">
               <span className="about-item-label">INSTAGRAM</span>
               <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/ngothanhsinh136/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="about-item-value"
               >
-                @jubisataka <span className="about-arrow">↗</span>
+                @ngothanhsinh136 <span className="about-arrow">↗</span>
               </a>
             </div>
 
             <div className="about-list-row">
-              <span className="about-item-label">CURRICULUM VITAE</span>
-              <a href="#" className="about-item-value">
-                DOWNLOAD CV <span className="about-arrow">↗</span>
+              <span className="about-item-label">THREADS</span>
+              <a
+                href="https://www.threads.com/@jubi_sataka138"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="about-item-value"
+              >
+                @jubi_sataka138 <span className="about-arrow">↗</span>
               </a>
             </div>
           </div>
