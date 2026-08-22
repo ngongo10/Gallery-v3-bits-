@@ -184,24 +184,29 @@
     align-items: flex-start;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding: 16px;
+    padding: 72px 16px 32px 16px; /* Lùi modal xuống để chừa không gian phía trên */
   }
 
   .contact-modal-card {
-    padding: 24px 20px;
-    margin: auto 0;
-    border-radius: 12px;
+    padding: 28px 20px 24px 20px;
+    margin: 0 auto;
+    border-radius: 14px;
   }
 
   .contact-modal-close {
-    top: 16px;
+    top: 14px;
     right: 16px;
+    font-size: 13px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 100px;
+    color: rgba(255, 255, 255, 0.9);
   }
 
   .contact-modal-content {
     grid-template-columns: 1fr;
     gap: 20px;
-    margin-top: 8px;
+    margin-top: 18px; /* Thêm khoảng cách với nút close */
   }
 
   .contact-modal-img-wrap {

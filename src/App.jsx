@@ -67,8 +67,8 @@ function App() {
       }
     },
     {
-      label: 'Contact',
-      href: '#contact',
+      label: 'Service',
+      href: '#service',
       onClick: () => {
         setNavActiveIndex(2);
         setCurrentPage('contact');
