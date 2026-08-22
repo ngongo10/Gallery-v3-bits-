@@ -316,59 +316,109 @@ const GalleryPage = ({ category, onBack }) => {
 
         {/* Main Section: Image Column on Left + Scroll-synced Text Column on Right */}
         <div className="chry-gallery-container split-container">
-          {/* Left: scrollable image column */}
-          <div className="chry-image-column left-column" ref={leftColRef}>
-            {items.map((photo, i) => (
-              <div
-                key={photo.id || i}
-                ref={(el) => (imageRefs.current[i] = el)}
-                className="chry-image-wrapper medium-size"
-              >
-                <img
-                  src={photo.image}
-                  alt={`${category.label} ${i + 1}`}
-                  className="chry-gallery-image"
-                  loading="eager"
-                  decoding="async"
-                />
+          {/* Mobile view: Stacked photo with its corresponding story right below it */}
+          {isMobile ? (
+            <div className="chry-mobile-stream" ref={leftColRef}>
+              {/* Mobile Album Header */}
+              <div className="chry-mobile-header">
+                <span className="chry-intro-tag">ALBUM STORY</span>
+                <h2 className="chry-intro-title">{category.label}</h2>
+                <p className="chry-intro-desc">
+                  <TypewriterText
+                    text={category.description ?? CATEGORY_DESC[category?.id] ?? 'Visual art portfolio collection captured by JUBISATAKA.'}
+                    trigger={showDetailMode}
+                    speed={20}
+                  />
+                </p>
+                <div className="chry-story-divider" />
               </div>
-            ))}
-          </div>
 
-          {/* Right: scroll-synced text column — 1 block per photo, same height as image wrapper */}
-          <div className="chry-text-column right-column" ref={rightColRef}>
-            {items.map((photo, i) => (
-              <div key={photo.id || i} className="chry-text-block">
-                {/* Album header only in first block */}
-                {i === 0 && (
-                  <div className="chry-story-header">
-                    <span className="chry-intro-tag">ALBUM STORY</span>
-                    <h2 className="chry-intro-title">{category.label}</h2>
-                    <p className="chry-intro-desc">
-                      <TypewriterText
-                        text={category.description ?? CATEGORY_DESC[category?.id] ?? 'Visual art portfolio collection captured by JUBISATAKA.'}
-                        trigger={showDetailMode && activePhotoIndex === 0}
-                        speed={24}
-                      />
-                    </p>
-                    <div className="chry-story-divider" />
+              {items.map((photo, i) => (
+                <div
+                  key={photo.id || i}
+                  ref={(el) => (imageRefs.current[i] = el)}
+                  className="chry-mobile-item"
+                >
+                  <div className="chry-image-wrapper medium-size">
+                    <img
+                      src={photo.image}
+                      alt={`${category.label} ${i + 1}`}
+                      className="chry-gallery-image"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
-                )}
-                {/* Custom story text for subsequent photos if provided (Matrix + Typewriter effect) */}
-                {photo.storyText && (
-                  <div className="chry-photo-story">
-                    <p className="chry-intro-desc">
-                      <MatrixTypewriterText
-                        text={photo.storyText}
-                        trigger={showDetailMode && activePhotoIndex === i}
-                        speed={30}
-                      />
-                    </p>
+                  {photo.storyText && (
+                    <div className="chry-photo-story chry-mobile-story">
+                      <p className="chry-intro-desc">
+                        <MatrixTypewriterText
+                          text={photo.storyText}
+                          trigger={showDetailMode && activePhotoIndex === i}
+                          speed={30}
+                        />
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <>
+              {/* Desktop Left: scrollable image column */}
+              <div className="chry-image-column left-column" ref={leftColRef}>
+                {items.map((photo, i) => (
+                  <div
+                    key={photo.id || i}
+                    ref={(el) => (imageRefs.current[i] = el)}
+                    className="chry-image-wrapper medium-size"
+                  >
+                    <img
+                      src={photo.image}
+                      alt={`${category.label} ${i + 1}`}
+                      className="chry-gallery-image"
+                      loading="eager"
+                      decoding="async"
+                    />
                   </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
+
+              {/* Desktop Right: scroll-synced text column — 1 block per photo, same height as image wrapper */}
+              <div className="chry-text-column right-column" ref={rightColRef}>
+                {items.map((photo, i) => (
+                  <div key={photo.id || i} className="chry-text-block">
+                    {/* Album header only in first block */}
+                    {i === 0 && (
+                      <div className="chry-story-header">
+                        <span className="chry-intro-tag">ALBUM STORY</span>
+                        <h2 className="chry-intro-title">{category.label}</h2>
+                        <p className="chry-intro-desc">
+                          <TypewriterText
+                            text={category.description ?? CATEGORY_DESC[category?.id] ?? 'Visual art portfolio collection captured by JUBISATAKA.'}
+                            trigger={showDetailMode && activePhotoIndex === 0}
+                            speed={24}
+                          />
+                        </p>
+                        <div className="chry-story-divider" />
+                      </div>
+                    )}
+                    {/* Custom story text for subsequent photos if provided (Matrix + Typewriter effect) */}
+                    {photo.storyText && (
+                      <div className="chry-photo-story">
+                        <p className="chry-intro-desc">
+                          <MatrixTypewriterText
+                            text={photo.storyText}
+                            trigger={showDetailMode && activePhotoIndex === i}
+                            speed={30}
+                          />
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Floating Bottom Counter */}
