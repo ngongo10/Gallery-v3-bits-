@@ -71,10 +71,10 @@ const HomePage = ({ onCategorySelect, isExiting = false }) => {
           tileWidth={isMobile ? 110 : 144}
           tileHeight={isMobile ? 140 : 172}
           gap={isMobile ? 12 : 18}
-          tilt={isMobile ? 12 : 30}
-          turn={isMobile ? -12 : -30}
-          perspective={isMobile ? 600 : 900}
-          depth={isMobile ? 120 : 400}
+          tilt={isMobile ? 18 : 30}
+          turn={isMobile ? -18 : -30}
+          perspective={isMobile ? 700 : 900}
+          depth={isMobile ? 160 : 400}
           speed={isChanging ? 120 : isMobile ? 28 : 58}
           direction="up"
           variance={0.35}
