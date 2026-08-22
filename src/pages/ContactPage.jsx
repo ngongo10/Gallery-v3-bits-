@@ -68,7 +68,7 @@ const ContactPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const handleContact = (product) => {
-    window.location.href = `mailto:contact@ngothanhsinh.com?subject=${encodeURIComponent(`Quan tâm: ${product.title}`)}`;
+    window.open('https://zalo.me/0348007036', '_blank', 'noopener,noreferrer');
   };
 
   return (
