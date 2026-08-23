@@ -217,9 +217,9 @@ def main():
     require_cloudinary_credentials()
 
     raw_folders = list_folders()
-    all_resources = list_images()
+    all_resources = search_all_images()
     if not all_resources:
-        all_resources = search_all_images()
+        all_resources = list_images()
 
     folders = filter_live_folders(raw_folders, all_resources)
 
@@ -250,7 +250,6 @@ def main():
 
     resources_cache = {}
     for folder_name in folders:
-        prefix = folder_prefix_map.get(folder_name, folder_name)
         folder_key = canonical_folder_name(folder_name)
         selected = []
         seen_public_ids = set()
@@ -264,8 +263,6 @@ def main():
             seen_public_ids.add(public_id)
             selected.append(resource)
 
-        if not selected:
-            selected = list_images(prefix)
         resources_cache[folder_name] = selected
 
     categories = []
