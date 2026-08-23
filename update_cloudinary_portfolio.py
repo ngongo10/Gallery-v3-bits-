@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 import base64
 import json
 import os
@@ -12,6 +12,18 @@ try:
 except Exception:
     requests = None
 
+# Auto load .env if present
+env_file = Path('.env')
+if env_file.exists():
+    for line in env_file.read_text(encoding='utf-8-sig').splitlines():
+        line = line.strip()
+        if not line or line.startswith('#') or '=' not in line:
+            continue
+        k, v = line.split('=', 1)
+        k, v = k.strip(), v.strip().strip('"').strip("'")
+        if k:
+            os.environ[k] = v
+
 CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME')
 API_KEY = os.getenv('CLOUDINARY_API_KEY')
 API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
@@ -20,8 +32,13 @@ IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif'}
 
 
 def require_cloudinary_credentials():
+    global CLOUD_NAME, API_KEY, API_SECRET, AUTH_HEADER
+    CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME')
+    API_KEY = os.getenv('CLOUDINARY_API_KEY')
+    API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
     if not CLOUD_NAME or not API_KEY or not API_SECRET:
         raise RuntimeError('Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in the environment.')
+    AUTH_HEADER = 'Basic ' + base64.b64encode(f'{API_KEY}:{API_SECRET}'.encode()).decode()
 
 
 AUTH_HEADER = 'Basic ' + base64.b64encode(f'{API_KEY}:{API_SECRET}'.encode()).decode() if API_KEY and API_SECRET else ''
@@ -193,7 +210,7 @@ def filter_live_folders(raw_folders, resources):
 
 
 def js_string(value):
-    return '"' + value.replace('\\', '\\\\').replace('"', '\\"') + '"'
+    return json.dumps(value, ensure_ascii=False)
 
 
 def main():
@@ -296,6 +313,15 @@ def main():
             'items': items,
         })
 
+    # Preserve existing metadata (description, storyText) from old portfolio.js
+    old_descriptions = {
+        'run-away': 'Hồi Ký 1:\nMột chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.',
+        'tiec-bai-bien': 'Chỉ là 1 bộ ảnh Cosplayer.',
+    }
+    old_story_texts = {
+        'run-away-7': 'Có thể phải hơn thế nữa',
+    }
+
     lines = [
         '// Portfolio data generated from Cloudinary folders',
         f'// Generated: {datetime.utcnow().isoformat()}Z',
@@ -311,16 +337,22 @@ def main():
     ]
 
     for category in categories:
+        cid = category["id"]
         lines.append('  {')
-        lines.append(f'    "id": {js_string(category["id"])},')
+        lines.append(f'    "id": {js_string(cid)},')
         lines.append(f'    "label": {js_string(category["label"])},')
+        if cid in old_descriptions:
+            lines.append(f'    "description": {js_string(old_descriptions[cid])},')
         lines.append(f'    "cover": cloudinaryUrl({js_string(category["cover"])}) ,')
         lines.append('    "items": [')
         for item in category['items']:
+            iid = item["id"]
             lines.append('      {')
-            lines.append(f'        "id": {js_string(item["id"])},')
+            lines.append(f'        "id": {js_string(iid)},')
             lines.append(f'        "image": cloudinaryUrl({js_string(item["image"])}) ,')
             lines.append(f'        "caption": {js_string(item["caption"])},')
+            if iid in old_story_texts:
+                lines.append(f'        "storyText": {js_string(old_story_texts[iid])},')
             lines.append('      },')
         lines.append('    ]')
         lines.append('  },')
