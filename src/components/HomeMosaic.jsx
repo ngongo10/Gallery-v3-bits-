@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState, useMemo } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import gsap from "gsap";
 import "./HomeMosaic.css";
 
@@ -42,7 +42,7 @@ export default function HomeMosaic({ items = [], onItemClick }) {
       if (!map.has(it.category)) {
         map.set(it.category, {
           id: it.category,
-          title: (it.categoryLabel || it.category).toUpperCase(),
+          title: it.categoryLabel || it.category,
           images: [],
         });
       }
@@ -737,6 +737,7 @@ export default function HomeMosaic({ items = [], onItemClick }) {
       {/* Floating UI */}
       <div className="hm-floating-ui">
         <div className="hm-title-container" onClick={() => handleTransitionOut()}>
+          <span className="hm-title-badge">MEMORIES &bull; CHAPTER {activeSeriesIndex + 1}</span>
           <h1 ref={titleRef} className="hm-title">
             {displayTitle}
           </h1>

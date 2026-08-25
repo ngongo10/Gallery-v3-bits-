@@ -3,12 +3,10 @@
   inset: 0;
   background: #050507;
   overflow: hidden;
-  transition: background 0.5s ease;
 }
 
-/* Memories: white/warm background */
 .home-page--memories {
-  background: #f8f6f2;
+  background: #050507;
 }
 
 /* ─── Mode toggle ─── */
