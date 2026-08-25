@@ -737,7 +737,6 @@ export default function HomeMosaic({ items = [], onItemClick }) {
       {/* Floating UI */}
       <div className="hm-floating-ui">
         <div className="hm-title-container" onClick={() => handleTransitionOut()}>
-          <span className="hm-title-badge">MEMORIES &bull; CHAPTER {activeSeriesIndex + 1}</span>
           <h1 ref={titleRef} className="hm-title">
             {displayTitle}
           </h1>

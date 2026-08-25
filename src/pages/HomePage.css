@@ -9,14 +9,20 @@
   background: #050507;
 }
 
-/* ─── Mode toggle ─── */
+/* ─── Mode toggle (Bottom Right) ─── */
 .home-mode-toggle-wrap {
   position: absolute;
-  top: 18px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 24px;
+  right: 32px;
   z-index: 60;
   pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+  .home-mode-toggle-wrap {
+    bottom: 16px;
+    right: 16px;
+  }
 }
 
 

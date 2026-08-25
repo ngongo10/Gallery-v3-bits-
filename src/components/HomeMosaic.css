@@ -1,4 +1,4 @@
-﻿.hm-wrapper {
+.hm-wrapper {
   position: fixed;
   top: 0;
   left: 0;
@@ -107,17 +107,6 @@
   max-width: 500px;
 }
 
-.hm-title-badge {
-  display: inline-block;
-  font-family: "Inter", sans-serif;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 8px;
-}
-
 .hm-title {
   font-family: "Borel", cursive, sans-serif !important;
   font-style: normal;
@@ -181,8 +170,16 @@
 /* Mobile adjustments */
 @media (max-width: 800px) {
   .hm-glitch-cursor {
-    width: 250px;
-    height: 250px;
+    display: none;
+  }
+  /* On mobile: reveal all real images clearly without needing cursor drag */
+  .hm-layer-base {
+    display: none;
+  }
+  .hm-masked-page {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+    pointer-events: auto !important;
   }
   .hm-title-container {
     right: auto;
@@ -197,9 +194,11 @@
   }
   .hm-bottom-center {
     display: block;
-    width: 100%;
-    text-align: center;
-    bottom: 20px;
+    width: auto;
+    left: 24px;
+    transform: none;
+    text-align: left;
+    bottom: 24px;
   }
   .hm-desktop-text {
     display: none;

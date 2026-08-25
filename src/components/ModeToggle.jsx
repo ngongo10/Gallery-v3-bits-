@@ -1,23 +1,23 @@
 ﻿import "./ModeToggle.css";
 
 export default function ModeToggle({ mode, onChange }) {
+  const isMemories = mode === "memories";
+
+  const handleToggle = () => {
+    onChange(isMemories ? "art" : "memories");
+  };
+
   return (
-    <div className={`mode-toggle mode-toggle--${mode}`} role="group" aria-label="Switch mode">
-      <button
-        className={`mode-toggle__option${mode === "art" ? " is-active" : ""}`}
-        onClick={() => mode !== "art" && onChange("art")}
-        aria-pressed={mode === "art"}
-      >
+    <div className="mode-toggle-container" onClick={handleToggle} title="Switch between Work & Memories">
+      <span className={`mode-toggle-label${!isMemories ? " is-active" : ""}`}>
         WORK
-      </button>
-      <div className="mode-toggle__pill" aria-hidden="true" />
-      <button
-        className={`mode-toggle__option${mode === "memories" ? " is-active" : ""}`}
-        onClick={() => mode !== "memories" && onChange("memories")}
-        aria-pressed={mode === "memories"}
-      >
+      </span>
+      <div className={`mode-switch${isMemories ? " is-on" : ""}`} role="switch" aria-checked={isMemories}>
+        <div className="mode-switch-thumb" />
+      </div>
+      <span className={`mode-toggle-label${isMemories ? " is-active" : ""}`}>
         MEMORIES
-      </button>
+      </span>
     </div>
   );
 }
