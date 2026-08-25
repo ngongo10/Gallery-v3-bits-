@@ -1,5 +1,5 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-08-23T08:54:35.626367Z
+// Generated: 2026-08-25T17:11:50.770935Z
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
@@ -215,18 +215,13 @@ export const categories = [
       },
       {
         "id": "portrait-14",
-        "image": cloudinaryUrl("/e530811e198da9d96bb57dbf67bcd643") ,
+        "image": cloudinaryUrl("/e8b57371bd744acb9a723390a360af74") ,
         "caption": "Portrait #15",
       },
       {
         "id": "portrait-15",
-        "image": cloudinaryUrl("/e8b57371bd744acb9a723390a360af74") ,
-        "caption": "Portrait #16",
-      },
-      {
-        "id": "portrait-16",
         "image": cloudinaryUrl("/gu_2") ,
-        "caption": "Portrait #17",
+        "caption": "Portrait #16",
       },
     ]
   },
@@ -796,22 +791,15 @@ export const allItems = [
   },
   {
     "id": "portrait-14",
-    "image": cloudinaryUrl("/e530811e198da9d96bb57dbf67bcd643") ,
+    "image": cloudinaryUrl("/e8b57371bd744acb9a723390a360af74") ,
     "title": "Portrait #15",
     "category": "portrait",
     "categoryLabel": "Portrait",
   },
   {
     "id": "portrait-15",
-    "image": cloudinaryUrl("/e8b57371bd744acb9a723390a360af74") ,
-    "title": "Portrait #16",
-    "category": "portrait",
-    "categoryLabel": "Portrait",
-  },
-  {
-    "id": "portrait-16",
     "image": cloudinaryUrl("/gu_2") ,
-    "title": "Portrait #17",
+    "title": "Portrait #16",
     "category": "portrait",
     "categoryLabel": "Portrait",
   },
