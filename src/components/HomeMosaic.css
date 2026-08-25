@@ -101,10 +101,10 @@
   transform: translateY(-50%);
   pointer-events: auto;
   cursor: pointer;
-  overflow: hidden;
   z-index: 1001;
   text-align: right;
   max-width: 500px;
+  padding: 16px 20px;
 }
 
 .hm-title {
@@ -114,12 +114,13 @@
   font-weight: 400;
   text-transform: none;
   margin: 0;
-  line-height: 1.15;
+  line-height: 1.45;
   white-space: normal;
   color: #ffffff;
   opacity: 0.9;
   text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  overflow: visible;
 }
 
 .hm-title-container:hover .hm-title {
