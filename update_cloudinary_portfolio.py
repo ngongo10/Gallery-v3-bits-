@@ -159,23 +159,54 @@ def canonical_folder_name(name):
     return normalize_folder_name(name).casefold()
 
 
+# Top-level parent folders that define mode
+MODE_PARENTS = {'art': 'art', 'memories': 'memories'}
+
+
+def resource_mode(resource):
+    """Return 'art' or 'memories' based on the top-level parent folder."""
+    if not resource:
+        return 'art'
+    asset_folder = (resource.get('asset_folder') or resource.get('folder') or '').strip().strip('/')
+    if '/' in asset_folder:
+        parent = asset_folder.split('/', 1)[0].strip().casefold()
+        return MODE_PARENTS.get(parent, 'art')
+    return 'art'
+
+
 def resource_folder_name(resource):
+    """Return album name only, stripping the parent mode prefix (ART/ or MEMORIES/)."""
     if not resource:
         return ''
 
     asset_folder = (resource.get('asset_folder') or resource.get('folder') or '').strip().strip('/')
     if asset_folder:
-        return normalize_folder_name(asset_folder)
+        # Strip parent mode prefix e.g. "ART/Portrait" -> "Portrait"
+        if '/' in asset_folder:
+            asset_folder = asset_folder.split('/', 1)[1].strip('/')
+        return normalize_folder_name(asset_folder) if asset_folder else ''
 
     public_id = (resource.get('public_id') or '').strip().strip('/')
     if '/' in public_id:
-        return public_id.split('/', 1)[0].strip('/')
+        parts = public_id.split('/')
+        # If 3+ parts (e.g. ART/Portrait/filename), return parts[1]
+        if len(parts) >= 3:
+            return parts[1].strip('/')
+        return parts[0].strip('/')
     return ''
 
 
 def derive_folder_names_from_resources(resources):
     names = {}
     for resource in resources or []:
+        # Only include resources that belong to a known mode parent (ART/ or MEMORIES/)
+        asset_folder = (resource.get('asset_folder') or resource.get('folder') or '').strip().strip('/')
+        if '/' not in asset_folder:
+            # Root-level or unknown parent — skip
+            continue
+        parent = asset_folder.split('/', 1)[0].strip().casefold()
+        if parent not in MODE_PARENTS:
+            continue
         folder = resource_folder_name(resource)
         if not folder or canonical_folder_name(folder) in {'images', 'video'}:
             continue
@@ -282,6 +313,9 @@ def main():
         if not resources:
             continue
 
+        # Determine mode from first resource in this folder
+        cat_mode = resource_mode(resources[0]) if resources else 'art'
+
         items = []
         for index, resource in enumerate(resources):
             public_id = resource['public_id']
@@ -301,11 +335,15 @@ def main():
                 'title': caption,
                 'category': cat_id,
                 'categoryLabel': folder_name,
+                'mode': cat_mode,
             })
+
+        # Determine mode from first resource in this folder (already done above)
 
         categories.append({
             'id': cat_id,
             'label': folder_name,
+            'mode': cat_mode,
             'cover': items[0]['image'],
             'items': items,
         })
@@ -335,9 +373,11 @@ def main():
 
     for category in categories:
         cid = category["id"]
+        cat_mode = category.get("mode", "art")
         lines.append('  {')
         lines.append(f'    "id": {js_string(cid)},')
         lines.append(f'    "label": {js_string(category["label"])},')
+        lines.append(f'    "mode": {js_string(cat_mode)},')
         if cid in old_descriptions:
             lines.append(f'    "description": {js_string(old_descriptions[cid])},')
         lines.append(f'    "cover": cloudinaryUrl({js_string(category["cover"])}) ,')
@@ -365,6 +405,7 @@ def main():
         lines.append(f'    "title": {js_string(item["title"])},')
         lines.append(f'    "category": {js_string(item["category"])},')
         lines.append(f'    "categoryLabel": {js_string(item["categoryLabel"])},')
+        lines.append(f'    "mode": {js_string(item.get("mode", "art"))},')
         lines.append('  },')
 
     lines.append('];')

@@ -1,5 +1,5 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-08-25T17:11:50.770935Z
+// Generated: 2026-08-25T18:54:38.439924Z
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
@@ -12,123 +12,90 @@ export const categories = [
   {
     "id": "graduation",
     "label": "Graduation",
-    "cover": cloudinaryUrl("/1108237420833724861") ,
+    "mode": "art",
+    "cover": cloudinaryUrl("/1108237420833725109") ,
     "items": [
       {
         "id": "graduation-0",
-        "image": cloudinaryUrl("/1108237420833724861") ,
+        "image": cloudinaryUrl("/1108237420833725109") ,
         "caption": "Graduation #1",
       },
       {
         "id": "graduation-1",
-        "image": cloudinaryUrl("/1108237420833724981") ,
+        "image": cloudinaryUrl("/20210505-DSC01007") ,
         "caption": "Graduation #2",
       },
       {
         "id": "graduation-2",
-        "image": cloudinaryUrl("/1108237420833724993") ,
+        "image": cloudinaryUrl("/20210525-DSC01694") ,
         "caption": "Graduation #3",
       },
       {
         "id": "graduation-3",
-        "image": cloudinaryUrl("/1108237420833725109") ,
+        "image": cloudinaryUrl("/20210525-DSC01696") ,
         "caption": "Graduation #4",
       },
       {
         "id": "graduation-4",
-        "image": cloudinaryUrl("/1108237420833725186") ,
+        "image": cloudinaryUrl("/20210525-DSC01700") ,
         "caption": "Graduation #5",
       },
       {
         "id": "graduation-5",
-        "image": cloudinaryUrl("/20210505-DSC01007") ,
+        "image": cloudinaryUrl("/20210525-DSC01701") ,
         "caption": "Graduation #6",
       },
       {
         "id": "graduation-6",
-        "image": cloudinaryUrl("/20210525-DSC01685") ,
+        "image": cloudinaryUrl("/20210525-DSC01707") ,
         "caption": "Graduation #7",
       },
       {
         "id": "graduation-7",
-        "image": cloudinaryUrl("/20210525-DSC01688") ,
+        "image": cloudinaryUrl("/20210525-DSC01708-Enhanced-NR") ,
         "caption": "Graduation #8",
       },
       {
         "id": "graduation-8",
-        "image": cloudinaryUrl("/20210525-DSC01694") ,
+        "image": cloudinaryUrl("/20210525-DSC01710") ,
         "caption": "Graduation #9",
       },
       {
         "id": "graduation-9",
-        "image": cloudinaryUrl("/20210525-DSC01696") ,
+        "image": cloudinaryUrl("/20210525-DSC01711") ,
         "caption": "Graduation #10",
       },
       {
         "id": "graduation-10",
-        "image": cloudinaryUrl("/20210525-DSC01700") ,
+        "image": cloudinaryUrl("/20210525-DSC01713") ,
         "caption": "Graduation #11",
       },
       {
         "id": "graduation-11",
-        "image": cloudinaryUrl("/20210525-DSC01701") ,
+        "image": cloudinaryUrl("/20210525-DSC01747") ,
         "caption": "Graduation #12",
       },
       {
         "id": "graduation-12",
-        "image": cloudinaryUrl("/20210525-DSC01707") ,
+        "image": cloudinaryUrl("/20210525-DSC01756") ,
         "caption": "Graduation #13",
       },
       {
         "id": "graduation-13",
-        "image": cloudinaryUrl("/20210525-DSC01708-Enhanced-NR") ,
+        "image": cloudinaryUrl("/20210525-DSC01765") ,
         "caption": "Graduation #14",
       },
       {
         "id": "graduation-14",
-        "image": cloudinaryUrl("/20210525-DSC01710") ,
-        "caption": "Graduation #15",
-      },
-      {
-        "id": "graduation-15",
-        "image": cloudinaryUrl("/20210525-DSC01711") ,
-        "caption": "Graduation #16",
-      },
-      {
-        "id": "graduation-16",
-        "image": cloudinaryUrl("/20210525-DSC01713") ,
-        "caption": "Graduation #17",
-      },
-      {
-        "id": "graduation-17",
-        "image": cloudinaryUrl("/20210525-DSC01747") ,
-        "caption": "Graduation #18",
-      },
-      {
-        "id": "graduation-18",
-        "image": cloudinaryUrl("/20210525-DSC01756") ,
-        "caption": "Graduation #19",
-      },
-      {
-        "id": "graduation-19",
-        "image": cloudinaryUrl("/20210525-DSC01765") ,
-        "caption": "Graduation #20",
-      },
-      {
-        "id": "graduation-20",
-        "image": cloudinaryUrl("/20210525-DSC01779") ,
-        "caption": "Graduation #21",
-      },
-      {
-        "id": "graduation-21",
         "image": cloudinaryUrl("/20210525-DSC01926") ,
-        "caption": "Graduation #22",
+        "caption": "Graduation #15",
       },
     ]
   },
   {
     "id": "grass",
     "label": "Grass",
+    "mode": "memories",
     "cover": cloudinaryUrl("/20210505-DSC00913") ,
     "items": [
       {
@@ -141,6 +108,7 @@ export const categories = [
   {
     "id": "portrait",
     "label": "Portrait",
+    "mode": "art",
     "cover": cloudinaryUrl("/0860a84b1c31850d680308f39b9019dd") ,
     "items": [
       {
@@ -150,84 +118,50 @@ export const categories = [
       },
       {
         "id": "portrait-1",
-        "image": cloudinaryUrl("/0f7d2e80313797cd7cdef85c7a32de29") ,
+        "image": cloudinaryUrl("/20210505-DSC00820") ,
         "caption": "Portrait #2",
       },
       {
         "id": "portrait-2",
-        "image": cloudinaryUrl("/20210505-DSC00820") ,
+        "image": cloudinaryUrl("/537295d6c42420605896ec290eb8ac4b") ,
         "caption": "Portrait #3",
       },
       {
         "id": "portrait-3",
-        "image": cloudinaryUrl("/537295d6c42420605896ec290eb8ac4b") ,
+        "image": cloudinaryUrl("/5c9f77cfec0ff3729205b2ddbbca82c8") ,
         "caption": "Portrait #4",
       },
       {
         "id": "portrait-4",
-        "image": cloudinaryUrl("/5c9f77cfec0ff3729205b2ddbbca82c8") ,
+        "image": cloudinaryUrl("/912330837028541371") ,
         "caption": "Portrait #5",
       },
       {
         "id": "portrait-5",
-        "image": cloudinaryUrl("/78e24450cd440830a4319da9b73bea7d") ,
+        "image": cloudinaryUrl("/a") ,
         "caption": "Portrait #6",
       },
       {
         "id": "portrait-6",
-        "image": cloudinaryUrl("/912330837028541371") ,
+        "image": cloudinaryUrl("/b4291fbbdefbf7db30be01084d23c73e") ,
         "caption": "Portrait #7",
       },
       {
         "id": "portrait-7",
-        "image": cloudinaryUrl("/9b3fe89d3f46d529b7a83fb7b84b873a") ,
+        "image": cloudinaryUrl("/d") ,
         "caption": "Portrait #8",
       },
       {
         "id": "portrait-8",
-        "image": cloudinaryUrl("/a") ,
-        "caption": "Portrait #9",
-      },
-      {
-        "id": "portrait-9",
-        "image": cloudinaryUrl("/adb1d5fa5b8158834aeb4da6d486cf86") ,
-        "caption": "Portrait #10",
-      },
-      {
-        "id": "portrait-10",
-        "image": cloudinaryUrl("/b4291fbbdefbf7db30be01084d23c73e") ,
-        "caption": "Portrait #11",
-      },
-      {
-        "id": "portrait-11",
-        "image": cloudinaryUrl("/b60211f41c4dcec9f4ca8d087608a16e") ,
-        "caption": "Portrait #12",
-      },
-      {
-        "id": "portrait-12",
-        "image": cloudinaryUrl("/d") ,
-        "caption": "Portrait #13",
-      },
-      {
-        "id": "portrait-13",
-        "image": cloudinaryUrl("/e10a1707341bc9b7a3f9f5460af14811") ,
-        "caption": "Portrait #14",
-      },
-      {
-        "id": "portrait-14",
-        "image": cloudinaryUrl("/e8b57371bd744acb9a723390a360af74") ,
-        "caption": "Portrait #15",
-      },
-      {
-        "id": "portrait-15",
         "image": cloudinaryUrl("/gu_2") ,
-        "caption": "Portrait #16",
+        "caption": "Portrait #9",
       },
     ]
   },
   {
     "id": "run-away",
     "label": "Run away",
+    "mode": "memories",
     "description": "Hồi Ký 1:\nMột chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.",
     "cover": cloudinaryUrl("/IMG20240619111217") ,
     "items": [
@@ -297,6 +231,7 @@ export const categories = [
   {
     "id": "tiec-bai-bien",
     "label": "Tiệc bãi biển",
+    "mode": "art",
     "description": "Chỉ là 1 bộ ảnh Cosplayer.",
     "cover": cloudinaryUrl("/20210504-DSC00542") ,
     "items": [
@@ -532,157 +467,123 @@ export const categories = [
 export const allItems = [
   {
     "id": "graduation-0",
-    "image": cloudinaryUrl("/1108237420833724861") ,
+    "image": cloudinaryUrl("/1108237420833725109") ,
     "title": "Graduation #1",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-1",
-    "image": cloudinaryUrl("/1108237420833724981") ,
+    "image": cloudinaryUrl("/20210505-DSC01007") ,
     "title": "Graduation #2",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-2",
-    "image": cloudinaryUrl("/1108237420833724993") ,
+    "image": cloudinaryUrl("/20210525-DSC01694") ,
     "title": "Graduation #3",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-3",
-    "image": cloudinaryUrl("/1108237420833725109") ,
+    "image": cloudinaryUrl("/20210525-DSC01696") ,
     "title": "Graduation #4",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-4",
-    "image": cloudinaryUrl("/1108237420833725186") ,
+    "image": cloudinaryUrl("/20210525-DSC01700") ,
     "title": "Graduation #5",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-5",
-    "image": cloudinaryUrl("/20210505-DSC01007") ,
+    "image": cloudinaryUrl("/20210525-DSC01701") ,
     "title": "Graduation #6",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-6",
-    "image": cloudinaryUrl("/20210525-DSC01685") ,
+    "image": cloudinaryUrl("/20210525-DSC01707") ,
     "title": "Graduation #7",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-7",
-    "image": cloudinaryUrl("/20210525-DSC01688") ,
+    "image": cloudinaryUrl("/20210525-DSC01708-Enhanced-NR") ,
     "title": "Graduation #8",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-8",
-    "image": cloudinaryUrl("/20210525-DSC01694") ,
+    "image": cloudinaryUrl("/20210525-DSC01710") ,
     "title": "Graduation #9",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-9",
-    "image": cloudinaryUrl("/20210525-DSC01696") ,
+    "image": cloudinaryUrl("/20210525-DSC01711") ,
     "title": "Graduation #10",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-10",
-    "image": cloudinaryUrl("/20210525-DSC01700") ,
+    "image": cloudinaryUrl("/20210525-DSC01713") ,
     "title": "Graduation #11",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-11",
-    "image": cloudinaryUrl("/20210525-DSC01701") ,
+    "image": cloudinaryUrl("/20210525-DSC01747") ,
     "title": "Graduation #12",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-12",
-    "image": cloudinaryUrl("/20210525-DSC01707") ,
+    "image": cloudinaryUrl("/20210525-DSC01756") ,
     "title": "Graduation #13",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-13",
-    "image": cloudinaryUrl("/20210525-DSC01708-Enhanced-NR") ,
+    "image": cloudinaryUrl("/20210525-DSC01765") ,
     "title": "Graduation #14",
     "category": "graduation",
     "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "graduation-14",
-    "image": cloudinaryUrl("/20210525-DSC01710") ,
+    "image": cloudinaryUrl("/20210525-DSC01926") ,
     "title": "Graduation #15",
     "category": "graduation",
     "categoryLabel": "Graduation",
-  },
-  {
-    "id": "graduation-15",
-    "image": cloudinaryUrl("/20210525-DSC01711") ,
-    "title": "Graduation #16",
-    "category": "graduation",
-    "categoryLabel": "Graduation",
-  },
-  {
-    "id": "graduation-16",
-    "image": cloudinaryUrl("/20210525-DSC01713") ,
-    "title": "Graduation #17",
-    "category": "graduation",
-    "categoryLabel": "Graduation",
-  },
-  {
-    "id": "graduation-17",
-    "image": cloudinaryUrl("/20210525-DSC01747") ,
-    "title": "Graduation #18",
-    "category": "graduation",
-    "categoryLabel": "Graduation",
-  },
-  {
-    "id": "graduation-18",
-    "image": cloudinaryUrl("/20210525-DSC01756") ,
-    "title": "Graduation #19",
-    "category": "graduation",
-    "categoryLabel": "Graduation",
-  },
-  {
-    "id": "graduation-19",
-    "image": cloudinaryUrl("/20210525-DSC01765") ,
-    "title": "Graduation #20",
-    "category": "graduation",
-    "categoryLabel": "Graduation",
-  },
-  {
-    "id": "graduation-20",
-    "image": cloudinaryUrl("/20210525-DSC01779") ,
-    "title": "Graduation #21",
-    "category": "graduation",
-    "categoryLabel": "Graduation",
-  },
-  {
-    "id": "graduation-21",
-    "image": cloudinaryUrl("/20210525-DSC01926") ,
-    "title": "Graduation #22",
-    "category": "graduation",
-    "categoryLabel": "Graduation",
+    "mode": "art",
   },
   {
     "id": "grass-0",
@@ -690,6 +591,7 @@ export const allItems = [
     "title": "Grass #1",
     "category": "grass",
     "categoryLabel": "Grass",
+    "mode": "memories",
   },
   {
     "id": "portrait-0",
@@ -697,111 +599,71 @@ export const allItems = [
     "title": "Portrait #1",
     "category": "portrait",
     "categoryLabel": "Portrait",
+    "mode": "art",
   },
   {
     "id": "portrait-1",
-    "image": cloudinaryUrl("/0f7d2e80313797cd7cdef85c7a32de29") ,
+    "image": cloudinaryUrl("/20210505-DSC00820") ,
     "title": "Portrait #2",
     "category": "portrait",
     "categoryLabel": "Portrait",
+    "mode": "art",
   },
   {
     "id": "portrait-2",
-    "image": cloudinaryUrl("/20210505-DSC00820") ,
+    "image": cloudinaryUrl("/537295d6c42420605896ec290eb8ac4b") ,
     "title": "Portrait #3",
     "category": "portrait",
     "categoryLabel": "Portrait",
+    "mode": "art",
   },
   {
     "id": "portrait-3",
-    "image": cloudinaryUrl("/537295d6c42420605896ec290eb8ac4b") ,
+    "image": cloudinaryUrl("/5c9f77cfec0ff3729205b2ddbbca82c8") ,
     "title": "Portrait #4",
     "category": "portrait",
     "categoryLabel": "Portrait",
+    "mode": "art",
   },
   {
     "id": "portrait-4",
-    "image": cloudinaryUrl("/5c9f77cfec0ff3729205b2ddbbca82c8") ,
+    "image": cloudinaryUrl("/912330837028541371") ,
     "title": "Portrait #5",
     "category": "portrait",
     "categoryLabel": "Portrait",
+    "mode": "art",
   },
   {
     "id": "portrait-5",
-    "image": cloudinaryUrl("/78e24450cd440830a4319da9b73bea7d") ,
+    "image": cloudinaryUrl("/a") ,
     "title": "Portrait #6",
     "category": "portrait",
     "categoryLabel": "Portrait",
+    "mode": "art",
   },
   {
     "id": "portrait-6",
-    "image": cloudinaryUrl("/912330837028541371") ,
+    "image": cloudinaryUrl("/b4291fbbdefbf7db30be01084d23c73e") ,
     "title": "Portrait #7",
     "category": "portrait",
     "categoryLabel": "Portrait",
+    "mode": "art",
   },
   {
     "id": "portrait-7",
-    "image": cloudinaryUrl("/9b3fe89d3f46d529b7a83fb7b84b873a") ,
+    "image": cloudinaryUrl("/d") ,
     "title": "Portrait #8",
     "category": "portrait",
     "categoryLabel": "Portrait",
+    "mode": "art",
   },
   {
     "id": "portrait-8",
-    "image": cloudinaryUrl("/a") ,
+    "image": cloudinaryUrl("/gu_2") ,
     "title": "Portrait #9",
     "category": "portrait",
     "categoryLabel": "Portrait",
-  },
-  {
-    "id": "portrait-9",
-    "image": cloudinaryUrl("/adb1d5fa5b8158834aeb4da6d486cf86") ,
-    "title": "Portrait #10",
-    "category": "portrait",
-    "categoryLabel": "Portrait",
-  },
-  {
-    "id": "portrait-10",
-    "image": cloudinaryUrl("/b4291fbbdefbf7db30be01084d23c73e") ,
-    "title": "Portrait #11",
-    "category": "portrait",
-    "categoryLabel": "Portrait",
-  },
-  {
-    "id": "portrait-11",
-    "image": cloudinaryUrl("/b60211f41c4dcec9f4ca8d087608a16e") ,
-    "title": "Portrait #12",
-    "category": "portrait",
-    "categoryLabel": "Portrait",
-  },
-  {
-    "id": "portrait-12",
-    "image": cloudinaryUrl("/d") ,
-    "title": "Portrait #13",
-    "category": "portrait",
-    "categoryLabel": "Portrait",
-  },
-  {
-    "id": "portrait-13",
-    "image": cloudinaryUrl("/e10a1707341bc9b7a3f9f5460af14811") ,
-    "title": "Portrait #14",
-    "category": "portrait",
-    "categoryLabel": "Portrait",
-  },
-  {
-    "id": "portrait-14",
-    "image": cloudinaryUrl("/e8b57371bd744acb9a723390a360af74") ,
-    "title": "Portrait #15",
-    "category": "portrait",
-    "categoryLabel": "Portrait",
-  },
-  {
-    "id": "portrait-15",
-    "image": cloudinaryUrl("/gu_2") ,
-    "title": "Portrait #16",
-    "category": "portrait",
-    "categoryLabel": "Portrait",
+    "mode": "art",
   },
   {
     "id": "run-away-0",
@@ -809,6 +671,7 @@ export const allItems = [
     "title": "Run away #1",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-1",
@@ -816,6 +679,7 @@ export const allItems = [
     "title": "Run away #2",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-2",
@@ -823,6 +687,7 @@ export const allItems = [
     "title": "Run away #3",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-3",
@@ -830,6 +695,7 @@ export const allItems = [
     "title": "Run away #4",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-4",
@@ -837,6 +703,7 @@ export const allItems = [
     "title": "Run away #5",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-5",
@@ -844,6 +711,7 @@ export const allItems = [
     "title": "Run away #6",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-6",
@@ -851,6 +719,7 @@ export const allItems = [
     "title": "Run away #7",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-7",
@@ -858,6 +727,7 @@ export const allItems = [
     "title": "Run away #8",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-8",
@@ -865,6 +735,7 @@ export const allItems = [
     "title": "Run away #9",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-9",
@@ -872,6 +743,7 @@ export const allItems = [
     "title": "Run away #10",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-10",
@@ -879,6 +751,7 @@ export const allItems = [
     "title": "Run away #11",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "run-away-11",
@@ -886,6 +759,7 @@ export const allItems = [
     "title": "Run away #12",
     "category": "run-away",
     "categoryLabel": "Run away",
+    "mode": "memories",
   },
   {
     "id": "tiec-bai-bien-0",
@@ -893,6 +767,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #1",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-1",
@@ -900,6 +775,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #2",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-2",
@@ -907,6 +783,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #3",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-3",
@@ -914,6 +791,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #4",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-4",
@@ -921,6 +799,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #5",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-5",
@@ -928,6 +807,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #6",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-6",
@@ -935,6 +815,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #7",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-7",
@@ -942,6 +823,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #8",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-8",
@@ -949,6 +831,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #9",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-9",
@@ -956,6 +839,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #10",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-10",
@@ -963,6 +847,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #11",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-11",
@@ -970,6 +855,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #12",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-12",
@@ -977,6 +863,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #13",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-13",
@@ -984,6 +871,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #14",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-14",
@@ -991,6 +879,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #15",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-15",
@@ -998,6 +887,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #16",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-16",
@@ -1005,6 +895,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #17",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-17",
@@ -1012,6 +903,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #18",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-18",
@@ -1019,6 +911,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #19",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-19",
@@ -1026,6 +919,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #20",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-20",
@@ -1033,6 +927,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #21",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-21",
@@ -1040,6 +935,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #22",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-22",
@@ -1047,6 +943,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #23",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-23",
@@ -1054,6 +951,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #24",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-24",
@@ -1061,6 +959,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #25",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-25",
@@ -1068,6 +967,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #26",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-26",
@@ -1075,6 +975,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #27",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-27",
@@ -1082,6 +983,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #28",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-28",
@@ -1089,6 +991,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #29",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-29",
@@ -1096,6 +999,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #30",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-30",
@@ -1103,6 +1007,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #31",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-31",
@@ -1110,6 +1015,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #32",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-32",
@@ -1117,6 +1023,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #33",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-33",
@@ -1124,6 +1031,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #34",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-34",
@@ -1131,6 +1039,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #35",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-35",
@@ -1138,6 +1047,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #36",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-36",
@@ -1145,6 +1055,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #37",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-37",
@@ -1152,6 +1063,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #38",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-38",
@@ -1159,6 +1071,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #39",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-39",
@@ -1166,6 +1079,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #40",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-40",
@@ -1173,6 +1087,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #41",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-41",
@@ -1180,6 +1095,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #42",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-42",
@@ -1187,6 +1103,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #43",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-43",
@@ -1194,6 +1111,7 @@ export const allItems = [
     "title": "Tiệc bãi biển #44",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
   {
     "id": "tiec-bai-bien-44",
@@ -1201,5 +1119,6 @@ export const allItems = [
     "title": "Tiệc bãi biển #45",
     "category": "tiec-bai-bien",
     "categoryLabel": "Tiệc bãi biển",
+    "mode": "art",
   },
 ];

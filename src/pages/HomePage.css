@@ -3,7 +3,24 @@
   inset: 0;
   background: #050507;
   overflow: hidden;
+  transition: background 0.5s ease;
 }
+
+/* Memories: white/warm background */
+.home-page--memories {
+  background: #f8f6f2;
+}
+
+/* ─── Mode toggle ─── */
+.home-mode-toggle-wrap {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  pointer-events: auto;
+}
+
 
 /* ─── DriftWall background ─── */
 .home-driftwall {
