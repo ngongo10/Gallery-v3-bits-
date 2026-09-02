@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import MorphSlider from '../components/MorphSlider';
+import ImageLightbox from '../components/ImageLightbox';
 import './GalleryPage.css';
 
 /* ─── Typewriter Component (Cho ảnh 1) ─── */
@@ -114,7 +115,31 @@ const GalleryPage = ({ category, onBack }) => {
   const isSyncingRef = useRef(false);
   const [showDetailMode, setShowDetailMode] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+  const [lightboxSrc, setLightboxSrc] = useState(null);
+  const [lightboxAlt, setLightboxAlt] = useState('');
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+
+  // Double-click / double-tap to open lightbox
+  const doubleTapTimers = useRef({});
+  const handleImageDoubleClick = useCallback((src, alt) => {
+    setLightboxSrc(src);
+    setLightboxAlt(alt || '');
+  }, []);
+
+  // For touch: detect double-tap manually (touchend fires twice within 350ms)
+  const handleImageTouchEnd = useCallback((e, src, alt) => {
+    const id = src;
+    if (doubleTapTimers.current[id]) {
+      clearTimeout(doubleTapTimers.current[id]);
+      delete doubleTapTimers.current[id];
+      setLightboxSrc(src);
+      setLightboxAlt(alt || '');
+    } else {
+      doubleTapTimers.current[id] = setTimeout(() => {
+        delete doubleTapTimers.current[id];
+      }, 350);
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -363,9 +388,11 @@ const GalleryPage = ({ category, onBack }) => {
                     <img
                       src={getOptimizedUrl(photo.image, true)}
                       alt={`${category.label} ${i + 1}`}
-                      className="chry-gallery-image"
+                      className="chry-gallery-image chry-zoomable"
                       loading="lazy"
                       decoding="async"
+                      onDoubleClick={() => handleImageDoubleClick(photo.image, `${category.label} ${i + 1}`)}
+                      onTouchEnd={(e) => handleImageTouchEnd(e, photo.image, `${category.label} ${i + 1}`)}
                     />
                   </div>
                   {photo.storyText && (
@@ -395,9 +422,11 @@ const GalleryPage = ({ category, onBack }) => {
                     <img
                       src={photo.image}
                       alt={`${category.label} ${i + 1}`}
-                      className="chry-gallery-image"
+                      className="chry-gallery-image chry-zoomable"
                       loading="eager"
                       decoding="async"
+                      onDoubleClick={() => handleImageDoubleClick(photo.image, `${category.label} ${i + 1}`)}
+                      onTouchEnd={(e) => handleImageTouchEnd(e, photo.image, `${category.label} ${i + 1}`)}
                     />
                   </div>
                 ))}
@@ -444,8 +473,18 @@ const GalleryPage = ({ category, onBack }) => {
         {/* Floating Bottom Counter */}
         <div className="chry-counter-float">
           <span>{activePhotoIndex + 1} OF {items.length}</span>
+          <span className="chry-zoom-hint">↕ Nhấn đúp để phóng to ảnh</span>
         </div>
       </div>
+
+      {/* Lightbox — renders on top of everything */}
+      {lightboxSrc && (
+        <ImageLightbox
+          src={lightboxSrc}
+          alt={lightboxAlt}
+          onClose={() => setLightboxSrc(null)}
+        />
+      )}
     </div>
   );
 };

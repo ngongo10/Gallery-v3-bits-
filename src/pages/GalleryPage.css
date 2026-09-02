@@ -566,3 +566,20 @@
     font-size: 2.2rem;
   }
 }
+
+/* ─── Zoomable Image Cursor & Hint ─── */
+.chry-gallery-image.chry-zoomable {
+  cursor: zoom-in;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.chry-zoom-hint {
+  display: block;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+  letter-spacing: 0.05em;
+}
+
