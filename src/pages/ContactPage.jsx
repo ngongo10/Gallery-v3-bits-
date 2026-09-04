@@ -60,7 +60,7 @@ const shopProducts = [
       'Gói được xây dựng linh hoạt theo từng dự án, có thể bao gồm trao đổi ý tưởng, định hướng phong cách hình ảnh, lựa chọn bối cảnh, thực hiện buổi chụp, chọn lọc ảnh và hậu kỳ theo yêu cầu.',
       'Phù hợp với các bộ ảnh concept, thời trang, kỷ yếu, couple, sản phẩm, thương hiệu cá nhân hoặc những dự án cần đầu tư nhiều hơn về hình ảnh.',
     ],
-    image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1786651120/20210505-DSC01007.jpg',
+    image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1788545041/Still_2026-09-05_010136_1.3.1.jpg',
   },
 ];
 
