@@ -1,5 +1,5 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-09-04T18:18:30.798708Z
+// Generated: 2026-09-20T18:09:50.024169Z
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
@@ -187,59 +187,23 @@ export const categories = [
       },
       {
         "id": "run-away-1",
-        "image": cloudinaryUrl("/IMG20240619140354") ,
+        "image": cloudinaryUrl("/IMG20240627095847") ,
         "caption": "Run away #2",
       },
       {
         "id": "run-away-2",
-        "image": cloudinaryUrl("/IMG20240627092520") ,
+        "image": cloudinaryUrl("/IMG20240627153005") ,
         "caption": "Run away #3",
       },
       {
         "id": "run-away-3",
-        "image": cloudinaryUrl("/IMG20240627095531") ,
+        "image": cloudinaryUrl("/IMG20240628084759") ,
         "caption": "Run away #4",
       },
       {
         "id": "run-away-4",
-        "image": cloudinaryUrl("/IMG20240627095847") ,
-        "caption": "Run away #5",
-      },
-      {
-        "id": "run-away-5",
-        "image": cloudinaryUrl("/IMG20240627105633") ,
-        "caption": "Run away #6",
-      },
-      {
-        "id": "run-away-6",
-        "image": cloudinaryUrl("/IMG20240627153005") ,
-        "caption": "Run away #7",
-      },
-      {
-        "id": "run-away-7",
-        "image": cloudinaryUrl("/IMG20240627160749") ,
-        "caption": "Run away #8",
-        "storyText": "Có thể phải hơn thế nữa",
-      },
-      {
-        "id": "run-away-8",
-        "image": cloudinaryUrl("/IMG20240627183158") ,
-        "caption": "Run away #9",
-      },
-      {
-        "id": "run-away-9",
-        "image": cloudinaryUrl("/IMG20240628084759") ,
-        "caption": "Run away #10",
-      },
-      {
-        "id": "run-away-10",
-        "image": cloudinaryUrl("/IMG_19700101_111950") ,
-        "caption": "Run away #11",
-      },
-      {
-        "id": "run-away-11",
         "image": cloudinaryUrl("/IMG_19700102_053916") ,
-        "caption": "Run away #12",
+        "caption": "Run away #5",
       },
     ]
   },
@@ -714,7 +678,7 @@ export const allItems = [
   },
   {
     "id": "run-away-1",
-    "image": cloudinaryUrl("/IMG20240619140354") ,
+    "image": cloudinaryUrl("/IMG20240627095847") ,
     "title": "Run away #2",
     "category": "run-away",
     "categoryLabel": "Run away",
@@ -722,7 +686,7 @@ export const allItems = [
   },
   {
     "id": "run-away-2",
-    "image": cloudinaryUrl("/IMG20240627092520") ,
+    "image": cloudinaryUrl("/IMG20240627153005") ,
     "title": "Run away #3",
     "category": "run-away",
     "categoryLabel": "Run away",
@@ -730,7 +694,7 @@ export const allItems = [
   },
   {
     "id": "run-away-3",
-    "image": cloudinaryUrl("/IMG20240627095531") ,
+    "image": cloudinaryUrl("/IMG20240628084759") ,
     "title": "Run away #4",
     "category": "run-away",
     "categoryLabel": "Run away",
@@ -738,64 +702,8 @@ export const allItems = [
   },
   {
     "id": "run-away-4",
-    "image": cloudinaryUrl("/IMG20240627095847") ,
-    "title": "Run away #5",
-    "category": "run-away",
-    "categoryLabel": "Run away",
-    "mode": "memories",
-  },
-  {
-    "id": "run-away-5",
-    "image": cloudinaryUrl("/IMG20240627105633") ,
-    "title": "Run away #6",
-    "category": "run-away",
-    "categoryLabel": "Run away",
-    "mode": "memories",
-  },
-  {
-    "id": "run-away-6",
-    "image": cloudinaryUrl("/IMG20240627153005") ,
-    "title": "Run away #7",
-    "category": "run-away",
-    "categoryLabel": "Run away",
-    "mode": "memories",
-  },
-  {
-    "id": "run-away-7",
-    "image": cloudinaryUrl("/IMG20240627160749") ,
-    "title": "Run away #8",
-    "category": "run-away",
-    "categoryLabel": "Run away",
-    "mode": "memories",
-  },
-  {
-    "id": "run-away-8",
-    "image": cloudinaryUrl("/IMG20240627183158") ,
-    "title": "Run away #9",
-    "category": "run-away",
-    "categoryLabel": "Run away",
-    "mode": "memories",
-  },
-  {
-    "id": "run-away-9",
-    "image": cloudinaryUrl("/IMG20240628084759") ,
-    "title": "Run away #10",
-    "category": "run-away",
-    "categoryLabel": "Run away",
-    "mode": "memories",
-  },
-  {
-    "id": "run-away-10",
-    "image": cloudinaryUrl("/IMG_19700101_111950") ,
-    "title": "Run away #11",
-    "category": "run-away",
-    "categoryLabel": "Run away",
-    "mode": "memories",
-  },
-  {
-    "id": "run-away-11",
     "image": cloudinaryUrl("/IMG_19700102_053916") ,
-    "title": "Run away #12",
+    "title": "Run away #5",
     "category": "run-away",
     "categoryLabel": "Run away",
     "mode": "memories",

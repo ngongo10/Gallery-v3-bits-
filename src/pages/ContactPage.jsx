@@ -8,8 +8,8 @@ const shopProducts = [
     subtitle: 'Phù hợp với quay content, review, cá nhân và các nhu cầu quay đơn giản.',
     intro:
       'Quay video theo nhu cầu như review, content cá nhân, mạng xã hội hoặc các nội dung ngắn. Bao gồm quay và xử lý hậu kỳ cơ bản.',
-    priceLine: 'Giá gói quay bao gồm 1 buổi — 450.000 🐟',
-    detailTitle: 'Quay Theo Buổi — 450.000 🐟',
+    priceLine: 'Giá gói quay bao gồm 1 buổi — 299.000 🐟',
+    detailTitle: 'Quay Theo Buổi — 299.000 🐟',
     paragraphs: [
       'Quay video theo nhu cầu trong một buổi làm việc. Phù hợp với review, content cá nhân, mạng xã hội, giới thiệu sản phẩm hoặc các nội dung video ngắn.',
       'Gói bao gồm quay video, hỗ trợ bố cục và góc máy trong quá trình thực hiện, lựa chọn những cảnh quay phù hợp và xử lý hậu kỳ cơ bản.',
@@ -23,8 +23,8 @@ const shopProducts = [
     subtitle: 'Dành cho các sản phẩm video cần lên ý tưởng, quay và hậu kỳ theo yêu cầu.',
     intro:
       'Dành cho các dự án video cần đầu tư về ý tưởng, hình ảnh, dựng phim và hậu kỳ theo yêu cầu.',
-    priceLine: 'Giá gói quay từ — 700.000 🐟',
-    detailTitle: 'Quay Theo Dự Án — từ 700.000 🐟',
+    priceLine: 'Giá gói quay từ — 1.799.000 🐟',
+    detailTitle: 'Quay Theo Dự Án — từ 1.799.000 🐟',
     paragraphs: [
       'Dành cho các dự án video có yêu cầu riêng về ý tưởng, hình ảnh, nội dung và hậu kỳ.',
       'Quy trình có thể bao gồm trao đổi ý tưởng, định hướng hình ảnh, chuẩn bị nội dung, quay phim, lựa chọn và xử lý footage, dựng video, chỉnh màu và hoàn thiện sản phẩm.',
@@ -38,8 +38,8 @@ const shopProducts = [
     title: 'Gói chụp',
     subtitle: 'Phù hợp với các nhu cầu chụp ảnh cá nhân, đời sống, kỷ niệm và concept đơn giản.',
     intro: 'Chụp ảnh theo buổi — phù hợp kỷ yếu, chân dung hoặc sự kiện đơn giản.',
-    priceLine: 'Giá gói chụp bao gồm 1 buổi — 750.000 🐟',
-    detailTitle: 'Chụp Theo Buổi — 315.000 🐟',
+    priceLine: 'Giá gói chụp bao gồm 1 buổi — 399.000 🐟',
+    detailTitle: 'Chụp Theo Buổi — 399.000 🐟',
     paragraphs: [
       'Chụp ảnh theo nhu cầu cá nhân trong một buổi làm việc. Phù hợp với chân dung, lifestyle, ảnh cá nhân, ảnh kỷ niệm hoặc các concept đơn giản.',
       'Gói bao gồm thời gian chụp theo buổi, hỗ trợ lựa chọn góc chụp và bối cảnh phù hợp, chọn lọc ảnh sau buổi chụp và chỉnh màu cơ bản.',
@@ -53,8 +53,8 @@ const shopProducts = [
     subtitle: 'Dành cho các yêu cầu chụp ảnh có concept, kế hoạch hoặc quy mô riêng.',
     intro:
       'Dành cho các dự án chụp có yêu cầu riêng về concept, địa điểm, số lượng người hoặc hậu kỳ.',
-    priceLine: 'Giá gói chụp từ — 500.000 🐟',
-    detailTitle: 'Chụp Theo Dự Án — từ 500.000 🐟',
+    priceLine: 'Giá gói chụp từ — 499.000 🐟',
+    detailTitle: 'Chụp Theo Dự Án — từ 499.000 🐟',
     paragraphs: [
       'Dành cho các dự án chụp ảnh có yêu cầu cụ thể về concept, địa điểm, số lượng người, sản phẩm hoặc phong cách hình ảnh.',
       'Gói được xây dựng linh hoạt theo từng dự án, có thể bao gồm trao đổi ý tưởng, định hướng phong cách hình ảnh, lựa chọn bối cảnh, thực hiện buổi chụp, chọn lọc ảnh và hậu kỳ theo yêu cầu.',
