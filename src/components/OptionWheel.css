@@ -24,16 +24,16 @@
   left: var(--ow-inset);
   white-space: nowrap;
   font-size: var(--ow-font-size);
-  line-height: 1;
-  font-weight: 500;
+  line-height: 1.25;
+  font-weight: normal;
   font-style: normal;
-  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'SVN-Brunette', cursive, sans-serif;
   transform-origin: left center;
   cursor: pointer;
   will-change: transform, opacity, filter;
   color: color-mix(in srgb, var(--ow-active-color) calc(var(--ow-p, 0) * 100%), var(--ow-text-color));
   transition: none;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.02em;
 }
 
 .option-wheel--right .option-wheel__item {
@@ -43,8 +43,8 @@
 }
 
 .option-wheel__item--selected {
-  font-weight: 600;
-  text-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
+  font-weight: normal;
+  text-shadow: 0 4px 25px rgba(255, 255, 255, 0.35);
 }
 
 /* Reel spin exit — same motion as mouse-wheel scroll */
