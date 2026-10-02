@@ -3,6 +3,7 @@ import "./ImageLightbox.css";
 
 export default function ImageLightbox({ src, alt, onClose }) {
   const overlayRef = useRef(null);
+  const doubleTapTimer = useRef(null);
 
   // Close on Escape
   useEffect(() => {
@@ -22,6 +23,26 @@ export default function ImageLightbox({ src, alt, onClose }) {
 
   const handleOverlayClick = useCallback((e) => {
     if (e.target === overlayRef.current) onClose();
+  }, [onClose]);
+
+  // Double-click to close (Desktop)
+  const handleImageDoubleClick = useCallback((e) => {
+    e.stopPropagation();
+    onClose();
+  }, [onClose]);
+
+  // Double-tap to close (Mobile Touch)
+  const handleImageTouchEnd = useCallback((e) => {
+    e.stopPropagation();
+    if (doubleTapTimer.current) {
+      clearTimeout(doubleTapTimer.current);
+      doubleTapTimer.current = null;
+      onClose();
+    } else {
+      doubleTapTimer.current = setTimeout(() => {
+        doubleTapTimer.current = null;
+      }, 350);
+    }
   }, [onClose]);
 
   if (!src) return null;
@@ -45,8 +66,10 @@ export default function ImageLightbox({ src, alt, onClose }) {
         src={src}
         alt={alt || ""}
         draggable={false}
+        onDoubleClick={handleImageDoubleClick}
+        onTouchEnd={handleImageTouchEnd}
       />
-      <p className="lb-hint">ESC hoặc nhấn ngoài ảnh để đóng</p>
+      <p className="lb-hint">Nhấn đúp hoặc chạm ngoài ảnh để đóng</p>
     </div>
   );
 }
