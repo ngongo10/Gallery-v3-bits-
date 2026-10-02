@@ -300,6 +300,14 @@
   letter-spacing: 0.02em;
 }
 
+.contact-modal-detail-subtitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  margin: -6px 0 0 0;
+  letter-spacing: 0.02em;
+}
+
 .contact-modal-detail p {
   margin: 0;
   font-size: 12px;

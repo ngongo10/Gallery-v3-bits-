@@ -40,12 +40,13 @@ const shopProducts = [
     intro: 'Chụp ảnh theo buổi — phù hợp kỷ yếu, chân dung hoặc sự kiện đơn giản.',
     priceLine: 'Giá gói chụp bao gồm 1 buổi — 399.000 🐟',
     detailTitle: 'Chụp Theo Buổi — 399.000 🐟',
+    detailSubtitle: 'Chụp Theo Giờ — 149.000 🐟/h',
     paragraphs: [
       'Chụp ảnh theo nhu cầu cá nhân trong một buổi làm việc. Phù hợp với chân dung, lifestyle, ảnh cá nhân, ảnh kỷ niệm hoặc các concept đơn giản.',
       'Gói bao gồm thời gian chụp theo buổi, hỗ trợ lựa chọn góc chụp và bối cảnh phù hợp, chọn lọc ảnh sau buổi chụp và chỉnh màu cơ bản.',
       'Phù hợp với những nhu cầu chụp ảnh đơn giản, không yêu cầu sản xuất hoặc hậu kỳ phức tạp.',
     ],
-    image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1786799001/%C3%A2d_nn.jpg',
+    image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790935995/DSC00990.avif',
   },
   {
     id: 'pkg-theo-yeu-cau',
@@ -91,6 +92,9 @@ const ContactPage = () => {
 
                 <div className="contact-modal-detail">
                   <h3 className="contact-modal-detail-title">{selectedProduct.detailTitle}</h3>
+                  {selectedProduct.detailSubtitle && (
+                    <h4 className="contact-modal-detail-subtitle">{selectedProduct.detailSubtitle}</h4>
+                  )}
                   {selectedProduct.paragraphs.map((text) => (
                     <p key={text.slice(0, 48)}>{text}</p>
                   ))}
