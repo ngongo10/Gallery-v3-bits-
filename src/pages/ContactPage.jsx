@@ -31,7 +31,7 @@ const shopProducts = [
       'Phù hợp với video cinematic, video quảng bá, giới thiệu thương hiệu, sản phẩm, cá nhân hoặc những dự án cần đầu tư nhiều hơn về hình ảnh và hậu kỳ.',
     ],
     image:
-      'https://res.cloudinary.com/g55oyjhn/image/upload/v1786777034/ef467a0f-d45a-4b3b-9fcc-40bd41d131c9.png',
+      'https://res.cloudinary.com/g55oyjhn/image/upload/v1790936046/DSC01094.avif',
   },
   {
     id: 'pkg-chup',
