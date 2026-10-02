@@ -10,12 +10,15 @@ const AboutPage = () => {
         <div className="about-bio-grid">
           <div className="about-bio-col">
             <p className="about-bio-text">
-              Ngo Thanh Sinh (JUBISATAKA) is a contemporary visual artist and photographer based in Vietnam, focusing on high-concept portraiture, cosplay photography, and atmospheric storytelling.
+              Ngô Thành Sinh (JUBISATAKA) là nhiếp ảnh gia hoạt động tại Việt Nam, tập trung vào nhiếp ảnh chân dung và kể chuyện bằng hình ảnh.
             </p>
           </div>
           <div className="about-bio-col">
             <p className="about-bio-text">
-              His work explores identity, mood, and cinematic aesthetics through meticulous composition and vivid color harmony.
+              Phong cách hướng đến việc khai thác cảm xúc, tính cách và câu chuyện của nhân vật, với sự chú trọng vào góc nhìn cá nhân, bố cục và tính tự nhiên trong từng khung hình.
+            </p>
+            <p className="about-bio-text" style={{ marginTop: '1em' }}>
+              Song song với nhiếp ảnh, hướng phát triển video ngắn tập trung vào những góc nhìn về con người và đời sống, khai thác các trạng thái tâm lý, sự thay đổi trong tính cách và những câu chuyện mang tính phản ánh.
             </p>
           </div>
         </div>
