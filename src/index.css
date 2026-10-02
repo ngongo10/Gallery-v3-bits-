@@ -1,10 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&display=swap');
 
 @font-face {
-  font-family: 'SVN-Brunette';
-  src: url('/fonts/SVN-Brunette.otf') format('opentype');
+  font-family: 'MJ Kedanty';
+  src: url('/fonts/MJ Kedanty.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'MJ Kedanty';
+  src: url('/fonts/MJ Kedanty-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
   font-display: swap;
 }
 
