@@ -24,15 +24,16 @@
   left: var(--ow-inset);
   white-space: nowrap;
   font-size: var(--ow-font-size);
-  line-height: 1;
-  font-weight: 200;
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
+  line-height: 1.15;
+  font-weight: 400;
+  font-style: italic;
+  font-family: 'Bodoni Moda', Georgia, serif;
   transform-origin: left center;
   cursor: pointer;
   will-change: transform, opacity, filter;
   color: color-mix(in srgb, var(--ow-active-color) calc(var(--ow-p, 0) * 100%), var(--ow-text-color));
   transition: none;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.01em;
 }
 
 .option-wheel--right .option-wheel__item {
@@ -42,7 +43,8 @@
 }
 
 .option-wheel__item--selected {
-  font-weight: 400;
+  font-weight: 600;
+  text-shadow: 0 4px 25px rgba(255, 255, 255, 0.2);
 }
 
 /* Reel spin exit — same motion as mouse-wheel scroll */
