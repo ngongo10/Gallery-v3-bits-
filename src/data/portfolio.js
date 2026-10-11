@@ -1,5 +1,5 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-10-11T20:29:35.270642Z
+// Generated: 2026-10-11T20:33:05.316713Z
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
@@ -47,13 +47,18 @@ export const categories = [
       },
       {
         "id": "chan-dung-6",
-        "image": cloudinaryUrl("/Still_2026-09-05_010136_1.4.1") ,
+        "image": cloudinaryUrl("/DSC01125") ,
         "caption": "Chân Dung #7",
       },
       {
         "id": "chan-dung-7",
-        "image": cloudinaryUrl("/Still_2026-09-05_010136_1.6.1") ,
+        "image": cloudinaryUrl("/Still_2026-09-05_010136_1.4.1") ,
         "caption": "Chân Dung #8",
+      },
+      {
+        "id": "chan-dung-8",
+        "image": cloudinaryUrl("/Still_2026-09-05_010136_1.6.1") ,
+        "caption": "Chân Dung #9",
       },
     ]
   },
@@ -551,7 +556,7 @@ export const allItems = [
   },
   {
     "id": "chan-dung-6",
-    "image": cloudinaryUrl("/Still_2026-09-05_010136_1.4.1") ,
+    "image": cloudinaryUrl("/DSC01125") ,
     "title": "Chân Dung #7",
     "category": "chan-dung",
     "categoryLabel": "Chân Dung",
@@ -559,8 +564,16 @@ export const allItems = [
   },
   {
     "id": "chan-dung-7",
-    "image": cloudinaryUrl("/Still_2026-09-05_010136_1.6.1") ,
+    "image": cloudinaryUrl("/Still_2026-09-05_010136_1.4.1") ,
     "title": "Chân Dung #8",
+    "category": "chan-dung",
+    "categoryLabel": "Chân Dung",
+    "mode": "art",
+  },
+  {
+    "id": "chan-dung-8",
+    "image": cloudinaryUrl("/Still_2026-09-05_010136_1.6.1") ,
+    "title": "Chân Dung #9",
     "category": "chan-dung",
     "categoryLabel": "Chân Dung",
     "mode": "art",
