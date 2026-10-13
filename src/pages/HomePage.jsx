@@ -67,7 +67,7 @@ const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
   }, [pendingMode]);
 
   // ── Art mode category select ──────────────────────────────────────────
-  const handleCategorySelect = (itemOrCat) => {
+  const handleCategorySelect = useCallback((itemOrCat) => {
     let target = selectedCategory;
     if (itemOrCat) {
       if (itemOrCat.category) {
@@ -78,7 +78,7 @@ const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
       }
     }
     if (onCategorySelect) onCategorySelect(target);
-  };
+  }, [selectedCategory, onCategorySelect]);
 
   // ── Memories mode item click → find category and open gallery ──────────
   const handleMemoriesItemClick = (item) => {
@@ -90,10 +90,12 @@ const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
   };
 
   // ── DriftWall items ────────────────────────────────────────────────────
-  const categoryItems = allItems.filter((i) => i.category === selectedCategory?.id);
-  const baseItems =
-    categoryItems.length >= 4 ? categoryItems : categoryItems.concat(allItems.slice(0, 8));
-  const driftItems = isMobile ? baseItems.slice(0, 4) : baseItems;
+  const driftItems = useMemo(() => {
+    const categoryItems = allItems.filter((i) => i.category === selectedCategory?.id);
+    const baseItems =
+      categoryItems.length >= 4 ? categoryItems : categoryItems.concat(allItems.slice(0, 8));
+    return isMobile ? baseItems.slice(0, 4) : baseItems;
+  }, [selectedCategory?.id, isMobile]);
 
   const effectiveMode = transitioning ? mode : mode; // current visible mode
 
@@ -125,9 +127,9 @@ const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
               variance={0.35}
               parallax={isMobile ? 0.4 : 2}
               lift={isMobile ? 36 : 108}
-              fade={0.25}
-              dim={0.92}
-              overlayColor="#060010"
+              fade={0.12}
+              dim={1}
+              overlayColor="transparent"
               radius={8}
               roll={isMobile ? 7.5 : 5}
               onTileClick={handleCategorySelect}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, memo } from 'react';
 import { buildSrc, buildSrcSet, defaultSizes } from '../utils/cloudinary';
 import './DriftWall.css';
 
@@ -105,9 +105,19 @@ const DriftWall = ({
     });
   }, [columnItems, speed, direction, variance]);
 
+  const initializedRef = useRef(false);
   useEffect(() => {
-    offsetsRef.current = columnMeta.map((meta, c) => meta.copyHeight * ((c * 0.37) % 1));
-    velocitiesRef.current = columnItems.map(() => 0);
+    if (!initializedRef.current || offsetsRef.current.length !== columnMeta.length) {
+      offsetsRef.current = columnMeta.map((meta, c) => meta.copyHeight * ((c * 0.37) % 1));
+      velocitiesRef.current = columnItems.map(() => 0);
+      initializedRef.current = true;
+    } else {
+      offsetsRef.current = columnMeta.map((meta, c) => {
+        const cur = offsetsRef.current[c] ?? 0;
+        return ((cur % meta.copyHeight) + meta.copyHeight) % meta.copyHeight;
+      });
+      velocitiesRef.current = columnItems.map((_, c) => velocitiesRef.current[c] ?? 0);
+    }
   }, [columnMeta, columnItems]);
 
   const applyPlaneTransform = useCallback(
@@ -304,4 +314,4 @@ const DriftWall = ({
   );
 };
 
-export default DriftWall;
+export default memo(DriftWall);
