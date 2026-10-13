@@ -196,14 +196,8 @@ function App() {
             </>
           )}
 
-          {currentPage !== 'gallery' && (
+          {currentPage === 'home' && (
             <div className="app-theme-toggle-bottom">
-              <ThemeToggle theme={theme} onToggle={toggleTheme} />
-            </div>
-          )}
-
-          {currentPage === 'gallery' && (
-            <div className="gallery-theme-toggle-wrap">
               <ThemeToggle theme={theme} onToggle={toggleTheme} />
             </div>
           )}

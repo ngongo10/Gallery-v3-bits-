@@ -307,24 +307,26 @@
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
 }
 
-/* Split Container: Image Column on Left + Text on Right */
+/* Split Container: Image centered + Text overlay on right */
 .split-container {
   display: flex;
   flex-direction: row;
   width: 100%;
   height: 100vh;
+  position: relative;
 }
 
-/* Left Image Column (Medium Size, Offset from Left Rail) */
+/* Left Image Column — full width, image centered */
 .chry-image-column.left-column {
-  flex: 1 1 58%;
+  flex: 1 1 100%;
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
-  padding: 100px 4vw 140px 4vw;
+  padding: 100px 340px 140px 40px; /* right padding leaves room for text column */
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 80px;
 }
 
@@ -335,8 +337,8 @@
 .chry-image-wrapper.medium-size {
   position: relative;
   width: 100%;
-  max-width: 680px;
-  height: 68vh; /* Medium height */
+  max-width: 760px;
+  height: 72vh;
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -354,17 +356,29 @@
   box-shadow: 0 12px 45px rgba(0, 0, 0, 0.7);
 }
 
-/* Right Text Column — scroll-synced with left image column */
+/* Right Text Column — fixed overlay on right side */
 .chry-text-column.right-column {
-  flex: 0 0 38%;
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 300px;
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: none;
-  padding: 100px 60px 140px 20px; /* same top/bottom padding as left column */
+  padding: 100px 32px 140px 24px;
   display: flex;
   flex-direction: column;
-  gap: 80px; /* same gap as left column */
+  gap: 80px;
+  z-index: 10;
+  background: linear-gradient(to left, rgba(255,255,255,0.92) 70%, rgba(255,255,255,0) 100%);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+[data-theme="dark"] .chry-text-column.right-column {
+  background: linear-gradient(to left, rgba(5,5,7,0.92) 70%, rgba(5,5,7,0) 100%);
 }
 
 .chry-text-column.right-column::-webkit-scrollbar {
