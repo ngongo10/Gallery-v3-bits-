@@ -115,30 +115,12 @@ const GalleryPage = ({ category, onBack }) => {
   const isSyncingRef = useRef(false);
   const [showDetailMode, setShowDetailMode] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
-  const [lightboxSrc, setLightboxSrc] = useState(null);
-  const [lightboxAlt, setLightboxAlt] = useState('');
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth <= 768 : false);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
 
-  // Double-click / double-tap to open lightbox
-  const doubleTapTimers = useRef({});
-  const handleImageDoubleClick = useCallback((src, alt) => {
-    setLightboxSrc(src);
-    setLightboxAlt(alt || '');
-  }, []);
-
-  // For touch: detect double-tap manually (touchend fires twice within 350ms)
-  const handleImageTouchEnd = useCallback((e, src, alt) => {
-    const id = src;
-    if (doubleTapTimers.current[id]) {
-      clearTimeout(doubleTapTimers.current[id]);
-      delete doubleTapTimers.current[id];
-      setLightboxSrc(src);
-      setLightboxAlt(alt || '');
-    } else {
-      doubleTapTimers.current[id] = setTimeout(() => {
-        delete doubleTapTimers.current[id];
-      }, 350);
-    }
+  const handleOpenLightbox = useCallback((index) => {
+    setLightboxIndex(index);
+    setActivePhotoIndex(index);
   }, []);
 
   useEffect(() => {
@@ -269,7 +251,9 @@ const GalleryPage = ({ category, onBack }) => {
       <button
         className="gallery-back-btn"
         onClick={() => {
-          if (showDetailMode) {
+          if (isMobile) {
+            onBack();
+          } else if (showDetailMode) {
             setShowDetailMode(false);
           } else {
             onBack();
@@ -280,31 +264,33 @@ const GalleryPage = ({ category, onBack }) => {
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M19 12H5M5 12l7-7M5 12l7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
-        <span>{showDetailMode ? 'GALLERY' : 'BACK'}</span>
+        <span>{(!isMobile && showDetailMode) ? 'GALLERY' : 'BACK'}</span>
       </button>
 
-      {/* Bottom Left INFO Button */}
-      <button
-        className={`gallery-info-btn${showDetailMode ? ' active' : ''}`}
-        onClick={() => setShowDetailMode(v => !v)}
-        aria-label="Toggle Detail Mode"
-        aria-expanded={showDetailMode}
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M12 16v-4M12 8h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-        <span>{showDetailMode ? 'CLOSE INFO' : 'INFO'}</span>
-      </button>
+      {/* Bottom Left INFO Button (Desktop only) */}
+      {!isMobile && (
+        <button
+          className={`gallery-info-btn${showDetailMode ? ' active' : ''}`}
+          onClick={() => setShowDetailMode((v) => !v)}
+          aria-label="Toggle Detail Mode"
+          aria-expanded={showDetailMode}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M12 16v-4M12 8h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          <span>{showDetailMode ? 'CLOSE INFO' : 'INFO'}</span>
+        </button>
+      )}
 
-      {/* Header Overlay in standard MorphSlider view (Clean view without Collection text & Album title) */}
-      {!showDetailMode && (
+      {/* Header Overlay in standard MorphSlider view (Desktop only) */}
+      {!isMobile && !showDetailMode && (
         <div className="gallery-header">
           <p className="gallery-count">{items.length} ITEMS</p>
         </div>
       )}
 
-      {/* Blurred backdrop behind photos — MorphSlider + INFO (only on desktop to save mobile memory) */}
+      {/* Blurred backdrop behind photos — Desktop only */}
       {!isMobile && (
         <div
           className="gallery-blurred-bg"
@@ -315,18 +301,18 @@ const GalleryPage = ({ category, onBack }) => {
         />
       )}
 
-      {/* MODE 1: MorphSlider (React Bits) - Unmount when showDetailMode on mobile to free WebGL VRAM */}
-      {(!isMobile || !showDetailMode) && (
+      {/* MODE 1: MorphSlider (Desktop only) */}
+      {!isMobile && (
         <div className={`gallery-slider-wrap${showDetailMode ? ' hide-slider' : ''}`}>
           <MorphSlider
             items={morphItems}
             transition="melt"
-            intensity={isMobile ? 0.4 : 1.2}
-            aberration={isMobile ? 0 : 0.35}
+            intensity={1.2}
+            aberration={0.35}
             drift={0}
-            autoplay={!isMobile}
+            autoplay={true}
             overlayColor="#000000"
-            scale={isMobile ? 1.1 : 2.5}
+            scale={2.5}
             showCaptions={false}
             radius={0}
             onIndexChange={setActivePhotoIndex}
@@ -334,9 +320,8 @@ const GalleryPage = ({ category, onBack }) => {
         </div>
       )}
 
-      {/* MODE 2: Detail Mode Layout */}
-      {/* Thumbnail Rail on LEFT (Dot on left, thumbnail on right) */}
-      <div className={`gallery-detail-view${showDetailMode ? ' active' : ''}`}>
+      {/* Main Gallery / Stream View (Always active on mobile as primary gallery) */}
+      <div className={`gallery-detail-view${(isMobile || showDetailMode) ? ' active' : ''}`}>
         <div className="chry-thumbnail-rail left-rail">
           {items.map((photo, i) => {
             const isActive = i === activePhotoIndex;
@@ -371,7 +356,7 @@ const GalleryPage = ({ category, onBack }) => {
                 <p className="chry-intro-desc">
                   <TypewriterText
                     text={category.description ?? CATEGORY_DESC[category?.id] ?? 'Visual art portfolio collection captured by JUBISATAKA.'}
-                    trigger={showDetailMode}
+                    trigger={isMobile || showDetailMode}
                     speed={20}
                   />
                 </p>
@@ -384,15 +369,17 @@ const GalleryPage = ({ category, onBack }) => {
                   ref={(el) => (imageRefs.current[i] = el)}
                   className="chry-mobile-item"
                 >
-                  <div className="chry-image-wrapper medium-size">
+                  <div
+                    className="chry-image-wrapper medium-size"
+                    onClick={() => handleOpenLightbox(i)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <img
                       src={getOptimizedUrl(photo.image, true)}
                       alt={`${category.label} ${i + 1}`}
                       className="chry-gallery-image chry-zoomable"
                       loading="lazy"
                       decoding="async"
-                      onDoubleClick={() => handleImageDoubleClick(photo.image, `${category.label} ${i + 1}`)}
-                      onTouchEnd={(e) => handleImageTouchEnd(e, photo.image, `${category.label} ${i + 1}`)}
                     />
                   </div>
                   {photo.storyText && (
@@ -400,7 +387,7 @@ const GalleryPage = ({ category, onBack }) => {
                       <p className="chry-intro-desc">
                         <MatrixTypewriterText
                           text={photo.storyText}
-                          trigger={showDetailMode && activePhotoIndex === i}
+                          trigger={isMobile || (showDetailMode && activePhotoIndex === i)}
                           speed={30}
                         />
                       </p>
@@ -418,6 +405,8 @@ const GalleryPage = ({ category, onBack }) => {
                     key={photo.id || i}
                     ref={(el) => (imageRefs.current[i] = el)}
                     className="chry-image-wrapper medium-size"
+                    onClick={() => handleOpenLightbox(i)}
+                    style={{ cursor: 'pointer' }}
                   >
                     <img
                       src={photo.image}
@@ -425,8 +414,6 @@ const GalleryPage = ({ category, onBack }) => {
                       className="chry-gallery-image chry-zoomable"
                       loading="eager"
                       decoding="async"
-                      onDoubleClick={() => handleImageDoubleClick(photo.image, `${category.label} ${i + 1}`)}
-                      onTouchEnd={(e) => handleImageTouchEnd(e, photo.image, `${category.label} ${i + 1}`)}
                     />
                   </div>
                 ))}
@@ -473,16 +460,17 @@ const GalleryPage = ({ category, onBack }) => {
         {/* Floating Bottom Counter */}
         <div className="chry-counter-float">
           <span>{activePhotoIndex + 1} OF {items.length}</span>
-          <span className="chry-zoom-hint">↕ Nhấn đúp để phóng to ảnh</span>
+          <span className="chry-zoom-hint">↕ Chạm ảnh để phóng to</span>
         </div>
       </div>
 
       {/* Lightbox — renders on top of everything */}
-      {lightboxSrc && (
+      {lightboxIndex !== null && (
         <ImageLightbox
-          src={lightboxSrc}
-          alt={lightboxAlt}
-          onClose={() => setLightboxSrc(null)}
+          items={items}
+          initialIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onChangeIndex={(idx) => setActivePhotoIndex(idx)}
         />
       )}
     </div>

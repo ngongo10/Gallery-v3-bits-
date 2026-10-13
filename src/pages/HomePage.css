@@ -260,10 +260,14 @@
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(0, 0, 0, 0.4);
   text-align: right;
   margin: 10px 0 0 0;
   text-transform: uppercase;
+}
+
+[data-theme="dark"] .home-preview-count {
+  color: rgba(255, 255, 255, 0.2);
 }
 
 /* ─── Footer hint ─── */
@@ -285,6 +289,10 @@
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .home-footer-text {
   color: rgba(255, 255, 255, 0.18);
 }
 
@@ -292,6 +300,10 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .home-footer-dot {
   background: rgba(255, 255, 255, 0.18);
 }
 

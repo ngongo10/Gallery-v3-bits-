@@ -155,7 +155,7 @@
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
@@ -164,35 +164,60 @@
   padding: 24px;
 }
 
+[data-theme="dark"] .contact-modal-overlay {
+  background: rgba(0, 0, 0, 0.85);
+}
+
 .contact-modal-card {
   position: relative;
-  background: #111116;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 16px;
   padding: 32px;
   max-width: 720px;
   width: 100%;
-  color: #fff;
+  color: #111111;
   font-family: 'Inter', sans-serif;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] .contact-modal-card {
+  background: #111116;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  box-shadow: none;
 }
 
 .contact-modal-close {
   position: absolute;
   top: 24px;
   right: 24px;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.05);
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  border-radius: 100px;
+  color: rgba(0, 0, 0, 0.6);
   font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
+  padding: 6px 12px;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+[data-theme="dark"] .contact-modal-close {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .contact-modal-close:hover {
+  color: #000000;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .contact-modal-close:hover {
   color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .contact-modal-content {
@@ -281,9 +306,13 @@
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.15em;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(0, 0, 0, 0.45);
   text-transform: uppercase;
   margin-bottom: 8px;
+}
+
+[data-theme="dark"] .contact-modal-type {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .contact-modal-title {
@@ -291,13 +320,22 @@
   font-weight: 300;
   margin: 0 0 8px 0;
   letter-spacing: -0.02em;
+  color: #111111;
+}
+
+[data-theme="dark"] .contact-modal-title {
+  color: #ffffff;
 }
 
 .contact-modal-paper {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.6);
   margin: 0 0 16px 0;
   line-height: 1.65;
+}
+
+[data-theme="dark"] .contact-modal-paper {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .contact-modal-intro {
@@ -318,38 +356,58 @@
 .contact-modal-detail-title {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: #111111;
   margin: 0;
   letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .contact-modal-detail-title {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .contact-modal-detail-subtitle {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: #111111;
   margin: -6px 0 0 0;
   letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .contact-modal-detail-subtitle {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .contact-modal-detail p {
   margin: 0;
   font-size: 12px;
   line-height: 1.65;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="dark"] .contact-modal-detail p {
   color: rgba(255, 255, 255, 0.5);
 }
 
 .contact-modal-price-line {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  color: #111111;
   margin: 0 0 16px 0;
   letter-spacing: 0.02em;
 }
 
+[data-theme="dark"] .contact-modal-price-line {
+  color: rgba(255, 255, 255, 0.85);
+}
+
 .contact-modal-divider {
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   margin: 0 0 20px 0;
+}
+
+[data-theme="dark"] .contact-modal-divider {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .contact-modal-purchase {
@@ -361,15 +419,19 @@
 .contact-modal-price {
   font-size: 14px;
   font-weight: 600;
+  color: #111111;
+}
+
+[data-theme="dark"] .contact-modal-price {
   color: #ffffff;
 }
 
 .contact-modal-btn {
   padding: 10px 20px;
   border-radius: 100px;
-  background: #ffffff;
+  background: #111111;
   border: none;
-  color: #000000;
+  color: #ffffff;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -377,7 +439,16 @@
   transition: transform 0.2s ease, background 0.2s ease;
 }
 
+[data-theme="dark"] .contact-modal-btn {
+  background: #ffffff;
+  color: #000000;
+}
+
 .contact-modal-btn:hover {
   transform: scale(1.04);
+  background: rgba(0, 0, 0, 0.85);
+}
+
+[data-theme="dark"] .contact-modal-btn:hover {
   background: rgba(255, 255, 255, 0.9);
 }
