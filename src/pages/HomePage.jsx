@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import OptionWheel from "../components/OptionWheel";
 import DriftWall from "../components/DriftWall";
+import ThreeDHoverGallery from "../components/ThreeDHoverGallery";
 import HomeMosaic from "../components/HomeMosaic";
 import ModeLoadingOverlay from "../components/ModeLoadingOverlay";
 import { categories, allItems } from "../data/portfolio";
@@ -98,6 +99,25 @@ const HomePage = ({
     return isMobile ? baseItems.slice(0, 4) : baseItems;
   }, [selectedCategory?.id, isMobile]);
 
+  // ── 3D Hover Gallery items for Mobile (ART albums) ───────────────────
+  const mobileHoverGalleryItems = useMemo(() => {
+    const GLOWS = [
+      "rgba(236,72,153,0.4)",
+      "rgba(6,182,212,0.4)",
+      "rgba(139,92,246,0.4)",
+      "rgba(245,158,11,0.4)",
+      "rgba(16,185,129,0.4)"
+    ];
+    return artCategories.map((cat, idx) => ({
+      url: cat.cover || cat.items?.[0]?.image || "",
+      title: cat.label,
+      category: "ART",
+      description: `${cat.items?.length || 0} Photos`,
+      glow: GLOWS[idx % GLOWS.length],
+      categoryObj: cat
+    }));
+  }, []);
+
   const effectiveMode = transitioning ? mode : mode; // current visible mode
 
   return (
@@ -106,66 +126,88 @@ const HomePage = ({
       {/* ── ART / WORK mode ── */}
       {effectiveMode === "art" && (
         <>
-          <div className={`home-driftwall${isLoaded ? " is-revealed" : ""}${isChanging && !isMobile ? " is-changing" : ""}`}>
-            <DriftWall
-              key={isMobile ? "mobile-art-wall" : selectedCategory?.id}
-              items={driftItems}
-              columnGroups={isMobile ? mobileColumnGroups : null}
-              showColumnLabels={isMobile}
-              activeCol={isMobile ? selectedIndex : -1}
-              columns={isMobile ? mobileColumnGroups.length : 2}
-              tileWidth={isMobile ? 130 : 144}
-              tileHeight={isMobile ? 180 : 172}
-              gap={isMobile ? 20 : 18}
-              tilt={isMobile ? 12 : 30}
-              turn={isMobile ? 0 : -30}
-              perspective={isMobile ? 1000 : 900}
-              depth={isMobile ? 120 : 400}
-              speed={isMobile ? 32 : isChanging ? 120 : 58}
-              direction="up"
-              variance={0.35}
-              parallax={isMobile ? 0.2 : 2}
-              lift={isMobile ? 40 : 108}
-              fade={0}
-              dim={1}
-              overlayColor="transparent"
-              radius={8}
-              roll={isMobile ? 0 : 5}
-              onTileClick={handleCategorySelect}
-            />
-          </div>
+          {/* MOBILE: 3D Hover Gallery */}
+          {isMobile ? (
+            <div className={`home-mobile-hover-gallery${isLoaded ? " is-revealed" : ""}`}>
+              <ThreeDHoverGallery
+                items={mobileHoverGalleryItems}
+                itemHeight={380}
+                gap={12}
+                perspective={900}
+                hoverScale={1.06}
+                transitionDuration={0.45}
+                enableKeyboardNavigation={true}
+                autoPlay={false}
+                onImageClick={(index, item) => {
+                  if (item?.categoryObj) {
+                    handleCategorySelect(item.categoryObj);
+                  }
+                }}
+              />
+              <div className="home-mobile-gallery-hint">
+                <span>Chạm vào ảnh để mở album</span>
+              </div>
+            </div>
+          ) : (
+            /* DESKTOP: DriftWall + OptionWheel unchanged */
+            <>
+              <div className={`home-driftwall${isLoaded ? " is-revealed" : ""}${isChanging ? " is-changing" : ""}`}>
+                <DriftWall
+                  key={selectedCategory?.id}
+                  items={driftItems}
+                  columns={2}
+                  tileWidth={144}
+                  tileHeight={172}
+                  gap={18}
+                  tilt={30}
+                  turn={-30}
+                  perspective={900}
+                  depth={400}
+                  speed={isChanging ? 120 : 58}
+                  direction="up"
+                  variance={0.35}
+                  parallax={2}
+                  lift={108}
+                  fade={0.12}
+                  dim={1}
+                  overlayColor="transparent"
+                  radius={8}
+                  roll={5}
+                  onTileClick={handleCategorySelect}
+                />
+              </div>
 
-          <div className="home-wheel">
-            <OptionWheel
-              items={artCategoryLabels}
-              defaultSelected={0}
-              orientation={isMobile ? "horizontal" : "vertical"}
-              hideLabels={isMobile}
-              textColor={theme === 'dark' ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.35)'}
-              activeColor={theme === 'dark' ? '#ffffff' : '#0a0a0c'}
-              side={isMobile ? "left" : "left"}
-              fontSize={isMobile ? 1.65 : 2.8}
-              spacing={1.5}
-              curve={1}
-              tilt={isMobile ? 4 : 7}
-              blur={isMobile ? 1.5 : 2.5}
-              fade={0.3}
-              minOpacity={0.04}
-              smoothing={isMobile ? 140 : 180}
-              inset={isMobile ? 0 : 64}
-              loop={false}
-              draggable={!isExiting}
-              exiting={isExiting}
-              onChange={handleWheelChange}
-              onItemClick={(idx) => handleCategorySelect(artCategories[idx])}
-            />
-          </div>
+              <div className="home-wheel">
+                <OptionWheel
+                  items={artCategoryLabels}
+                  defaultSelected={0}
+                  textColor={theme === 'dark' ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.35)'}
+                  activeColor={theme === 'dark' ? '#ffffff' : '#0a0a0c'}
+                  side="left"
+                  fontSize={2.8}
+                  spacing={1.5}
+                  curve={1}
+                  tilt={7}
+                  blur={2.5}
+                  fade={0.3}
+                  minOpacity={0.04}
+                  smoothing={180}
+                  inset={64}
+                  loop={false}
+                  draggable={!isExiting}
+                  exiting={isExiting}
+                  onChange={handleWheelChange}
+                  onItemClick={(idx) => handleCategorySelect(artCategories[idx])}
+                />
+              </div>
 
-          <div className="home-footer">
-            <span className="home-footer-text">Scroll or drag to explore</span>
-            <span className="home-footer-dot" />
-            <span className="home-footer-text">Click to open</span>
-          </div>
+              <div className="home-footer">
+                <span className="home-footer-text">Scroll or drag to explore</span>
+                <span className="home-footer-dot" />
+                <span className="home-footer-text">Click to open</span>
+              </div>
+            </>
+          )}
         </>
       )}
 
