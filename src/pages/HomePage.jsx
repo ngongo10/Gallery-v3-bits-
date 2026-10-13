@@ -126,7 +126,7 @@ const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
               parallax={isMobile ? 0.4 : 2}
               lift={isMobile ? 36 : 108}
               fade={0.25}
-              dim={theme === 'dark' ? 0.35 : 0.78}
+              dim={0.92}
               overlayColor="#060010"
               radius={8}
               roll={isMobile ? 7.5 : 5}

@@ -83,6 +83,7 @@
 [data-theme="dark"] .drift-wall__inner {
   background: #0b0b12;
   box-shadow: none;
+  opacity: 0.35;
 }
 
 .drift-wall__tile img {
