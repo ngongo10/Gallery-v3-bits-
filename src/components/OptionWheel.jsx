@@ -99,28 +99,50 @@ const OptionWheel = ({
 
   const isHorizontal = orientation === 'horizontal';
 
+  // In horizontal mode: center of invisible circle is placed below the bottom
+  // Radius R = 320px. Angular step between items = 14 degrees
+  const HORIZ_RADIUS = 320;
+  const DEG_PER_INDEX = 14;
+
   const dialTicksWithStyle = useMemo(() => {
+    if (isHorizontal) {
+      // Build a full set of watch ticks along the circumference around bottom center
+      // Total span covers all categories + overflow
+      const totalSteps = items.length;
+      const ticks = [];
+      // Generate ticks spanning across all categories
+      const minD = -3;
+      const maxD = totalSteps + 2;
+      const step = 0.25; // 4 ticks per index (1 major item tick + 3 minor subdivision ticks)
+
+      for (let d = minD; d <= maxD; d += step) {
+        const isMajor = Math.abs(d - Math.round(d)) < 0.01;
+        const tickType = isMajor ? 'major' : 'minor';
+        const len = isMajor ? 16 : 8;
+        const deg = d * DEG_PER_INDEX;
+        const rad = (deg * Math.PI) / 180;
+        // Position on circle perimeter relative to center: (R * sin(rad), -R * cos(rad))
+        const x = HORIZ_RADIUS * Math.sin(rad);
+        const y = -HORIZ_RADIUS * Math.cos(rad);
+        ticks.push({
+          d,
+          type: tickType,
+          len,
+          x,
+          y,
+          rot: deg, // radial angle pointing toward center
+          opacity: isMajor ? 0.85 : 0.4
+        });
+      }
+      return ticks;
+    }
+
     const rowH = Math.max(fontSize * spacing * remPx, 1);
     const tiltRad = (tilt * Math.PI) / 180;
     const R = tiltRad > 0.0005 ? rowH / tiltRad : 0;
     const mirror = side === 'right' ? -1 : 1;
 
     return DIAL_TICKS.map(tick => {
-      if (isHorizontal) {
-        // Horizontally curved arch like a bottom watch bezel
-        const tickSpacing = 28; // px between ticks along bottom arch
-        const x = tick.d * tickSpacing;
-        // Subtle arch bending upwards at center, downwards at sides
-        const archY = Math.abs(tick.d) * 3.5;
-        const rot = tick.d * 8; // rotate radially
-        return {
-          ...tick,
-          x,
-          y: archY,
-          rot
-        };
-      }
-
       let x = 0;
       let y = tick.d * rowH;
       let rot = 0;
@@ -137,7 +159,7 @@ const OptionWheel = ({
         rot
       };
     });
-  }, [fontSize, spacing, remPx, tilt, side, curve, isHorizontal]);
+  }, [fontSize, spacing, remPx, tilt, side, curve, isHorizontal, items.length]);
 
   const runFrame = useCallback(now => {
     const dt = Math.min((now - lastRef.current) / 1000, 0.05);
@@ -153,14 +175,12 @@ const OptionWheel = ({
     if (settled) next = target;
     posRef.current = next;
 
-    // Animate ticks dynamically in horizontal mode to reflect current wheel position
+    // In horizontal mode: rotate the whole dial scale around invisible circle center
     if (cfg.orientation === 'horizontal') {
       const dialEl = rootRef.current?.querySelector('.option-wheel__dial-scale');
       if (dialEl) {
-        const tickSpacing = 28;
-        // Slide dial scale based on offset from selected
-        const offsetPx = -(next - Math.round(next)) * tickSpacing * 3;
-        dialEl.style.transform = `translateX(${offsetPx.toFixed(2)}px)`;
+        const rotDeg = -next * DEG_PER_INDEX;
+        dialEl.style.transform = `rotate(${rotDeg.toFixed(3)}deg)`;
       }
     }
 
@@ -502,6 +522,12 @@ const OptionWheel = ({
       onPointerCancel={exiting ? undefined : handlePointerEnd}
       onKeyDown={exiting ? undefined : handleKeyDown}
     >
+      {isHorizontal && (
+        <div className="option-wheel__center-needle" aria-hidden="true">
+          <span className="option-wheel__center-dot" />
+          <span className="option-wheel__center-line" />
+        </div>
+      )}
       <div className="option-wheel__dial-scale" aria-hidden="true">
         {dialTicksWithStyle.map(tick => {
           if (tick.type === 'active') {
@@ -511,7 +537,7 @@ const OptionWheel = ({
                 className="option-wheel__dial-tick option-wheel__dial-tick--active"
                 style={{
                   transform: isHorizontal
-                    ? `translate(calc(-50% + ${tick.x.toFixed(2)}px), ${tick.y.toFixed(2)}px) rotate(${tick.rot.toFixed(3)}deg)`
+                    ? `translate(${tick.x.toFixed(2)}px, ${tick.y.toFixed(2)}px) rotate(${tick.rot.toFixed(3)}deg)`
                     : `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
                   opacity: tick.opacity
                 }}
@@ -527,7 +553,7 @@ const OptionWheel = ({
               className={`option-wheel__dial-tick option-wheel__dial-tick--${tick.type}`}
               style={{
                 transform: isHorizontal
-                  ? `translate(calc(-50% + ${tick.x.toFixed(2)}px), ${tick.y.toFixed(2)}px) rotate(${tick.rot.toFixed(3)}deg)`
+                  ? `translate(${tick.x.toFixed(2)}px, ${tick.y.toFixed(2)}px) rotate(${tick.rot.toFixed(3)}deg)`
                   : `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
                 opacity: tick.opacity
               }}

@@ -42,50 +42,89 @@
 
 /* ─── Horizontal Watch Dial Mode (Mobile Bottom Bezel) ─── */
 .option-wheel--horizontal {
+  position: relative;
+  width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: visible;
+  touch-action: pan-y;
 }
 
 .option-wheel--horizontal .option-wheel__dial-scale {
-  top: 50%;
+  position: absolute;
+  /* Invisible center of the circle placed below bottom center */
   left: 50%;
+  top: calc(100% + 240px);
+  width: 0;
+  height: 0;
   right: auto;
-  transform: translate(-50%, -50%);
+  transform-origin: 0 0;
+  will-change: transform;
   transition: opacity 0.3s ease;
 }
 
 .option-wheel--horizontal .option-wheel__dial-tick {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  transform-origin: center top;
+  gap: 4px;
+  transform-origin: center center;
 }
 
 .option-wheel--horizontal .option-wheel__dial-line {
   width: 1.5px !important;
   height: 14px;
+  border-radius: 1px;
 }
 
 .option-wheel--horizontal .option-wheel__dial-tick--minor .option-wheel__dial-line {
   width: 1px !important;
-  height: 7px;
+  height: 8px;
+  opacity: 0.5;
 }
 
 .option-wheel--horizontal .option-wheel__dial-tick--major .option-wheel__dial-line {
   width: 1.5px !important;
-  height: 14px;
-}
-
-.option-wheel--horizontal .option-wheel__dial-tick--active .option-wheel__dial-line {
-  width: 2px !important;
-  height: 22px;
+  height: 16px;
+  opacity: 0.85;
 }
 
 .option-wheel--horizontal .option-wheel__dial-dot {
+  width: 4px;
+  height: 4px;
+}
+
+/* ─── Fixed Center Active Needle (Apex Indicator) ─── */
+.option-wheel__center-needle {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 15;
+  pointer-events: none;
+}
+
+.option-wheel__center-dot {
   width: 5px;
   height: 5px;
+  border-radius: 50%;
+  background-color: var(--ow-active-color);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--ow-active-color) 70%, transparent);
+}
+
+.option-wheel__center-line {
+  display: block;
+  width: 2px;
+  height: 22px;
+  border-radius: 1px;
+  background-color: var(--ow-active-color);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--ow-active-color) 50%, transparent);
 }
 
 .option-wheel__dial-tick {
