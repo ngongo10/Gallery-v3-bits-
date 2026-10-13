@@ -19,19 +19,19 @@
   background: #050507;
 }
 
-/* ─── Mode toggle (Bottom Right) ─── */
+/* ─── Mode toggle (Top Left) ─── */
 .home-mode-toggle-wrap {
   position: absolute;
-  bottom: 24px;
-  right: 32px;
+  top: 2.3rem;
+  left: 2.5rem;
   z-index: 60;
   pointer-events: auto;
 }
 
 @media (max-width: 768px) {
   .home-mode-toggle-wrap {
-    bottom: 16px;
-    right: 16px;
+    top: 1.25rem;
+    left: 1.25rem;
   }
 }
 

@@ -53,6 +53,21 @@ html, body, #root {
   }
 }
 
+/* ─── Theme toggle bottom-right (Home / About / Contact) ─── */
+.app-theme-toggle-bottom {
+  position: absolute;
+  bottom: 24px;
+  right: 32px;
+  z-index: 100;
+}
+
+@media (max-width: 768px) {
+  .app-theme-toggle-bottom {
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
 .page-layer {
   position: absolute;
   inset: 0;

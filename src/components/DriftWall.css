@@ -69,10 +69,11 @@
   display: block;
   border-radius: var(--dw-radius);
   overflow: hidden;
-  background: #f0f0f4;
+  background: #ffffff;
   opacity: var(--dw-dim);
   transform: translateZ(0);
   pointer-events: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   transition:
     transform 0.42s cubic-bezier(0.22, 1, 0.36, 1),
     opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1),
@@ -81,6 +82,7 @@
 
 [data-theme="dark"] .drift-wall__inner {
   background: #0b0b12;
+  box-shadow: none;
 }
 
 .drift-wall__tile img {
@@ -88,7 +90,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: grayscale(var(--dw-gray)) saturate(0.92);
+  filter: grayscale(var(--dw-gray)) saturate(1);
   transition: filter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
   user-select: none;
   -webkit-user-drag: none;
@@ -97,10 +99,14 @@
 .drift-wall__overlay {
   position: absolute;
   inset: 0;
-  background: var(--dw-overlay);
-  opacity: 0.42;
+  background: var(--dw-overlay, transparent);
+  opacity: 0;
   pointer-events: none;
   transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-theme="dark"] .drift-wall__overlay {
+  opacity: 0.42;
 }
 
 .drift-wall__tile.is-active .drift-wall__inner,

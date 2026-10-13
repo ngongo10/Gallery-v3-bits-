@@ -130,7 +130,6 @@ function App() {
         <ErrorBoundary>
           {currentPage !== 'gallery' && (
             <div className="app-top-bar">
-              <ThemeToggle theme={theme} onToggle={toggleTheme} />
               <GooeyNav
                 items={navItems}
                 particleCount={mobile ? 0 : 10}
@@ -141,6 +140,12 @@ function App() {
                 timeVariance={mobile ? 0 : 1700}
                 colors={theme === 'light' ? [4, 4, 4, 4] : [1, 2, 3, 1, 2, 3, 1, 4]}
               />
+            </div>
+          )}
+
+          {currentPage !== 'gallery' && (
+            <div className="app-theme-toggle-bottom">
+              <ThemeToggle theme={theme} onToggle={toggleTheme} />
             </div>
           )}
 
