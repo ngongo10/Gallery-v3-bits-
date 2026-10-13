@@ -371,6 +371,33 @@ class MorphEngine {
     );
   }
 
+  goToIndex(targetIndex) {
+    if (this.animating || this.dragging || this.items.length < 2) return;
+    const target = this.wrap(targetIndex);
+    if (target === this.current) return;
+    const dir = target > this.current ? 1 : -1;
+    this.syncOptions();
+    this.program.uniforms.tCurrent.value = this.textures[this.current];
+    this.program.uniforms.uCurrentSize.value = this.sizes[this.current];
+    this.program.uniforms.tNext.value = this.textures[target];
+    this.program.uniforms.uNextSize.value = this.sizes[target];
+    this.program.uniforms.uDir.value = dir;
+    this.animating = true;
+    this.announce(target);
+    const opts = this.getOptions();
+    const duration = this.reducedMotion ? Math.min(opts.duration, 0.4) : opts.duration;
+    this.tween = gsap.fromTo(
+      this.program.uniforms.uProgress,
+      { value: 0 },
+      {
+        value: 1,
+        duration,
+        ease: opts.ease,
+        onComplete: () => this.commit(target)
+      }
+    );
+  }
+
   announce(index) {
     if (index === this.shownIndex) return;
     this.shownIndex = index;
@@ -685,7 +712,7 @@ export default function MorphSlider({
               onClick={() => {
                 const engine = engineRef.current;
                 if (!engine || i === index) return;
-                engine.goTo(i > index ? 1 : -1);
+                engine.goToIndex(i);
               }}
             />
           ))}
