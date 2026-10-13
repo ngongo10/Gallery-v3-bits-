@@ -70,14 +70,16 @@
 .morph-slider-controls {
   position: absolute;
   top: 50%;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 1400px;
   z-index: 3;
   display: flex;
   justify-content: space-between;
-  padding: 0 16px;
-  transform: translateY(-50%);
+  padding: 0 28px;
   pointer-events: none;
+  box-sizing: border-box;
 }
 
 .morph-slider-btn {
@@ -85,29 +87,43 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 50%;
   color: #fff;
-  background: rgba(12, 12, 14, 0.4);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(12, 12, 14, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition:
     transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
     background 0.25s ease,
-    border-color 0.25s ease;
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+[data-theme="light"] .morph-slider-btn {
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #111;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .morph-slider-btn:hover {
-  background: rgba(24, 24, 28, 0.6);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.06);
+  background: rgba(24, 24, 28, 0.75);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.08);
+}
+
+[data-theme="light"] .morph-slider-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.25);
 }
 
 .morph-slider-btn:active {
-  transform: scale(0.96);
+  transform: scale(0.95);
 }
 
 .morph-slider-btn:focus-visible {
@@ -117,14 +133,26 @@
 
 .morph-slider-indicators {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 24px;
   z-index: 3;
   display: flex;
   gap: 8px;
   justify-content: center;
   align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .morph-slider-indicators {
+  background: rgba(255, 255, 255, 0.4);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
 .morph-slider-dot {
@@ -133,16 +161,24 @@
   padding: 0;
   border: none;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition:
     width var(--ms-dot) cubic-bezier(0.16, 1, 0.3, 1),
     background var(--ms-dot) ease;
 }
 
+[data-theme="light"] .morph-slider-dot {
+  background: rgba(0, 0, 0, 0.25);
+}
+
 .morph-slider-dot.is-active {
   width: 22px;
   background: rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="light"] .morph-slider-dot.is-active {
+  background: #111111;
 }
 
 .morph-slider-dot:focus-visible {
