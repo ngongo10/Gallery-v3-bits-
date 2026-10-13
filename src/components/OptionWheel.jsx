@@ -537,7 +537,7 @@ const OptionWheel = ({
                 className="option-wheel__dial-tick option-wheel__dial-tick--active"
                 style={{
                   transform: isHorizontal
-                    ? `translate(${tick.x.toFixed(2)}px, ${tick.y.toFixed(2)}px) rotate(${tick.rot.toFixed(3)}deg)`
+                    ? `translate(calc(-50% + ${tick.x.toFixed(2)}px), calc(-50% + ${tick.y.toFixed(2)}px)) rotate(${tick.rot.toFixed(3)}deg)`
                     : `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
                   opacity: tick.opacity
                 }}
@@ -553,7 +553,7 @@ const OptionWheel = ({
               className={`option-wheel__dial-tick option-wheel__dial-tick--${tick.type}`}
               style={{
                 transform: isHorizontal
-                  ? `translate(${tick.x.toFixed(2)}px, ${tick.y.toFixed(2)}px) rotate(${tick.rot.toFixed(3)}deg)`
+                  ? `translate(calc(-50% + ${tick.x.toFixed(2)}px), calc(-50% + ${tick.y.toFixed(2)}px)) rotate(${tick.rot.toFixed(3)}deg)`
                   : `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
                 opacity: tick.opacity
               }}

@@ -105,17 +105,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: 4px;
+  width: 12px;
   z-index: 15;
   pointer-events: none;
 }
 
 .option-wheel__center-dot {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background-color: var(--ow-active-color);
   box-shadow: 0 0 8px color-mix(in srgb, var(--ow-active-color) 70%, transparent);
+  margin: 0 auto;
 }
 
 .option-wheel__center-line {
@@ -125,6 +128,7 @@
   border-radius: 1px;
   background-color: var(--ow-active-color);
   box-shadow: 0 0 8px color-mix(in srgb, var(--ow-active-color) 50%, transparent);
+  margin: 0 auto;
 }
 
 .option-wheel__dial-tick {
