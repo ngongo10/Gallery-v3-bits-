@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import './OptionWheel.css';
 
 const DEFAULT_ITEMS = [
@@ -10,6 +10,22 @@ const DEFAULT_ITEMS = [
   'Architecture',
   'Abstract',
   'Street',
+];
+
+const DIAL_TICKS = [
+  { d: -2.0,  type: 'major', len: 14, opacity: 0.45 },
+  { d: -1.66, type: 'minor', len: 7,  opacity: 0.32 },
+  { d: -1.33, type: 'minor', len: 7,  opacity: 0.42 },
+  { d: -1.0,  type: 'major', len: 15, opacity: 0.70 },
+  { d: -0.66, type: 'minor', len: 8,  opacity: 0.52 },
+  { d: -0.33, type: 'minor', len: 8,  opacity: 0.60 },
+  { d: 0,     type: 'active', len: 24, opacity: 1.0 },
+  { d: 0.33,  type: 'minor', len: 8,  opacity: 0.60 },
+  { d: 0.66,  type: 'minor', len: 8,  opacity: 0.52 },
+  { d: 1.0,   type: 'major', len: 15, opacity: 0.70 },
+  { d: 1.33,  type: 'minor', len: 7,  opacity: 0.42 },
+  { d: 1.66,  type: 'minor', len: 7,  opacity: 0.32 },
+  { d: 2.0,   type: 'major', len: 14, opacity: 0.45 },
 ];
 
 const OptionWheel = ({
@@ -76,6 +92,31 @@ const OptionWheel = ({
     soundUrl,
     soundVolume
   };
+
+  const dialTicksWithStyle = useMemo(() => {
+    const rowH = Math.max(fontSize * spacing * remPx, 1);
+    const tiltRad = (tilt * Math.PI) / 180;
+    const R = tiltRad > 0.0005 ? rowH / tiltRad : 0;
+    const mirror = side === 'right' ? -1 : 1;
+
+    return DIAL_TICKS.map(tick => {
+      let x = 0;
+      let y = tick.d * rowH;
+      let rot = 0;
+      if (R > 0) {
+        const ang = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, tick.d * tiltRad));
+        y = R * Math.sin(ang);
+        x = -mirror * R * (1 - Math.cos(ang)) * curve;
+        rot = (mirror * ang * 180) / Math.PI;
+      }
+      return {
+        ...tick,
+        x,
+        y,
+        rot
+      };
+    });
+  }, [fontSize, spacing, remPx, tilt, side, curve]);
 
   const runFrame = useCallback(now => {
     const dt = Math.min((now - lastRef.current) / 1000, 0.05);
@@ -423,9 +464,36 @@ const OptionWheel = ({
       onPointerCancel={exiting ? undefined : handlePointerEnd}
       onKeyDown={exiting ? undefined : handleKeyDown}
     >
-      <div className="option-wheel__dial-indicator" aria-hidden="true">
-        <span className="option-wheel__dial-dot" />
-        <span className="option-wheel__dial-line" />
+      <div className="option-wheel__dial-scale" aria-hidden="true">
+        {dialTicksWithStyle.map(tick => {
+          if (tick.type === 'active') {
+            return (
+              <div
+                key={`dial-tick-${tick.d}`}
+                className="option-wheel__dial-tick option-wheel__dial-tick--active"
+                style={{
+                  transform: `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
+                  opacity: tick.opacity
+                }}
+              >
+                <span className="option-wheel__dial-dot" />
+                <span className="option-wheel__dial-line" style={{ width: `${tick.len}px` }} />
+              </div>
+            );
+          }
+          return (
+            <div
+              key={`dial-tick-${tick.d}`}
+              className={`option-wheel__dial-tick option-wheel__dial-tick--${tick.type}`}
+              style={{
+                transform: `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
+                opacity: tick.opacity
+              }}
+            >
+              <span className="option-wheel__dial-line" style={{ width: `${tick.len}px` }} />
+            </div>
+          );
+        })}
       </div>
       {items.map((label, index) => (
         <div

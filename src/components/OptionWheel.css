@@ -23,26 +23,41 @@
   cursor: grabbing;
 }
 
-/* ─── Watch Dial Indicator (Dot + Tick Line) ─── */
-.option-wheel__dial-indicator {
+/* ─── Watch Dial Scale (Clock graduation ticks) ─── */
+.option-wheel__dial-scale {
   position: absolute;
   top: 50%;
-  left: 18px;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  left: 20px;
+  width: 0;
+  height: 0;
   pointer-events: none;
   z-index: 10;
-  opacity: 0.9;
   transition: opacity 0.3s ease;
 }
 
-.option-wheel--right .option-wheel__dial-indicator {
+.option-wheel--right .option-wheel__dial-scale {
   left: auto;
   right: 12px;
-  flex-direction: row-reverse;
+}
+
+.option-wheel__dial-tick {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
   gap: 7px;
+  transform-origin: left center;
+  will-change: transform, opacity;
+  transition: opacity 0.25s ease;
+}
+
+.option-wheel--right .option-wheel__dial-tick {
+  left: auto;
+  right: 0;
+  flex-direction: row-reverse;
+  gap: 6px;
+  transform-origin: right center;
 }
 
 .option-wheel__dial-dot {
@@ -56,7 +71,7 @@
 }
 
 .option-wheel__dial-line {
-  width: 24px;
+  display: block;
   height: 1.5px;
   border-radius: 1px;
   background-color: var(--ow-active-color);
@@ -65,26 +80,58 @@
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Minor ticks (thin, delicate) */
+.option-wheel__dial-tick--minor .option-wheel__dial-line {
+  height: 1px;
+  box-shadow: none;
+}
+
+/* Major ticks (item markers) */
+.option-wheel__dial-tick--major .option-wheel__dial-line {
+  height: 1.5px;
+}
+
+/* Active tick (centered active indicator) */
+.option-wheel__dial-tick--active {
+  opacity: 1 !important;
+}
+
+.option-wheel__dial-tick--active .option-wheel__dial-line {
+  height: 1.5px;
+}
+
 [data-theme="dark"] .option-wheel__dial-dot {
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.7);
 }
 
 [data-theme="dark"] .option-wheel__dial-line {
-  box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .option-wheel__dial-tick--minor .option-wheel__dial-line {
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.15);
 }
 
 @media (max-width: 768px) {
-  .option-wheel__dial-indicator {
+  .option-wheel__dial-scale {
     right: 10px;
-    gap: 6px;
+  }
+  .option-wheel__dial-tick {
+    gap: 5px;
   }
   .option-wheel__dial-dot {
     width: 4px;
     height: 4px;
   }
-  .option-wheel__dial-line {
-    width: 18px;
-    height: 1.5px;
+  .option-wheel__dial-tick--active .option-wheel__dial-line {
+    width: 16px !important;
+  }
+  .option-wheel__dial-tick--major .option-wheel__dial-line {
+    width: 10px !important;
+  }
+  .option-wheel__dial-tick--minor .option-wheel__dial-line {
+    width: 5px !important;
+    height: 1px;
   }
 }
 
@@ -127,7 +174,7 @@
   cursor: default;
 }
 
-.option-wheel--exiting .option-wheel__dial-indicator {
+.option-wheel--exiting .option-wheel__dial-scale {
   opacity: 0;
   transition: opacity 0.35s ease;
 }
