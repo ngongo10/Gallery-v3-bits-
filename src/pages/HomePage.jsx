@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import OptionWheel from "../components/OptionWheel";
 import DriftWall from "../components/DriftWall";
 import HomeMosaic from "../components/HomeMosaic";
-import ModeToggle from "../components/ModeToggle";
 import ModeLoadingOverlay from "../components/ModeLoadingOverlay";
 import { categories, allItems } from "../data/portfolio";
 import "./HomePage.css";
@@ -20,11 +19,15 @@ const artCategories = categories.filter((c) => c.mode === "art");
 const memoriesCategories = categories.filter((c) => c.mode === "memories");
 const memoriesItems = allItems.filter((i) => i.mode === "memories");
 
-const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
-  const [mode, setMode] = useState("art");
-  const [pendingMode, setPendingMode] = useState(null);
-  const [transitioning, setTransitioning] = useState(false);
-
+const HomePage = ({
+  theme = 'light',
+  onCategorySelect,
+  isExiting = false,
+  mode = 'art',
+  pendingMode = null,
+  transitioning = false,
+  onTransitionDone
+}) => {
   // ART state
   const [selectedCategory, setSelectedCategory] = useState(artCategories[0]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -52,19 +55,6 @@ const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
       clearTimeout(changeTimerRef.current);
     };
   }, []);
-
-  // ── Mode toggle ────────────────────────────────────────────────────────
-  const handleModeChange = useCallback((newMode) => {
-    if (newMode === mode || transitioning) return;
-    setPendingMode(newMode);
-    setTransitioning(true);
-  }, [mode, transitioning]);
-
-  const handleOverlayDone = useCallback(() => {
-    setMode(pendingMode);
-    setTransitioning(false);
-    setPendingMode(null);
-  }, [pendingMode]);
 
   // ── Art mode category select ──────────────────────────────────────────
   const handleCategorySelect = useCallback((itemOrCat) => {
@@ -101,11 +91,6 @@ const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
 
   return (
     <div className={`home-page${isMobile ? " home-page--mobile" : ""} home-page--${effectiveMode}`}>
-
-      {/* ── Mode toggle pill ── */}
-      <div className="home-mode-toggle-wrap">
-        <ModeToggle mode={mode} onChange={handleModeChange} />
-      </div>
 
       {/* ── ART / WORK mode ── */}
       {effectiveMode === "art" && (
@@ -180,7 +165,7 @@ const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
       <ModeLoadingOverlay
         active={transitioning}
         targetMode={pendingMode ?? mode}
-        onDone={handleOverlayDone}
+        onDone={onTransitionDone}
       />
     </div>
   );

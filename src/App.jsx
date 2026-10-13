@@ -6,6 +6,7 @@ import ContactPage from './pages/ContactPage';
 import LoaderScreen from './components/LoaderScreen';
 import GooeyNav from './components/GooeyNav';
 import ThemeToggle from './components/ThemeToggle';
+import ModeToggle from './components/ModeToggle';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import './App.css';
@@ -40,6 +41,25 @@ function App() {
   const exitTimerRef = useRef(null);
   const loaderDoneRef = useRef(false);
   const mobile = useMemo(() => isMobileDevice(), []);
+
+  // Mode state (WORK vs MEMORIES)
+  const [homeMode, setHomeMode] = useState('art');
+  const [pendingMode, setPendingMode] = useState(null);
+  const [transitioningMode, setTransitioningMode] = useState(false);
+
+  const handleModeChange = useCallback((newMode) => {
+    if (newMode === homeMode || transitioningMode) return;
+    setPendingMode(newMode);
+    setTransitioningMode(true);
+  }, [homeMode, transitioningMode]);
+
+  const handleModeTransitionDone = useCallback(() => {
+    if (pendingMode) {
+      setHomeMode(pendingMode);
+      setPendingMode(null);
+    }
+    setTransitioningMode(false);
+  }, [pendingMode]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -130,6 +150,9 @@ function App() {
         <ErrorBoundary>
           {currentPage !== 'gallery' && (
             <div className="app-top-bar">
+              {currentPage !== 'about' && currentPage !== 'contact' && (
+                <ModeToggle mode={homeMode} onChange={handleModeChange} />
+              )}
               <GooeyNav
                 items={navItems}
                 particleCount={mobile ? 0 : 10}
@@ -159,6 +182,10 @@ function App() {
             <div className={`page-wrapper ${isExitingHome ? 'is-gallery-active' : ''}`}>
               <HomePage
                 theme={theme}
+                mode={homeMode}
+                pendingMode={pendingMode}
+                transitioning={transitioningMode}
+                onTransitionDone={handleModeTransitionDone}
                 onCategorySelect={handleCategorySelect}
                 isExiting={isExitingHome}
               />

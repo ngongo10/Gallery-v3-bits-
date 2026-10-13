@@ -19,21 +19,7 @@
   background: #050507;
 }
 
-/* ─── Mode toggle (Top Left) ─── */
-.home-mode-toggle-wrap {
-  position: absolute;
-  top: 2.3rem;
-  left: 2.5rem;
-  z-index: 60;
-  pointer-events: auto;
-}
 
-@media (max-width: 768px) {
-  .home-mode-toggle-wrap {
-    top: 1.25rem;
-    left: 1.25rem;
-  }
-}
 
 
 /* ─── DriftWall background ─── */
