@@ -53,7 +53,7 @@
   position: absolute;
   /* Invisible center of the circle placed below bottom center */
   left: 50%;
-  top: calc(100% + 240px);
+  top: 340px; /* top - R (320px) = 20px (Apex reaches 20px from top of container) */
   width: 0;
   height: 0;
   right: auto;
@@ -99,7 +99,7 @@
 /* ─── Fixed Center Active Needle (Apex Indicator) ─── */
 .option-wheel__center-needle {
   position: absolute;
-  top: 14px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;

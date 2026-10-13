@@ -298,10 +298,10 @@
   .home-page--mobile .home-driftwall {
     left: 0;
     right: 0;
-    top: 56px;
-    bottom: 96px;
-    mask-image: linear-gradient(to bottom, transparent 0%, #000 8%, #000 85%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 8%, #000 85%, transparent 100%);
+    top: 50px;
+    bottom: 80px;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
   }
 
   /* OptionWheel centered horizontally at bottom like a watch bezel */

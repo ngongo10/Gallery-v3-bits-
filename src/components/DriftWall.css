@@ -204,6 +204,13 @@
     0 0 0 2px rgba(255, 255, 255, 0.9);
 }
 
+@media (max-width: 768px) {
+  .drift-wall {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .drift-wall__plane,
   .drift-wall__track {
