@@ -423,6 +423,10 @@ const OptionWheel = ({
       onPointerCancel={exiting ? undefined : handlePointerEnd}
       onKeyDown={exiting ? undefined : handleKeyDown}
     >
+      <div className="option-wheel__dial-indicator" aria-hidden="true">
+        <span className="option-wheel__dial-dot" />
+        <span className="option-wheel__dial-line" />
+      </div>
       {items.map((label, index) => (
         <div
           key={`${label}-${index}`}

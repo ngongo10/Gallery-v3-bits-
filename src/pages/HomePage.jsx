@@ -149,7 +149,7 @@ const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
               fade={0.3}
               minOpacity={0.04}
               smoothing={isMobile ? 140 : 180}
-              inset={isMobile ? 8 : 0}
+              inset={isMobile ? 48 : 64}
               loop={false}
               draggable={!isExiting}
               exiting={isExiting}
