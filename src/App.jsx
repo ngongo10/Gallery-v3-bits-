@@ -7,6 +7,7 @@ import LoaderScreen from './components/LoaderScreen';
 import GooeyNav from './components/GooeyNav';
 import ThemeToggle from './components/ThemeToggle';
 import ModeToggle from './components/ModeToggle';
+import FlickeringText from './components/ui/flickering-text';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import './App.css';
@@ -140,6 +141,15 @@ function App() {
     }, 100);
   }, [isTransitioning]);
 
+  const handleLogoClick = useCallback(() => {
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+    setNavActiveIndex(0);
+    setIsExitingHome(false);
+    setSelectedCategory(null);
+    setIsTransitioning(false);
+    setCurrentPage('home');
+  }, []);
+
   return (
     <div className="app" data-theme={theme}>
       {isLoading && (
@@ -149,21 +159,41 @@ function App() {
       {!isLoading && (
         <ErrorBoundary>
           {currentPage !== 'gallery' && (
-            <div className="app-top-bar">
-              {currentPage !== 'about' && currentPage !== 'contact' && (
-                <ModeToggle mode={homeMode} onChange={handleModeChange} />
-              )}
-              <GooeyNav
-                items={navItems}
-                particleCount={mobile ? 0 : 10}
-                particleDistances={mobile ? [0, 0] : [90, 10]}
-                particleR={mobile ? 0 : 800}
-                initialActiveIndex={navActiveIndex}
-                animationTime={600}
-                timeVariance={mobile ? 0 : 1700}
-                colors={theme === 'light' ? [4, 4, 4, 4] : [1, 2, 3, 1, 2, 3, 1, 4]}
-              />
-            </div>
+            <>
+              <div
+                className="app-brand-logo"
+                onClick={handleLogoClick}
+                role="button"
+                tabIndex={0}
+                aria-label="Jubi Sataka Home"
+              >
+                <FlickeringText
+                  text="JUBI SATAKA"
+                  fontSize={mobile ? "0.95rem" : "1.15rem"}
+                  fontWeight={700}
+                  textColor={theme === 'dark' ? '#ffffff' : '#0a0a0c'}
+                  glowColor={theme === 'dark' ? '#ffffff' : '#0a0a0c'}
+                  glowIntensity={theme === 'dark' ? 0.8 : 0.35}
+                  glowRadius={1.1}
+                />
+              </div>
+
+              <div className="app-top-bar">
+                {currentPage !== 'about' && currentPage !== 'contact' && (
+                  <ModeToggle mode={homeMode} onChange={handleModeChange} />
+                )}
+                <GooeyNav
+                  items={navItems}
+                  particleCount={mobile ? 0 : 10}
+                  particleDistances={mobile ? [0, 0] : [90, 10]}
+                  particleR={mobile ? 0 : 800}
+                  initialActiveIndex={navActiveIndex}
+                  animationTime={600}
+                  timeVariance={mobile ? 0 : 1700}
+                  colors={theme === 'light' ? [4, 4, 4, 4] : [1, 2, 3, 1, 2, 3, 1, 4]}
+                />
+              </div>
+            </>
           )}
 
           {currentPage !== 'gallery' && (
