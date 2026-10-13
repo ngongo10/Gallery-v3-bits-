@@ -100,29 +100,18 @@ mat2 rot(float a) {
   return mat2(c, -s, s, c);
 }
 
-/* object-fit: contain — full image visible inside the viewport */
-vec2 fitUV(vec2 uv, vec2 res, vec2 img) {
+/* object-fit: cover — image fills viewport, centered, cropped */
+vec2 coverUV(vec2 uv, vec2 res, vec2 img) {
   float rA = res.x / max(res.y, 1.0);
   float iA = img.x / max(img.y, 1.0);
   vec2 s = vec2(1.0);
   float ratio = rA / max(iA, 0.0001);
   if (ratio > 1.0) {
-    s.x = ratio;
-  } else {
     s.y = 1.0 / ratio;
+  } else {
+    s.x = ratio;
   }
   return (uv - 0.5) * s + 0.5;
-}
-
-vec4 sampleFit(sampler2D tex, vec2 uv, float ca) {
-  bool inside = uv.x >= 0.0 && uv.x <= 1.0 && uv.y >= 0.0 && uv.y <= 1.0;
-  if (!inside) return vec4(0.0);
-  vec3 col = vec3(
-    texture2D(tex, clamp(uv + vec2(ca, 0.0), 0.0, 1.0)).r,
-    texture2D(tex, clamp(uv, 0.0, 1.0)).g,
-    texture2D(tex, clamp(uv - vec2(ca, 0.0), 0.0, 1.0)).b
-  );
-  return vec4(col, 1.0);
 }
 
 void main() {
@@ -175,20 +164,28 @@ void main() {
     }
   }
 
-  vec2 sC = fitUV(uvC, uResolution, uCurrentSize);
-  vec2 sN = fitUV(uvN, uResolution, uNextSize);
+  vec2 sC = coverUV(uvC, uResolution, uCurrentSize);
+  vec2 sN = coverUV(uvN, uResolution, uNextSize);
 
   float ca = uReduce < 0.5 ? uAberration * env * 0.03 : 0.0;
 
-  vec4 colC = sampleFit(tCurrent, sC, ca);
-  vec4 colN = sampleFit(tNext, sN, ca);
+  vec3 colC = vec3(
+    texture2D(tCurrent, clamp(sC + vec2(ca, 0.0), 0.0, 1.0)).r,
+    texture2D(tCurrent, clamp(sC, 0.0, 1.0)).g,
+    texture2D(tCurrent, clamp(sC - vec2(ca, 0.0), 0.0, 1.0)).b
+  );
+  vec3 colN = vec3(
+    texture2D(tNext, clamp(sN + vec2(ca, 0.0), 0.0, 1.0)).r,
+    texture2D(tNext, clamp(sN, 0.0, 1.0)).g,
+    texture2D(tNext, clamp(sN - vec2(ca, 0.0), 0.0, 1.0)).b
+  );
 
-  vec4 col = mix(colC, colN, m);
+  vec3 col = mix(colC, colN, m);
 
   float vig = smoothstep(1.25, 0.25, length(uv - 0.5));
-  col.rgb = mix(col.rgb, uOverlay, (1.0 - vig) * 0.28 * col.a);
+  col = mix(col, uOverlay, (1.0 - vig) * 0.28);
 
-  gl_FragColor = col;
+  gl_FragColor = vec4(col, 1.0);
 }
 `;
 
@@ -232,13 +229,12 @@ class MorphEngine {
     this.tween = null;
 
     this.renderer = new Renderer({
-      alpha: true,
+      alpha: false,
       antialias: true,
       dpr: Math.min(window.devicePixelRatio || 1, dprCap),
-      premultipliedAlpha: false
     });
     this.gl = this.renderer.gl;
-    this.gl.clearColor(0, 0, 0, 0);
+    this.gl.clearColor(0.05, 0.05, 0.06, 1);
 
     this.canvas = this.gl.canvas;
     this.canvas.className = 'morph-slider-canvas';
