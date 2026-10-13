@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import OptionWheel from "../components/OptionWheel";
 import DriftWall from "../components/DriftWall";
 import HomeMosaic from "../components/HomeMosaic";
@@ -20,7 +20,7 @@ const artCategories = categories.filter((c) => c.mode === "art");
 const memoriesCategories = categories.filter((c) => c.mode === "memories");
 const memoriesItems = allItems.filter((i) => i.mode === "memories");
 
-const HomePage = ({ onCategorySelect, isExiting = false }) => {
+const HomePage = ({ theme = 'light', onCategorySelect, isExiting = false }) => {
   const [mode, setMode] = useState("art");
   const [pendingMode, setPendingMode] = useState(null);
   const [transitioning, setTransitioning] = useState(false);
@@ -138,8 +138,8 @@ const HomePage = ({ onCategorySelect, isExiting = false }) => {
             <OptionWheel
               items={artCategoryLabels}
               defaultSelected={0}
-              textColor="rgba(255,255,255,0.3)"
-              activeColor="#ffffff"
+              textColor={theme === 'dark' ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.35)'}
+              activeColor={theme === 'dark' ? '#ffffff' : '#0a0a0c'}
               side={isMobile ? "right" : "left"}
               fontSize={isMobile ? 1.65 : 2.8}
               spacing={1.5}

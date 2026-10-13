@@ -17,8 +17,8 @@ const OptionWheel = ({
   defaultSelected = 0,
   onChange,
   onItemClick,
-  textColor = '#a6a6a6',
-  activeColor = '#ffffff',
+  textColor,
+  activeColor,
   side = 'left',
   fontSize = 3,
   spacing = 1.4,
@@ -412,8 +412,8 @@ const OptionWheel = ({
       aria-label="Option wheel"
       className={`option-wheel${side === 'right' ? ' option-wheel--right' : ''}${isDragging ? ' option-wheel--dragging' : ''}${className ? ` ${className}` : ''}`}
       style={{
-        '--ow-text-color': textColor,
-        '--ow-active-color': activeColor,
+        ...(textColor ? { '--ow-text-color': textColor } : {}),
+        ...(activeColor ? { '--ow-active-color': activeColor } : {}),
         '--ow-font-size': `${fontSize}rem`,
         '--ow-inset': `${inset}px`
       }}
