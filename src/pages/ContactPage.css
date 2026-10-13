@@ -2,8 +2,8 @@
   position: fixed;
   inset: 0;
   width: 100%;
-  background-color: #050507;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #111111;
   padding: 120px 80px 80px;
   box-sizing: border-box;
   display: flex;
@@ -13,6 +13,12 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+[data-theme="dark"] .contact-page {
+  background-color: #050507;
+  color: #ffffff;
 }
 
 @media (max-width: 800px) {
@@ -67,8 +73,12 @@
   font-weight: 700;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #ffffff;
+  color: #111111;
   margin: 0;
+}
+
+[data-theme="dark"] .contact-page-title {
+  color: #ffffff;
 }
 
 .contact-shop-grid {
@@ -88,10 +98,15 @@
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 5;
-  background: #111116;
+  background: #f0f0f4;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .contact-shop-frame {
+  background: #111116;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .contact-shop-image {
@@ -116,15 +131,23 @@
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.05em;
-  color: #ffffff;
+  color: #111111;
   margin: 0;
+}
+
+[data-theme="dark"] .contact-shop-item-title {
+  color: #ffffff;
 }
 
 .contact-shop-item-sub {
   font-family: 'Inter', sans-serif;
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(0, 0, 0, 0.45);
   letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .contact-shop-item-sub {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* Modal Popup */

@@ -5,6 +5,7 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import LoaderScreen from './components/LoaderScreen';
 import GooeyNav from './components/GooeyNav';
+import ThemeToggle from './components/ThemeToggle';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import './App.css';
@@ -21,6 +22,14 @@ function isMobileDevice() {
 }
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('portfolio_theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+    }
+    return 'light'; // Mặc định là nền trắng theo yêu cầu
+  });
+
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -31,6 +40,16 @@ function App() {
   const exitTimerRef = useRef(null);
   const loaderDoneRef = useRef(false);
   const mobile = useMemo(() => isMobileDevice(), []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('portfolio_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  }, []);
 
   useEffect(() => () => {
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
@@ -102,22 +121,16 @@ function App() {
   }, [isTransitioning]);
 
   return (
-    <div className="app">
+    <div className="app" data-theme={theme}>
       {isLoading && (
-        <LoaderScreen onComplete={handleLoaderComplete} />
+        <LoaderScreen theme={theme} onComplete={handleLoaderComplete} />
       )}
 
       {!isLoading && (
         <ErrorBoundary>
           {currentPage !== 'gallery' && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '2rem',
-                right: '2rem',
-                zIndex: 100
-              }}
-            >
+            <div className="app-top-bar">
+              <ThemeToggle theme={theme} onToggle={toggleTheme} />
               <GooeyNav
                 items={navItems}
                 particleCount={mobile ? 0 : 10}
@@ -126,24 +139,31 @@ function App() {
                 initialActiveIndex={navActiveIndex}
                 animationTime={600}
                 timeVariance={mobile ? 0 : 1700}
-                colors={[1, 2, 3, 1, 2, 3, 1, 4]}
+                colors={theme === 'light' ? [4, 4, 4, 4] : [1, 2, 3, 1, 2, 3, 1, 4]}
               />
+            </div>
+          )}
+
+          {currentPage === 'gallery' && (
+            <div className="gallery-theme-toggle-wrap">
+              <ThemeToggle theme={theme} onToggle={toggleTheme} />
             </div>
           )}
 
           {currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
             <div className={`page-wrapper ${isExitingHome ? 'is-gallery-active' : ''}`}>
               <HomePage
+                theme={theme}
                 onCategorySelect={handleCategorySelect}
                 isExiting={isExitingHome}
               />
             </div>
           )}
 
-          {currentPage === 'about' && <AboutPage />}
-          {currentPage === 'contact' && <ContactPage />}
+          {currentPage === 'about' && <AboutPage theme={theme} />}
+          {currentPage === 'contact' && <ContactPage theme={theme} />}
           {currentPage === 'gallery' && selectedCategory && (
-            <GalleryPage category={selectedCategory} onBack={handleBack} />
+            <GalleryPage theme={theme} category={selectedCategory} onBack={handleBack} />
           )}
         </ErrorBoundary>
       )}

@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --linear-ease: linear(
     0,
     0.068,
@@ -45,6 +45,11 @@
   margin: 0;
   position: relative;
   z-index: 3;
+  color: #1a1a1a;
+  text-shadow: none;
+}
+
+[data-theme="dark"] .gooey-nav-container nav ul {
   color: white;
   text-shadow: 0 1px 1px hsl(205deg 30% 10% / 0.2);
 }
@@ -58,6 +63,10 @@
     color 0.3s ease,
     box-shadow 0.3s ease;
   box-shadow: 0 0 0.5px 1.5px transparent;
+  color: #1a1a1a;
+}
+
+[data-theme="dark"] .gooey-nav-container nav ul li {
   color: white;
 }
 
@@ -67,6 +76,10 @@
 }
 
 .gooey-nav-container nav ul li:focus-within:has(:focus-visible) {
+  box-shadow: 0 0 0.5px 1.5px #111111;
+}
+
+[data-theme="dark"] .gooey-nav-container nav ul li:focus-within:has(:focus-visible) {
   box-shadow: 0 0 0.5px 1.5px white;
 }
 
@@ -75,14 +88,23 @@
   position: absolute;
   inset: 0;
   border-radius: 10px;
-  background: white;
+  background: #111111;
   opacity: 0;
   transform: scale(0);
   transition: all 0.3s ease;
   z-index: -1;
 }
 
+[data-theme="dark"] .gooey-nav-container nav ul li::after {
+  background: white;
+}
+
 .gooey-nav-container nav ul li.active {
+  color: white;
+  text-shadow: none;
+}
+
+[data-theme="dark"] .gooey-nav-container nav ul li.active {
   color: black;
   text-shadow: none;
 }
@@ -106,16 +128,28 @@
 }
 
 .gooey-nav-container .effect.text {
-  color: white;
+  color: #1a1a1a;
   transition: color 0.3s ease;
 }
 
+[data-theme="dark"] .gooey-nav-container .effect.text {
+  color: white;
+}
+
 .gooey-nav-container .effect.text.active {
+  color: white;
+}
+
+[data-theme="dark"] .gooey-nav-container .effect.text.active {
   color: black;
 }
 
 .gooey-nav-container .effect.filter {
   filter: none;
+  mix-blend-mode: normal;
+}
+
+[data-theme="dark"] .gooey-nav-container .effect.filter {
   mix-blend-mode: plus-lighter;
 }
 
@@ -131,11 +165,15 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: white;
+  background: #111111;
   transform: scale(0);
   opacity: 0;
   z-index: -1;
   border-radius: 100vw;
+}
+
+[data-theme="dark"] .gooey-nav-container .effect.filter::after {
+  background: white;
 }
 
 .gooey-nav-container .effect.active::after {

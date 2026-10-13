@@ -1,14 +1,14 @@
-﻿/* ── Minimalist Switch Button (iPhone / Mac style) ── */
+/* ── Minimalist Switch Button (iPhone / Mac style) ── */
 .mode-switch-only {
   position: relative;
   width: 44px;
   height: 26px;
   border-radius: 100px;
-  background: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   user-select: none;
   transition: background 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -16,13 +16,30 @@
               transform 0.25s ease;
 }
 
+[data-theme="dark"] .mode-switch-only {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
 .mode-switch-only:hover {
   transform: scale(1.06);
+  border-color: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.14);
+}
+
+[data-theme="dark"] .mode-switch-only:hover {
   border-color: rgba(255, 255, 255, 0.35);
   background: rgba(255, 255, 255, 0.24);
 }
 
 .mode-switch-only.is-on {
+  background: #111111;
+  border-color: #111111;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .mode-switch-only.is-on {
   background: #ffffff;
   border-color: #ffffff;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
@@ -35,13 +52,23 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  background: #111111;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
               background 0.35s ease;
 }
 
+[data-theme="dark"] .mode-switch-thumb {
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
 .mode-switch-only.is-on .mode-switch-thumb {
+  transform: translateX(18px);
+  background: #ffffff;
+}
+
+[data-theme="dark"] .mode-switch-only.is-on .mode-switch-thumb {
   transform: translateX(18px);
   background: #050507;
 }

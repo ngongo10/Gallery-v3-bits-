@@ -1,11 +1,21 @@
 .home-page {
   position: fixed;
   inset: 0;
-  background: #050507;
+  background: #ffffff;
   overflow: hidden;
+  transition: background-color 0.4s ease;
+}
+
+[data-theme="dark"] .home-page {
+  background: #050507;
 }
 
 .home-page--memories {
+  background: #ffffff;
+  transition: background-color 0.4s ease;
+}
+
+[data-theme="dark"] .home-page--memories {
   background: #050507;
 }
 

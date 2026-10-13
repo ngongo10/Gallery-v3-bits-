@@ -1,6 +1,6 @@
 .option-wheel {
-  --ow-text-color: #a6a6a6;
-  --ow-active-color: #ffffff;
+  --ow-text-color: rgba(0, 0, 0, 0.28);
+  --ow-active-color: #0a0a0c;
   --ow-font-size: 3rem;
   --ow-inset: 80px;
 
@@ -12,6 +12,11 @@
   user-select: none;
   touch-action: none;
   outline: none;
+}
+
+[data-theme="dark"] .option-wheel {
+  --ow-text-color: rgba(255, 255, 255, 0.35);
+  --ow-active-color: #ffffff;
 }
 
 .option-wheel--dragging {
@@ -44,6 +49,10 @@
 
 .option-wheel__item--selected {
   font-weight: normal;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] .option-wheel__item--selected {
   text-shadow: 0 4px 25px rgba(255, 255, 255, 0.35);
 }
 

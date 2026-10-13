@@ -2,7 +2,7 @@
 .gallery-page {
   position: fixed;
   inset: 0;
-  background: #050507;
+  background: #ffffff;
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -14,7 +14,12 @@
   transition:
     opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
     transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+    filter 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.4s ease;
+}
+
+[data-theme="dark"] .gallery-page {
+  background: #050507;
 }
 
 .gallery-page.gallery-page--entered {
@@ -30,20 +35,29 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  filter: blur(64px) brightness(0.32) saturate(1.35);
+  filter: blur(64px) brightness(0.85) saturate(1.35);
   transform: scale(1.15);
-  opacity: 0.85;
+  opacity: 0.5;
   pointer-events: none;
   z-index: 1;
   transition: background-image 0.8s ease;
+}
+
+[data-theme="dark"] .gallery-blurred-bg {
+  filter: blur(64px) brightness(0.32) saturate(1.35);
+  opacity: 0.85;
 }
 
 .gallery-blurred-bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(5, 5, 7, 0.35);
+  background: rgba(255, 255, 255, 0.35);
   pointer-events: none;
+}
+
+[data-theme="dark"] .gallery-blurred-bg::after {
+  background: rgba(5, 5, 7, 0.35);
 }
 
 /* ─── Back Button ─── */
@@ -55,10 +69,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 100px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.65);
   font-size: 13px;
   font-weight: 400;
   letter-spacing: 0.04em;
@@ -69,11 +83,23 @@
   transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 
+[data-theme="dark"] .gallery-back-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .gallery-back-btn:hover {
+  color: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.2);
+  transform: translateX(-2px);
+}
+
+[data-theme="dark"] .gallery-back-btn:hover {
   color: rgba(255, 255, 255, 1);
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.25);
-  transform: translateX(-2px);
 }
 
 /* ─── Bottom Left INFO Button ─── */
@@ -85,10 +111,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 100px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.65);
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -99,10 +125,16 @@
   transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 
+[data-theme="dark"] .gallery-info-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .gallery-info-btn:hover {
-  color: rgba(255, 255, 255, 1);
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
 }
 
