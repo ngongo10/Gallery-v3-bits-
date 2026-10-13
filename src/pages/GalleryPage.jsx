@@ -307,14 +307,15 @@ const GalleryPage = ({ category, onBack }) => {
           <MorphSlider
             items={morphItems}
             transition="melt"
-            intensity={1.2}
+            intensity={0.55}
             aberration={0.35}
-            drift={0}
+            drift={0.4}
             autoplay={true}
+            autoplayDelay={4}
             overlayColor="#000000"
-            scale={2.5}
-            showCaptions={false}
-            radius={0}
+            scale={2.4}
+            showCaptions={true}
+            radius={16}
             onIndexChange={setActivePhotoIndex}
           />
         </div>
