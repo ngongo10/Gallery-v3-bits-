@@ -43,7 +43,10 @@ const DriftWall = ({
   overlayColor = '#060010',
   className = '',
   style,
-  onTileClick
+  onTileClick,
+  columnGroups = null,
+  showColumnLabels = false,
+  activeCol = -1
 }) => {
   const containerRef = useRef(null);
   const planeRef = useRef(null);
@@ -72,10 +75,13 @@ const DriftWall = ({
   }, []);
 
   const columnItems = useMemo(() => {
+    if (columnGroups && Array.isArray(columnGroups) && columnGroups.length > 0) {
+      return columnGroups.map(grp => (grp.items && grp.items.length ? grp.items : items.slice(0, 1)));
+    }
     const cols = Array.from({ length: columns }, () => []);
     items.forEach((item, i) => cols[i % columns].push(item));
     return cols.map(col => (col.length ? col : items.slice(0, 1)));
-  }, [items, columns]);
+  }, [items, columns, columnGroups]);
 
   const columnMeta = useMemo(() => {
     const unit = tileHeight + gap;
@@ -299,8 +305,16 @@ const DriftWall = ({
         {columnItems.map((col, c) => {
           const meta = columnMeta[c];
           const copies = Array.from({ length: meta.copies });
+          const label = columnGroups?.[c]?.label || '';
+          const isColActive = activeCol === c;
           return (
-            <div className="drift-wall__col" key={`col-${c}`}>
+            <div className={`drift-wall__col${isColActive ? ' is-col-active' : ''}`} key={`col-${c}`}>
+              {showColumnLabels && label && (
+                <div className="drift-wall__col-label" aria-hidden="true">
+                  <span className="drift-wall__col-label-text">{label}</span>
+                  <span className="drift-wall__col-label-line" />
+                </div>
+              )}
               <div className="drift-wall__track" ref={el => (trackRefs.current[c] = el)}>
                 {copies.map((_, copyIndex) =>
                   col.map((item, itemIndex) => renderTile(item, `${c}-${copyIndex}-${itemIndex}`, c))

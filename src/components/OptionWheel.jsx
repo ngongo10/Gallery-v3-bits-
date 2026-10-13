@@ -50,7 +50,9 @@ const OptionWheel = ({
   exiting = false,
   soundUrl = '',
   soundVolume = 0.5,
-  className = ''
+  className = '',
+  orientation = 'vertical', // 'vertical' (desktop side) | 'horizontal' (mobile bottom watch dial)
+  hideLabels = false
 }) => {
   const rootRef = useRef(null);
   const itemRefs = useRef([]);
@@ -90,8 +92,12 @@ const OptionWheel = ({
     smoothing,
     draggable,
     soundUrl,
-    soundVolume
+    soundVolume,
+    orientation,
+    hideLabels
   };
+
+  const isHorizontal = orientation === 'horizontal';
 
   const dialTicksWithStyle = useMemo(() => {
     const rowH = Math.max(fontSize * spacing * remPx, 1);
@@ -100,6 +106,21 @@ const OptionWheel = ({
     const mirror = side === 'right' ? -1 : 1;
 
     return DIAL_TICKS.map(tick => {
+      if (isHorizontal) {
+        // Horizontally curved arch like a bottom watch bezel
+        const tickSpacing = 28; // px between ticks along bottom arch
+        const x = tick.d * tickSpacing;
+        // Subtle arch bending upwards at center, downwards at sides
+        const archY = Math.abs(tick.d) * 3.5;
+        const rot = tick.d * 8; // rotate radially
+        return {
+          ...tick,
+          x,
+          y: archY,
+          rot
+        };
+      }
+
       let x = 0;
       let y = tick.d * rowH;
       let rot = 0;
@@ -116,7 +137,7 @@ const OptionWheel = ({
         rot
       };
     });
-  }, [fontSize, spacing, remPx, tilt, side, curve]);
+  }, [fontSize, spacing, remPx, tilt, side, curve, isHorizontal]);
 
   const runFrame = useCallback(now => {
     const dt = Math.min((now - lastRef.current) / 1000, 0.05);
@@ -132,33 +153,46 @@ const OptionWheel = ({
     if (settled) next = target;
     posRef.current = next;
 
-    const els = itemRefs.current;
-    const n = cfg.count;
-    const mirror = cfg.side === 'right' ? -1 : 1;
-    const tiltRad = (cfg.tilt * Math.PI) / 180;
-    const R = tiltRad > 0.0005 ? cfg.rowH / tiltRad : 0;
-    for (let i = 0; i < n; i++) {
-      const el = els[i];
-      if (!el) continue;
-      let d = i - next;
-      if (cfg.loop && n > 1) {
-        d = ((d % n) + n) % n;
-        if (d > n / 2) d -= n;
+    // Animate ticks dynamically in horizontal mode to reflect current wheel position
+    if (cfg.orientation === 'horizontal') {
+      const dialEl = rootRef.current?.querySelector('.option-wheel__dial-scale');
+      if (dialEl) {
+        const tickSpacing = 28;
+        // Slide dial scale based on offset from selected
+        const offsetPx = -(next - Math.round(next)) * tickSpacing * 3;
+        dialEl.style.transform = `translateX(${offsetPx.toFixed(2)}px)`;
       }
-      const dist = Math.abs(d);
-      let x = 0;
-      let y = d * cfg.rowH;
-      let rot = 0;
-      if (R > 0) {
-        const ang = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, d * tiltRad));
-        y = R * Math.sin(ang);
-        x = -mirror * R * (1 - Math.cos(ang)) * cfg.curve;
-        rot = (mirror * ang * 180) / Math.PI;
+    }
+
+    if (!cfg.hideLabels) {
+      const els = itemRefs.current;
+      const n = cfg.count;
+      const mirror = cfg.side === 'right' ? -1 : 1;
+      const tiltRad = (cfg.tilt * Math.PI) / 180;
+      const R = tiltRad > 0.0005 ? cfg.rowH / tiltRad : 0;
+      for (let i = 0; i < n; i++) {
+        const el = els[i];
+        if (!el) continue;
+        let d = i - next;
+        if (cfg.loop && n > 1) {
+          d = ((d % n) + n) % n;
+          if (d > n / 2) d -= n;
+        }
+        const dist = Math.abs(d);
+        let x = 0;
+        let y = d * cfg.rowH;
+        let rot = 0;
+        if (R > 0) {
+          const ang = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, d * tiltRad));
+          y = R * Math.sin(ang);
+          x = -mirror * R * (1 - Math.cos(ang)) * cfg.curve;
+          rot = (mirror * ang * 180) / Math.PI;
+        }
+        el.style.transform = `translate(${x.toFixed(2)}px, calc(${y.toFixed(2)}px - 50%)) rotate(${rot.toFixed(3)}deg)`;
+        el.style.opacity = String(Math.max(cfg.minOpacity, 1 - dist * cfg.fade));
+        el.style.filter = cfg.blur > 0 ? `blur(${(dist * cfg.blur).toFixed(2)}px)` : 'none';
+        el.style.setProperty('--ow-p', Math.max(0, 1 - Math.min(dist, 1)).toFixed(4));
       }
-      el.style.transform = `translate(${x.toFixed(2)}px, calc(${y.toFixed(2)}px - 50%)) rotate(${rot.toFixed(3)}deg)`;
-      el.style.opacity = String(Math.max(cfg.minOpacity, 1 - dist * cfg.fade));
-      el.style.filter = cfg.blur > 0 ? `blur(${(dist * cfg.blur).toFixed(2)}px)` : 'none';
-      el.style.setProperty('--ow-p', Math.max(0, 1 - Math.min(dist, 1)).toFixed(4));
     }
 
     rafRef.current = settled ? null : requestAnimationFrame(runFrame);
@@ -233,9 +267,14 @@ const OptionWheel = ({
   const handlePointerDown = useCallback(e => {
     if (!cfgRef.current.draggable) return;
     const now = performance.now();
-    // Use current rendered position so drag starts from where the list visually is
-    dragRef.current = { y: e.clientY, start: posRef.current, id: e.pointerId };
-    dragHistoryRef.current = [{ y: e.clientY, t: now }];
+    const isHoriz = cfgRef.current.orientation === 'horizontal';
+    dragRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      start: posRef.current,
+      id: e.pointerId
+    };
+    dragHistoryRef.current = [{ val: isHoriz ? e.clientX : e.clientY, t: now }];
     dragMovedRef.current = false;
     setIsDragging(true);
   }, []);
@@ -244,22 +283,24 @@ const OptionWheel = ({
     e => {
       const drag = dragRef.current;
       if (!drag) return;
-      const dy = e.clientY - drag.y;
+      const isHoriz = cfgRef.current.orientation === 'horizontal';
+      const delta = isHoriz ? -(e.clientX - drag.x) : -(e.clientY - drag.y);
       const now = performance.now();
-      if (!dragMovedRef.current && Math.abs(dy) > 4) {
+      if (!dragMovedRef.current && Math.abs(delta) > 4) {
         dragMovedRef.current = true;
         rootRef.current?.setPointerCapture(drag.id);
       }
       if (dragMovedRef.current) {
-        // Track pointer history for velocity (keep last 5 samples)
         const history = dragHistoryRef.current;
-        history.push({ y: e.clientY, t: now });
+        history.push({ val: isHoriz ? e.clientX : e.clientY, t: now });
         if (history.length > 5) history.shift();
-        // Set position DIRECTLY — no smoothing lag while finger is down
-        const newPos = drag.start - dy / cfgRef.current.rowH;
+
+        // Step sensitivity: in horizontal watch dial, 70px drag moves 1 index
+        const stepPx = isHoriz ? 70 : cfgRef.current.rowH;
+        const newPos = drag.start + delta / stepPx;
         posRef.current = newPos;
         targetRef.current = newPos;
-        // Fire onChange if index changed
+
         const cfg = cfgRef.current;
         const idx = ((Math.round(newPos) % cfg.count) + cfg.count) % cfg.count;
         if (idx !== selectedRef.current) {
@@ -276,25 +317,22 @@ const OptionWheel = ({
 
   const handlePointerEnd = useCallback(() => {
     if (!dragRef.current) return;
+    const isHoriz = cfgRef.current.orientation === 'horizontal';
     dragRef.current = null;
     setIsDragging(false);
     if (dragMovedRef.current) {
-      // Calculate release velocity from recent pointer history
       const history = dragHistoryRef.current;
       let velocity = 0;
+      const stepPx = isHoriz ? 70 : cfgRef.current.rowH;
       if (history.length >= 2) {
         const recent = history[history.length - 1];
-        // Use a slightly older sample for stability (3rd from end)
         const older = history[Math.max(0, history.length - 3)];
         const dt = (recent.t - older.t) / 1000;
         if (dt > 0.005) {
-          // Negative because dragging down = scrolling up (toward lower indices)
-          velocity = -(recent.y - older.y) / cfgRef.current.rowH / dt;
+          velocity = -(recent.val - older.val) / stepPx / dt;
         }
       }
-      // Clamp velocity to reasonable range
       velocity = Math.max(-25, Math.min(25, velocity));
-      // Project forward: momentum = velocity * decay_time
       const momentumDistance = velocity * 0.12;
       const projected = posRef.current + momentumDistance;
       const snapped = Math.round(projected);
@@ -451,7 +489,7 @@ const OptionWheel = ({
       role="listbox"
       tabIndex={0}
       aria-label="Option wheel"
-      className={`option-wheel${side === 'right' ? ' option-wheel--right' : ''}${isDragging ? ' option-wheel--dragging' : ''}${className ? ` ${className}` : ''}`}
+      className={`option-wheel${side === 'right' ? ' option-wheel--right' : ''}${isHorizontal ? ' option-wheel--horizontal' : ''}${isDragging ? ' option-wheel--dragging' : ''}${className ? ` ${className}` : ''}`}
       style={{
         ...(textColor ? { '--ow-text-color': textColor } : {}),
         ...(activeColor ? { '--ow-active-color': activeColor } : {}),
@@ -472,7 +510,9 @@ const OptionWheel = ({
                 key={`dial-tick-${tick.d}`}
                 className="option-wheel__dial-tick option-wheel__dial-tick--active"
                 style={{
-                  transform: `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
+                  transform: isHorizontal
+                    ? `translate(calc(-50% + ${tick.x.toFixed(2)}px), ${tick.y.toFixed(2)}px) rotate(${tick.rot.toFixed(3)}deg)`
+                    : `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
                   opacity: tick.opacity
                 }}
               >
@@ -486,7 +526,9 @@ const OptionWheel = ({
               key={`dial-tick-${tick.d}`}
               className={`option-wheel__dial-tick option-wheel__dial-tick--${tick.type}`}
               style={{
-                transform: `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
+                transform: isHorizontal
+                  ? `translate(calc(-50% + ${tick.x.toFixed(2)}px), ${tick.y.toFixed(2)}px) rotate(${tick.rot.toFixed(3)}deg)`
+                  : `translate(${tick.x.toFixed(2)}px, calc(${tick.y.toFixed(2)}px - 50%)) rotate(${tick.rot.toFixed(3)}deg)`,
                 opacity: tick.opacity
               }}
             >
@@ -495,7 +537,7 @@ const OptionWheel = ({
           );
         })}
       </div>
-      {items.map((label, index) => (
+      {!hideLabels && items.map((label, index) => (
         <div
           key={`${label}-${index}`}
           ref={el => {

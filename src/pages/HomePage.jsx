@@ -79,7 +79,18 @@ const HomePage = ({
     }
   };
 
-  // ── DriftWall items ────────────────────────────────────────────────────
+  // ── DriftWall items & columns ──────────────────────────────────────────
+  // On mobile: each column corresponds to an ART album with vertical album label
+  const mobileColumnGroups = useMemo(() => {
+    return artCategories.map(cat => ({
+      id: cat.id,
+      label: cat.label,
+      items: (cat.items && cat.items.length > 0)
+        ? cat.items
+        : allItems.filter(i => i.category === cat.id)
+    }));
+  }, []);
+
   const driftItems = useMemo(() => {
     const categoryItems = allItems.filter((i) => i.category === selectedCategory?.id);
     const baseItems =
@@ -95,28 +106,31 @@ const HomePage = ({
       {/* ── ART / WORK mode ── */}
       {effectiveMode === "art" && (
         <>
-          <div className={`home-driftwall${isLoaded ? " is-revealed" : ""}${isChanging ? " is-changing" : ""}`}>
+          <div className={`home-driftwall${isLoaded ? " is-revealed" : ""}${isChanging && !isMobile ? " is-changing" : ""}`}>
             <DriftWall
-              key={selectedCategory?.id}
+              key={isMobile ? "mobile-art-wall" : selectedCategory?.id}
               items={driftItems}
-              columns={isMobile ? 1 : 2}
-              tileWidth={isMobile ? 110 : 144}
-              tileHeight={isMobile ? 140 : 172}
-              gap={isMobile ? 12 : 18}
-              tilt={isMobile ? 18 : 30}
-              turn={isMobile ? -18 : -30}
-              perspective={isMobile ? 700 : 900}
-              depth={isMobile ? 160 : 400}
-              speed={isChanging ? 120 : isMobile ? 28 : 58}
+              columnGroups={isMobile ? mobileColumnGroups : null}
+              showColumnLabels={isMobile}
+              activeCol={isMobile ? selectedIndex : -1}
+              columns={isMobile ? mobileColumnGroups.length : 2}
+              tileWidth={isMobile ? 120 : 144}
+              tileHeight={isMobile ? 168 : 172}
+              gap={isMobile ? 24 : 18}
+              tilt={isMobile ? 22 : 30}
+              turn={isMobile ? -14 : -30}
+              perspective={isMobile ? 850 : 900}
+              depth={isMobile ? 180 : 400}
+              speed={isMobile ? 32 : isChanging ? 120 : 58}
               direction="up"
               variance={0.35}
-              parallax={isMobile ? 0.4 : 2}
-              lift={isMobile ? 36 : 108}
+              parallax={isMobile ? 0.35 : 2}
+              lift={isMobile ? 40 : 108}
               fade={0.12}
               dim={1}
               overlayColor="transparent"
               radius={8}
-              roll={isMobile ? 7.5 : 5}
+              roll={isMobile ? 4 : 5}
               onTileClick={handleCategorySelect}
             />
           </div>
@@ -125,9 +139,11 @@ const HomePage = ({
             <OptionWheel
               items={artCategoryLabels}
               defaultSelected={0}
+              orientation={isMobile ? "horizontal" : "vertical"}
+              hideLabels={isMobile}
               textColor={theme === 'dark' ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.35)'}
               activeColor={theme === 'dark' ? '#ffffff' : '#0a0a0c'}
-              side={isMobile ? "right" : "left"}
+              side={isMobile ? "left" : "left"}
               fontSize={isMobile ? 1.65 : 2.8}
               spacing={1.5}
               curve={1}
@@ -136,7 +152,7 @@ const HomePage = ({
               fade={0.3}
               minOpacity={0.04}
               smoothing={isMobile ? 140 : 180}
-              inset={isMobile ? 48 : 64}
+              inset={isMobile ? 0 : 64}
               loop={false}
               draggable={!isExiting}
               exiting={isExiting}
