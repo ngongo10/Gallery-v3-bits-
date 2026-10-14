@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GlassFolder from '../components/ui/glass-folder-cards';
+import ReflectBackground from '../components/lightswind/reflect-background';
 import './ContactPage.css';
 
 const shopProducts = [
@@ -7,134 +8,167 @@ const shopProducts = [
     id: 'pkg-video',
     title: 'Gói quay video',
     subtitle: 'Phù hợp với quay content, review, cá nhân và các nhu cầu quay đơn giản.',
-    intro:
-      'Quay video theo nhu cầu như review, content cá nhân, mạng xã hội hoặc các nội dung ngắn. Bao gồm quay và xử lý hậu kỳ cơ bản.',
     priceLine: '299.000 🐟 / buổi',
-    detailTitle: 'Quay Theo Buổi — 299.000 🐟',
-    paragraphs: [
-      'Quay video theo nhu cầu trong một buổi làm việc. Phù hợp với review, content cá nhân, mạng xã hội, giới thiệu sản phẩm hoặc các nội dung video ngắn.',
-      'Gói bao gồm quay video, hỗ trợ bố cục và góc máy trong quá trình thực hiện, lựa chọn những cảnh quay phù hợp và xử lý hậu kỳ cơ bản.',
-      'Phù hợp với những nội dung cần hình ảnh chỉn chu nhưng không yêu cầu quá nhiều về kịch bản, sản xuất hoặc kỹ xảo.',
-    ],
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1786775685/Tiktok.webp',
     art: 'ember',
-    files: [
-      {
-        name: 'Tiktok / Reels',
-        meta: 'Short-form · 9:16',
-        image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1786775685/Tiktok.webp',
-      },
-      {
-        name: 'Review Cá Nhân',
-        meta: 'Vlog · 1 buổi',
-        art: 'ember',
-      },
-      {
-        name: 'Hậu kỳ cơ bản',
-        meta: 'Color & Cut',
-      },
-    ],
+    pricingDetail: {
+      title: 'Bảng Giá & Chi Tiết Dịch Vụ — Quay Video',
+      tag: 'Gói cơ bản · 299.000 🐟 / buổi',
+      items: [
+        'Thời gian làm việc: 01 buổi (2 - 3 tiếng) linh hoạt theo địa điểm chỉ định.',
+        'Thiết bị: Camera chất lượng cao 4K / Full HD, mic thu âm không dây chống ồn.',
+        'Hỗ trợ trong buổi quay: Tư vấn góc máy, hướng dẫn cử chỉ/tạo dáng, chọn bối cảnh sáng đẹp.',
+        'Sản phẩm bàn giao: 02 - 04 video ngắn hoàn chỉnh (đã dựng, căn màu, âm thanh cơ bản) hoặc toàn bộ raw footage.',
+      ],
+      note: 'Phù hợp: Content Creator, Reviewer, Shop Online, TikToker, cá nhân xây kênh.',
+    },
+    masterText: {
+      headline: 'Master Storytelling — Video Ngắn Chạm Cảm Xúc',
+      lead: 'Trong kỷ nguyên số, một thước phim 30 giây đủ sức truyền tải trọn vẹn phong cách sống và dấu ấn cá nhân của bạn.',
+      sections: [
+        {
+          title: '01 / ĐỊNH HƯỚNG TẦNG HÌNH ẢNH (VISUAL IDENTITY)',
+          content:
+            'Mỗi khung hình không chỉ đơn thuần là ghi hình, mà là sự cân nhắc tỉ mỉ về nguồn sáng, bố cục đường dẫn và nhịp điệu chuyển động. Chúng tôi kết hợp các góc máy cận và trung để làm nổi bật thần thái tự nhiên nhất.',
+        },
+        {
+          title: '02 / XỬ LÝ HẬU KỲ CHUYÊN NGHIỆP',
+          content:
+            'Quy trình dựng nhịp theo tiết tấu âm thanh, xử lý dynamic zoom tinh tế và phân giải màu cinematic giúp video của bạn nổi bật giữa dòng tin tức mạng xã hội.',
+        },
+        {
+          title: '03 / TỐI ƯU ĐA NỀN TẢNG',
+          content:
+            'Tỷ lệ khung hình chuẩn 9:16 cho Reels / TikTok / Shorts với bitrate sắc nét, đảm bảo không bị suy giảm chất lượng khi đăng tải.',
+        },
+      ],
+    },
   },
   {
     id: 'pkg-cinematic',
     title: 'Gói Cinematic',
     subtitle: 'Dành cho các sản phẩm video cần lên ý tưởng, quay và hậu kỳ theo yêu cầu.',
-    intro:
-      'Dành cho các dự án video cần đầu tư về ý tưởng, hình ảnh, dựng phim và hậu kỳ theo yêu cầu.',
     priceLine: 'Từ 1.799.000 🐟',
-    detailTitle: 'Quay Theo Dự Án — từ 1.799.000 🐟',
-    paragraphs: [
-      'Dành cho các dự án video có yêu cầu riêng về ý tưởng, hình ảnh, nội dung và hậu kỳ.',
-      'Quy trình có thể bao gồm trao đổi ý tưởng, định hướng hình ảnh, chuẩn bị nội dung, quay phim, lựa chọn và xử lý footage, dựng video, chỉnh màu và hoàn thiện sản phẩm.',
-      'Phù hợp với video cinematic, video quảng bá, giới thiệu thương hiệu, sản phẩm, cá nhân hoặc những dự án cần đầu tư nhiều hơn về hình ảnh và hậu kỳ.',
-    ],
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790936046/DSC01094.avif',
     art: 'dusk',
-    files: [
-      {
-        name: 'Cinematic Visual',
-        meta: '4K Footage',
-        image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790936046/DSC01094.avif',
-      },
-      {
-        name: 'Kịch bản & Storyboard',
-        meta: 'Concept planning',
-        art: 'dusk',
-      },
-      {
-        name: 'Color Grading & Sound',
-        meta: 'Master edit',
-      },
-    ],
+    pricingDetail: {
+      title: 'Bảng Giá & Quy Trình — Cinematic Project',
+      tag: 'Dự án sản xuất · Từ 1.799.000 🐟',
+      items: [
+        'Họp ý tưởng & Moodboard: Thảo luận concept, xây dựng kịch bản phân cảnh (storyboard chi tiết).',
+        'Thiết bị điện ảnh: Ống kính prime/cinema, hệ thống gimbal ổn định, đèn studio setup ánh sáng chuyên sâu.',
+        'Color Grading chuẩn Hollywood: Phối màu theo tông LUT độc quyền, tách lớp màu da và background.',
+        'Sound Design & Sound Effects: Phối hợp nhạc nền có bản quyền và hiệu ứng âm thanh môi trường sống động.',
+      ],
+      note: 'Phù hợp: Fashion film, MV ca nhạc, Video thương hiệu cá nhân, Phim ngắn nghệ thuật, Brand Story.',
+    },
+    masterText: {
+      headline: 'Điện Ảnh Hóa Từng Khung Hình — Nghệ Thuật Kể Chuyện Bằng Ánh Sáng',
+      lead: 'Không chỉ là quay phim, đây là sự hòa quyện giữa ngôn ngữ điện ảnh, tâm lý nhân vật và triết lý thẩm mỹ đương đại.',
+      sections: [
+        {
+          title: '01 / NGÔN NGỮ ĐIỆN ẢNH & NHỊP ĐIỆU CẢM XÚC',
+          content:
+            'Mỗi chuyển động của máy quay (camera movement) đều mang một ý đồ biểu đạt: những cú tracking tĩnh lặng, tilt-up kiêu hãnh hay góc nghiêng dutch-angle nội tâm. Tất cả phục vụ cho thông điệp cốt lõi của bạn.',
+        },
+        {
+          title: '02 / NGHỆ THUẬT COLOR GRADING ĐA LỚP',
+          content:
+            'Màu sắc là linh hồn của Cinematic. Chúng tôi sử dụng bảng màu điện ảnh với độ sâu tương phản mềm, giữ trọn sắc thái da tự nhiên và làm nổi bật chiều sâu không gian ba chiều.',
+        },
+        {
+          title: '03 / HOÀN THIỆN ĐẦU RA 4K DCI',
+          content:
+            'Master xuất file chuẩn DCI 4K HDR, sẵn sàng trình chiếu sự kiện, màn hình lớn cũng như truyền thông cao cấp trên mọi nền tảng kỹ thuật số.',
+        },
+      ],
+    },
   },
   {
     id: 'pkg-chup',
     title: 'Gói chụp',
     subtitle: 'Phù hợp với các nhu cầu chụp ảnh cá nhân, đời sống, kỷ niệm và concept đơn giản.',
-    intro: 'Chụp ảnh theo buổi — phù hợp kỷ yếu, chân dung hoặc sự kiện đơn giản.',
     priceLine: '399.000 🐟 / buổi (149k/h)',
-    detailTitle: 'Chụp Theo Buổi — 399.000 🐟',
-    detailSubtitle: 'Chụp Theo Giờ — 149.000 🐟/h',
-    paragraphs: [
-      'Chụp ảnh theo nhu cầu cá nhân trong một buổi làm việc. Phù hợp với chân dung, lifestyle, ảnh cá nhân, ảnh kỷ niệm hoặc các concept đơn giản.',
-      'Gói bao gồm thời gian chụp theo buổi, hỗ trợ lựa chọn góc chụp và bối cảnh phù hợp, chọn lọc ảnh sau buổi chụp và chỉnh màu cơ bản.',
-      'Phù hợp với những nhu cầu chụp ảnh đơn giản, không yêu cầu sản xuất hoặc hậu kỳ phức tạp.',
-    ],
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790935995/DSC00990.avif',
     art: 'glacier',
-    files: [
-      {
-        name: 'Chân dung cá nhân',
-        meta: 'Portrait · Natural',
-        image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790935995/DSC00990.avif',
-      },
-      {
-        name: 'Kỷ yếu & Đời sống',
-        meta: 'Lifestyle vibes',
-        art: 'glacier',
-      },
-      {
-        name: 'Blend màu chuẩn',
-        meta: 'All selected files',
-      },
-    ],
+    pricingDetail: {
+      title: 'Bảng Giá & Chi Tiết Dịch Vụ — Chụp Ảnh Cá Nhân / Lifestyle',
+      tag: 'Gói chụp buổi: 399.000 🐟 · Hoặc tính theo giờ: 149.000 🐟/h',
+      items: [
+        'Thời gian chụp: 01 buổi chụp thoải mái (hoặc book linh hoạt theo giờ).',
+        'Địa điểm: Quán cafe, công viên, đường phố Sài Gòn, bối cảnh studio hoặc nhà riêng.',
+        'Hỗ trợ bắt khoảnh khắc: Hướng dẫn tạo dáng tự nhiên, không gượng gạo, tôn nét đẹp riêng của bạn.',
+        'Bàn giao: Toàn bộ file gốc độ phân giải cao + 15 đến 20 ảnh blend màu chỉnh sửa cẩn thận.',
+      ],
+      note: 'Phù hợp: Chân dung nghệ thuật, Kỷ niệm ngày lễ, Sinh nhật, Couple tình cảm, Ảnh đời thường aesthetic.',
+    },
+    masterText: {
+      headline: 'Chân Dung & Đời Sống — Lưu Giữ Những Khoảnh Khắc Nguyên Bản',
+      lead: 'Vẻ đẹp chân thật nhất là vẻ đẹp khi bạn là chính mình: tự do, an nhiên và tràn đầy cảm xúc.',
+      sections: [
+        {
+          title: '01 / NẮM BẮT KHOẢNH KHẮC THẬT (CANDID MOMENTS)',
+          content:
+            'Thay vì những tư thế tạo dáng rập khuôn cứng nhắc, chúng tôi tạo không khí trò chuyện gần gũi để bắt trọn những nụ cười bất chợt, ánh mắt dịu dàng và những chuyển động tự nhiên nhất của bạn.',
+        },
+        {
+          title: '02 / CHẤT MÀU PHIM TRẦM ẤM & HOÀI NIỆM',
+          content:
+            'Tone màu được lấy cảm hứng từ phim nhựa analog: độ hạt grain mịn màng, vùng sáng mềm mại và sắc xanh hoài niệm, tạo cảm giác bền vững cùng thời gian.',
+        },
+        {
+          title: '03 / TRỌN VẸN KỶ NIỆM',
+          content:
+            'Từng bức ảnh sau buổi chụp là một lát cắt ký ức được nâng niu, sẵn sàng để in album photobook hoặc lưu giữ trong thư viện cá nhân.',
+        },
+      ],
+    },
   },
   {
     id: 'pkg-theo-yeu-cau',
     title: 'Gói chụp theo yêu cầu',
     subtitle: 'Dành cho các yêu cầu chụp ảnh có concept, kế hoạch hoặc quy mô riêng.',
-    intro:
-      'Dành cho các dự án chụp có yêu cầu riêng về concept, địa điểm, số lượng người hoặc hậu kỳ.',
     priceLine: 'Từ 499.000 🐟',
-    detailTitle: 'Chụp Theo Dự Án — từ 499.000 🐟',
-    paragraphs: [
-      'Dành cho các dự án chụp ảnh có yêu cầu cụ thể về concept, địa điểm, số lượng người, sản phẩm hoặc phong cách hình ảnh.',
-      'Gói được xây dựng linh hoạt theo từng dự án, có thể bao gồm trao đổi ý tưởng, định hướng phong cách hình ảnh, lựa chọn bối cảnh, thực hiện buổi chụp, chọn lọc ảnh và hậu kỳ theo yêu cầu.',
-      'Phù hợp với các bộ ảnh concept, thời trang, kỷ yếu, couple, sản phẩm, thương hiệu cá nhân hoặc những dự án cần đầu tư nhiều hơn về hình ảnh.',
-    ],
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1788545041/Still_2026-09-05_010136_1.3.1.jpg',
     art: 'aurora',
-    files: [
-      {
-        name: 'Concept & Fashion',
-        meta: 'Editorial look',
-        image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1788545041/Still_2026-09-05_010136_1.3.1.jpg',
-      },
-      {
-        name: 'Lookbook & Brand',
-        meta: 'Custom art direction',
-        art: 'aurora',
-      },
-      {
-        name: 'Retouch chuyên sâu',
-        meta: 'High-end beauty retouch',
-      },
-    ],
+    pricingDetail: {
+      title: 'Bảng Giá & Quy Trình — Concept Theo Yêu Cầu',
+      tag: 'Tùy biến dự án · Từ 499.000 🐟',
+      items: [
+        'Xây dựng Concept riêng: Trao đổi phong cách, bảng màu (color palette), trang phục và đạo cụ phù hợp.',
+        'Chọn lọc địa điểm & bối cảnh đặc biệt: Studio chuyên nghiệp, ngoại cảnh thiên nhiên, kiến trúc độc đáo.',
+        'Chăm chút từng khung hình: Đo sáng chính xác, định hình mood & tone theo chuẩn Lookbook quốc tế.',
+        'Hậu kỳ chuyên sâu: Retouch tỉ mỉ từng chi tiết da (high-end frequency separation), căn chỉnh phom dáng tự nhiên.',
+      ],
+      note: 'Phù hợp: Thời trang (Fashion Lookbook), Kỷ yếu concept cao cấp, Brand Ambassador, Profile doanh nhân.',
+    },
+    masterText: {
+      headline: 'Concept & Nghệ Thuật Tạo Hình — Tuyên Ngôn Cá Tính Độc Bản',
+      lead: 'Mỗi dự án concept là một công trình nghệ thuật thị giác độc lập được may đo riêng cho từng câu chuyện thương hiệu.',
+      sections: [
+        {
+          title: '01 / TƯ DUY NGHỆ THUẬT & ĐỊNH HƯỚNG CONCEPT',
+          content:
+            'Từ ý tưởng sơ khai, chúng tôi cùng bạn phát triển moodboard hoàn chỉnh: từ ánh sáng tương phản cao (chiaroscuro), sắc thái avant-garde đến sự tối giản tinh tế của phong cách Scandinavian.',
+        },
+        {
+          title: '02 / KỸ THUẬT RETOUCH CHUYÊN SÂU',
+          content:
+            'Áp dụng quy trình xử lý da chuyên nghiệp (Dodge & Burn, Frequency Separation), giữ nguyên vân da tự nhiên và làm nổi bật chất liệu vải, trang sức một cách sắc nét nhất.',
+        },
+        {
+          title: '03 / BẢN SẮC KHÁC BIỆT',
+          content:
+            'Kết quả mang lại không chỉ là bộ ảnh đẹp, mà là một tài sản hình ảnh có giá trị truyền thông và khẳng định vị thế thương hiệu cá nhân của bạn.',
+        },
+      ],
+    },
   },
 ];
 
 const ContactPage = ({ theme = 'light' }) => {
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  // activeModal: { type: 'image' | 'pricing' | 'master', product }
+  const [activeModal, setActiveModal] = useState(null);
 
   const handleContact = (product) => {
     window.open('https://zalo.me/0348007036', '_blank', 'noopener,noreferrer');
@@ -143,90 +177,187 @@ const ContactPage = ({ theme = 'light' }) => {
   const isDark = theme === 'dark';
   const folderTone = isDark ? 'dark' : 'light';
 
+  const handleSheetSelect = (product, fileIndex) => {
+    if (fileIndex === 0) {
+      setActiveModal({ type: 'image', product });
+    } else if (fileIndex === 1) {
+      setActiveModal({ type: 'pricing', product });
+    } else {
+      setActiveModal({ type: 'master', product });
+    }
+  };
+
   return (
     <div className="contact-page">
-      {selectedProduct && (
-        <div className="contact-modal-overlay" onClick={() => setSelectedProduct(null)}>
-          <div className="contact-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button className="contact-modal-close" onClick={() => setSelectedProduct(null)}>
-              ← CLOSE
+      {/* 3 DISTINCT MODALS */}
+      {activeModal && activeModal.type === 'image' && (
+        <div className="contact-modal-overlay" onClick={() => setActiveModal(null)}>
+          <div className="contact-modal-card contact-modal-card--image" onClick={(e) => e.stopPropagation()}>
+            <button className="contact-modal-close" onClick={() => setActiveModal(null)}>
+              ← ĐÓNG
             </button>
-            <div className="contact-modal-content">
-              <div className="contact-modal-img-wrap">
-                <img src={selectedProduct.image} alt={selectedProduct.title} className="contact-modal-img" />
-              </div>
-              <div className="contact-modal-info">
-                <h2 className="contact-modal-title">{selectedProduct.title}</h2>
-                <p className="contact-modal-paper contact-modal-intro">
-                  {selectedProduct.intro}
-                </p>
-
-                <div className="contact-modal-detail">
-                  <h3 className="contact-modal-detail-title">{selectedProduct.detailTitle}</h3>
-                  {selectedProduct.detailSubtitle && (
-                    <h4 className="contact-modal-detail-subtitle">{selectedProduct.detailSubtitle}</h4>
-                  )}
-                  {selectedProduct.paragraphs.map((text) => (
-                    <p key={text.slice(0, 48)}>{text}</p>
-                  ))}
-                </div>
-
-                <hr className="contact-modal-divider" />
-                <div className="contact-modal-purchase">
-                  <button className="contact-modal-btn" onClick={() => handleContact(selectedProduct)}>
-                    LIÊN HỆ
-                  </button>
-                </div>
+            <div className="contact-modal-img-preview-wrap">
+              <img
+                src={activeModal.product.image}
+                alt={activeModal.product.title}
+                className="contact-modal-preview-full"
+              />
+              <div className="contact-modal-preview-caption">
+                <h3>{activeModal.product.title}</h3>
+                <p>{activeModal.product.subtitle}</p>
+                <button
+                  className="contact-modal-btn"
+                  style={{ marginTop: 12 }}
+                  onClick={() => handleContact(activeModal.product)}
+                >
+                  LIÊN HỆ ĐẶT LỊCH NGAY
+                </button>
               </div>
             </div>
           </div>
         </div>
       )}
 
+      {activeModal && activeModal.type === 'pricing' && (
+        <div className="contact-modal-overlay" onClick={() => setActiveModal(null)}>
+          <div className="contact-modal-card contact-modal-card--pricing" onClick={(e) => e.stopPropagation()}>
+            <button className="contact-modal-close" onClick={() => setActiveModal(null)}>
+              ← ĐÓNG
+            </button>
+            <div className="contact-pricing-modal-body">
+              <span className="contact-pricing-badge">{activeModal.product.pricingDetail.tag}</span>
+              <h2 className="contact-pricing-title">{activeModal.product.pricingDetail.title}</h2>
+              <ul className="contact-pricing-list">
+                {activeModal.product.pricingDetail.items.map((item, idx) => (
+                  <li key={idx} className="contact-pricing-item">
+                    <span className="contact-pricing-check">✓</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="contact-pricing-note">
+                <strong>Ghi chú:</strong> {activeModal.product.pricingDetail.note}
+              </div>
+              <div className="contact-modal-purchase" style={{ marginTop: 24 }}>
+                <span className="contact-modal-price">{activeModal.product.priceLine}</span>
+                <button className="contact-modal-btn" onClick={() => handleContact(activeModal.product)}>
+                  TƯ VẤN & BÁO GIÁ ZALO
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeModal && activeModal.type === 'master' && (
+        <div className="contact-modal-overlay" onClick={() => setActiveModal(null)}>
+          <div className="contact-modal-card contact-modal-card--master" onClick={(e) => e.stopPropagation()}>
+            <button className="contact-modal-close" onClick={() => setActiveModal(null)}>
+              ← ĐÓNG
+            </button>
+
+            {/* Background phản chiếu ReflectBackground của Lightswind */}
+            <div className="contact-master-reflect-bg">
+              <ReflectBackground backdropBlurAmount="xl" />
+            </div>
+
+            <div className="contact-master-content-body">
+              <div className="contact-master-badge">MASTER EDITORIAL & ART DIRECTION</div>
+              <h1 className="contact-master-headline">{activeModal.product.masterText.headline}</h1>
+              <p className="contact-master-lead">{activeModal.product.masterText.lead}</p>
+
+              <hr className="contact-master-divider" />
+
+              <div className="contact-master-sections">
+                {activeModal.product.masterText.sections.map((sec, i) => (
+                  <div key={i} className="contact-master-sec-block">
+                    <h3 className="contact-master-sec-title">{sec.title}</h3>
+                    <p className="contact-master-sec-desc">{sec.content}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="contact-master-actions">
+                <button className="contact-modal-btn" onClick={() => handleContact(activeModal.product)}>
+                  TRAO ĐỔI Ý TƯỞNG CÙNG EKIP
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SHOP GRID WITH 3 TILES PER FOLDER */}
       <div className="contact-shop-content">
         <div className="contact-header-section">
           <h1 className="contact-page-title">CHỤP ẢNH & QUAY PHIM</h1>
           <p className="contact-page-subtitle">
-            Chọn gói dịch vụ bên dưới để xem chi tiết hoặc liên hệ tư vấn trực tiếp.
+            Mở từng folder kính để khám phá 3 tài liệu: Ảnh mẫu, Báo giá chi tiết và Master Text nghệ thuật.
           </p>
         </div>
 
         <div className="contact-glass-folders-grid">
-          {shopProducts.map((product, idx) => (
-            <div key={product.id} className="contact-glass-folder-wrapper">
-              <GlassFolder
-                label={product.title}
-                meta={product.priceLine}
-                tone={folderTone}
-                art={product.art}
-                image={product.image}
-                files={product.files}
-                action="more"
-                menu={[
-                  {
-                    label: 'Xem chi tiết gói',
-                    onSelect: () => setSelectedProduct(product),
-                  },
-                  {
-                    label: 'Liên hệ đặt lịch (Zalo)',
-                    onSelect: () => handleContact(product),
-                  },
-                ]}
-                onFileSelect={() => setSelectedProduct(product)}
-                width={300}
-                appear={true}
-                appearDelay={idx * 120}
-              />
-              <button
-                type="button"
-                className="contact-folder-quick-btn"
-                onClick={() => setSelectedProduct(product)}
-              >
-                <span>Xem chi tiết</span>
-                <span className="contact-folder-price-tag">{product.priceLine}</span>
-              </button>
-            </div>
-          ))}
+          {shopProducts.map((product, idx) => {
+            const folderFiles = [
+              {
+                name: '1. Xem Ảnh / Visual Mẫu',
+                meta: 'Preview Visual Gallery',
+                image: product.image,
+              },
+              {
+                name: '2. Bảng Giá & Chi Tiết Gói',
+                meta: product.priceLine,
+                art: product.art,
+              },
+              {
+                name: '3. Master Editorial Text',
+                meta: 'Reflect Creative Story',
+              },
+            ];
+
+            return (
+              <div key={product.id} className="contact-glass-folder-wrapper">
+                <GlassFolder
+                  label={product.title}
+                  meta={product.priceLine}
+                  tone={folderTone}
+                  art={product.art}
+                  files={folderFiles}
+                  action="more"
+                  menu={[
+                    {
+                      label: '1. Xem ảnh / visual mẫu',
+                      onSelect: () => setActiveModal({ type: 'image', product }),
+                    },
+                    {
+                      label: '2. Bảng giá & chi tiết gói',
+                      onSelect: () => setActiveModal({ type: 'pricing', product }),
+                    },
+                    {
+                      label: '3. Master text edit & Story',
+                      onSelect: () => setActiveModal({ type: 'master', product }),
+                    },
+                    {
+                      label: 'Liên hệ tư vấn Zalo',
+                      onSelect: () => handleContact(product),
+                    },
+                  ]}
+                  onFileSelect={(file, fileIndex) => handleSheetSelect(product, fileIndex)}
+                  width={310}
+                  appear={true}
+                  appearDelay={idx * 100}
+                />
+                <button
+                  type="button"
+                  className="contact-folder-quick-btn"
+                  onClick={() => setActiveModal({ type: 'pricing', product })}
+                >
+                  <span>Bảng giá & Chi tiết</span>
+                  <span className="contact-folder-price-tag">{product.priceLine}</span>
+                </button>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
