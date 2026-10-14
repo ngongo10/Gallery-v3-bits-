@@ -398,10 +398,10 @@ function pump() {
   if (pumping) return
   pumping = true
   const tick = () => {
-    const until = performance.now() + 7
+    const until = performance.now() + 4
     while (queue.length && performance.now() < until) {
       const head = queue[0]
-      if (head.job.step(4)) {
+      if (head.job.step(16)) {
         queue.shift()
         const c = document.createElement("canvas")
         c.width = head.job.width

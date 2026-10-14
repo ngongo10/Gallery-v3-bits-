@@ -60,49 +60,44 @@ export default function LoaderScreen({ onComplete }) {
       }, mobile ? 80 : 160);
     };
 
-    // Mobile: skip network preload — mounting Home is enough work.
-    if (mobile) {
-      setStatusText('Preparing...');
-      let p = 0;
-      const tick = setInterval(() => {
-        if (!isMounted) return;
-        p = Math.min(p + 18, 92);
-        setProgress(p);
-      }, 60);
-      const done = setTimeout(() => {
-        clearInterval(tick);
-        finish();
-      }, 700);
-      const failSafe = setTimeout(finish, MAX_WAIT_MS);
-      return () => {
-        isMounted = false;
-        clearInterval(tick);
-        clearTimeout(done);
-        clearTimeout(failSafe);
-      };
-    }
+    // Danh sách tất cả ảnh trọng tâm cần tải trước (bao gồm cả các gói dịch vụ và các album ảnh)
+    const serviceImages = [
+      'https://res.cloudinary.com/g55oyjhn/image/upload/v1790935995/DSC00990.avif',
+      'https://res.cloudinary.com/g55oyjhn/image/upload/v1788545041/Still_2026-09-05_010136_1.3.1.jpg',
+      'https://res.cloudinary.com/g55oyjhn/image/upload/v1786775685/Tiktok.webp',
+      'https://res.cloudinary.com/g55oyjhn/image/upload/v1790936046/DSC01094.avif',
+    ];
 
-    const urls = categories
-      .map((cat) => buildSrc(cat.cover || cat.items?.[0]?.image, { w: PRELOAD_WIDTH }))
-      .filter(Boolean)
-      .slice(0, 6);
+    const albumCoverUrls = categories
+      .map((cat) => cat.cover || cat.items?.[0]?.image)
+      .filter(Boolean);
 
-    const total = Math.max(urls.length, 1);
+    // Tập hợp danh sách các URL ảnh duy nhất để nạp sẵn vào cache
+    const urlsToPreload = Array.from(new Set([...serviceImages, ...albumCoverUrls]));
+    const total = Math.max(urlsToPreload.length, 1);
     let loaded = 0;
+
+    setStatusText('Đang nạp dữ liệu ảnh...');
 
     const bump = () => {
       if (!isMounted || finished) return;
       loaded += 1;
-      const pct = Math.min(Math.round((loaded / total) * 100), 99);
+      const pct = Math.min(Math.round((loaded / total) * 100), 100);
       setProgress(pct);
-      setStatusText(pct < 50 ? 'Loading covers...' : 'Preparing home...');
+      setStatusText(
+        pct < 40
+          ? 'Đang nạp ảnh dịch vụ...'
+          : pct < 85
+          ? 'Đang chuẩn bị album...'
+          : 'Sẵn sàng trải nghiệm!'
+      );
       if (loaded >= total) finish();
     };
 
-    if (urls.length === 0) {
+    if (urlsToPreload.length === 0) {
       finish();
     } else {
-      urls.forEach((url) => {
+      urlsToPreload.forEach((url) => {
         preloadImage(url).then(bump);
       });
     }
