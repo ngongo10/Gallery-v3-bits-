@@ -156,13 +156,15 @@ function App() {
     if (isTransitioning) return;
     setIsTransitioning(true);
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-    setCurrentPage('home');
+    const targetPage = mobile ? 'contact' : 'home';
+    setCurrentPage(targetPage);
+    setNavActiveIndex(0);
     setTimeout(() => {
       setIsExitingHome(false);
       setSelectedCategory(null);
       setIsTransitioning(false);
     }, 100);
-  }, [isTransitioning]);
+  }, [isTransitioning, mobile]);
 
   const handleLogoClick = useCallback(() => {
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
@@ -170,8 +172,8 @@ function App() {
     setIsExitingHome(false);
     setSelectedCategory(null);
     setIsTransitioning(false);
-    setCurrentPage('home');
-  }, []);
+    setCurrentPage(mobile ? 'contact' : 'home');
+  }, [mobile]);
 
   return (
     <div className="app" data-theme={theme}>
@@ -225,7 +227,7 @@ function App() {
             </div>
           )}
 
-          {currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
+          {!mobile && currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
             <div className={`page-wrapper ${isExitingHome ? 'is-gallery-active' : ''}`}>
               <HomePage
                 theme={theme}

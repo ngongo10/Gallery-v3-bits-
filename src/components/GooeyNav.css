@@ -142,8 +142,7 @@
 }
 
 .gooey-nav-container .effect.text {
-  color: #1a1a1a;
-  transition: color 0.3s ease;
+  display: none !important; /* Tránh đè chữ lồng nhau */
 }
 
 [data-theme="dark"] .gooey-nav-container .effect.text {
