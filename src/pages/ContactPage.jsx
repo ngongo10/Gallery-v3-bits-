@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GlassFolder from '../components/ui/glass-folder-cards';
+import ReflectBackground from '../components/lightswind/reflect-background';
 import './ContactPage.css';
 
 const shopProducts = [
@@ -220,6 +221,11 @@ const ContactPage = ({ theme = 'light' }) => {
       {activeModal && activeModal.type === 'pricing' && (
         <div className="contact-modal-overlay" onClick={() => setActiveModal(null)}>
           <div className="contact-modal-card contact-modal-card--pricing" onClick={(e) => e.stopPropagation()}>
+            {/* Lớp ReflectBackground gợn sóng tinh tế, nhẹ nhàng */}
+            <div className="contact-subtle-reflect-bg" aria-hidden="true">
+              <ReflectBackground backdropBlurAmount="2xl" />
+            </div>
+
             <button className="contact-modal-close" onClick={() => setActiveModal(null)}>
               ← ĐÓNG
             </button>
@@ -251,6 +257,11 @@ const ContactPage = ({ theme = 'light' }) => {
       {activeModal && activeModal.type === 'master' && (
         <div className="contact-modal-overlay" onClick={() => setActiveModal(null)}>
           <div className="contact-modal-card contact-modal-card--master" onClick={(e) => e.stopPropagation()}>
+            {/* Lớp ReflectBackground nhẹ nhàng, thanh lịch dưới nền giấy mỹ thuật */}
+            <div className="contact-subtle-reflect-bg contact-subtle-reflect-bg--master" aria-hidden="true">
+              <ReflectBackground backdropBlurAmount="3xl" />
+            </div>
+
             {/* Nếp gấp gập góc tài liệu designer (Dog-ear folded corner) */}
             <div className="contact-document-fold" aria-hidden="true" />
             <div className="contact-document-fold-edge" aria-hidden="true" />

@@ -559,10 +559,45 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+/* Subtle Ambient ReflectBackground Layer */
+.contact-subtle-reflect-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.16; /* Rất nhẹ nhàng, không bị gắt hay nặng màu */
+  z-index: 1;
+  border-radius: inherit;
+  overflow: hidden;
+  mix-blend-mode: multiply;
+  transition: opacity 0.3s ease;
+}
+
+[data-theme="dark"] .contact-subtle-reflect-bg {
+  opacity: 0.28;
+  mix-blend-mode: screen;
+}
+
+.contact-subtle-reflect-bg--master {
+  opacity: 0.12;
+}
+
+[data-theme="dark"] .contact-subtle-reflect-bg--master {
+  opacity: 0.22;
+}
+
 /* Pricing Modal */
 .contact-modal-card--pricing {
+  position: relative;
   max-width: 600px;
   padding: 36px 32px;
+  overflow: hidden;
+}
+
+.contact-pricing-modal-body {
+  position: relative;
+  z-index: 5;
 }
 
 .contact-pricing-badge {
