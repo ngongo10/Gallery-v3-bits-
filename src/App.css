@@ -97,6 +97,15 @@ html, body, #root {
   }
 }
 
+/* ─── Mode toggle bottom-right (chỉ desktop, trang Home) ─── */
+.app-mode-toggle-bottom {
+  position: absolute;
+  bottom: 24px;
+  right: 32px;
+  z-index: 100;
+}
+
+
 .page-layer {
   position: absolute;
   inset: 0;

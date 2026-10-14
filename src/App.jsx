@@ -204,12 +204,9 @@ function App() {
               </div>
 
               <div className="app-top-bar">
-                {/* Desktop: ThemeToggler left of ModeToggle */}
+                {/* Desktop: ThemeToggler ở top-bar */}
                 {!mobile && (
                   <AnimatedThemeToggler theme={theme} onToggle={toggleTheme} />
-                )}
-                {currentPage !== 'about' && currentPage !== 'contact' && (
-                  <ModeToggle mode={homeMode} onChange={handleModeChange} />
                 )}
                 <GooeyNav
                   items={navItems}
@@ -233,6 +230,14 @@ function App() {
             </>
           )}
 
+          {/* ModeToggle góc dưới phải — chỉ desktop, chỉ trang Home */}
+          {!mobile && currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
+            <div className="app-mode-toggle-bottom">
+              <ModeToggle mode={homeMode} onChange={handleModeChange} />
+            </div>
+          )}
+
+          {/* Mobile: ThemeToggler góc dưới phải */}
           {mobile && currentPage === 'home' && (
             <div className="app-theme-toggle-bottom">
               <AnimatedThemeToggler theme={theme} onToggle={toggleTheme} />
