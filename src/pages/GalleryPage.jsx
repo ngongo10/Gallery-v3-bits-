@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import MorphSlider from '../components/MorphSlider';
 import ImageLightbox from '../components/ImageLightbox';
 import './GalleryPage.css';
 
@@ -113,7 +112,6 @@ const GalleryPage = ({ category, onBack }) => {
   const leftColRef = useRef(null);
   const rightColRef = useRef(null);
   const isSyncingRef = useRef(false);
-  const [showDetailMode, setShowDetailMode] = useState(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
@@ -147,36 +145,21 @@ const GalleryPage = ({ category, onBack }) => {
     return url;
   }, []);
 
-  const morphItems = useMemo(
-    () => items.map(({ image, caption }) => ({
-      image: getOptimizedUrl(image, isMobile),
-      caption
-    })),
-    [items, isMobile, getOptimizedUrl]
-  );
-
-  // Lens bloom entrance
+  // Entrance
   useEffect(() => {
     if (!category) return;
     const el = pageRef.current;
     if (!el) return;
     el.classList.remove('gallery-page--entered');
-    if (isMobile) {
-      el.classList.add('gallery-page--entered');
-      return;
-    }
-    // Double rAF so the browser paints the start state before transitioning
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         el.classList.add('gallery-page--entered');
       });
     });
-  }, [category, isMobile]);
+  }, [category]);
 
-  // Scroll spy when in Detail Mode (update active index by IntersectionObserver on left column)
+  // Scroll spy (update active index by IntersectionObserver on left column)
   useEffect(() => {
-    if (!showDetailMode) return;
-
     const observers = [];
     imageRefs.current.forEach((el, index) => {
       if (!el) return;
@@ -197,7 +180,7 @@ const GalleryPage = ({ category, onBack }) => {
     return () => {
       observers.forEach((obs) => obs.disconnect());
     };
-  }, [showDetailMode, category, isMobile]);
+  }, [category, isMobile]);
 
   // Sync scroll: left col drives right col
   const handleLeftScroll = useCallback(() => {
@@ -221,11 +204,11 @@ const GalleryPage = ({ category, onBack }) => {
     requestAnimationFrame(() => { isSyncingRef.current = false; });
   }, []);
 
-  // Attach / detach scroll listeners when detail mode changes
+  // Attach / detach scroll listeners
   useEffect(() => {
     const left = leftColRef.current;
     const right = rightColRef.current;
-    if (!showDetailMode || !left || !right) return;
+    if (!left || !right) return;
 
     left.addEventListener('scroll', handleLeftScroll, { passive: true });
     right.addEventListener('scroll', handleRightScroll, { passive: true });
@@ -233,7 +216,7 @@ const GalleryPage = ({ category, onBack }) => {
       left.removeEventListener('scroll', handleLeftScroll);
       right.removeEventListener('scroll', handleRightScroll);
     };
-  }, [showDetailMode, handleLeftScroll, handleRightScroll]);
+  }, [handleLeftScroll, handleRightScroll]);
 
   // Handle clicking a thumbnail in thumbnail rail
   const handleThumbnailClick = (index) => {
@@ -250,79 +233,17 @@ const GalleryPage = ({ category, onBack }) => {
       {/* Back button */}
       <button
         className="gallery-back-btn"
-        onClick={() => {
-          if (isMobile) {
-            onBack();
-          } else if (showDetailMode) {
-            setShowDetailMode(false);
-          } else {
-            onBack();
-          }
-        }}
+        onClick={onBack}
         aria-label="Back"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M19 12H5M5 12l7-7M5 12l7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
-        <span>{(!isMobile && showDetailMode) ? 'GALLERY' : 'BACK'}</span>
+        <span>BACK</span>
       </button>
 
-      {/* Bottom Left INFO Button (Desktop only) */}
-      {!isMobile && (
-        <button
-          className={`gallery-info-btn${showDetailMode ? ' active' : ''}`}
-          onClick={() => setShowDetailMode((v) => !v)}
-          aria-label="Toggle Detail Mode"
-          aria-expanded={showDetailMode}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M12 16v-4M12 8h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-          <span>{showDetailMode ? 'CLOSE INFO' : 'INFO'}</span>
-        </button>
-      )}
-
-      {/* Header Overlay in standard MorphSlider view (Desktop only) */}
-      {!isMobile && !showDetailMode && (
-        <div className="gallery-header">
-          <p className="gallery-count">{items.length} ITEMS</p>
-        </div>
-      )}
-
-      {/* Blurred backdrop behind photos — Desktop only */}
-      {!isMobile && (
-        <div
-          className="gallery-blurred-bg"
-          style={{
-            backgroundImage: items[activePhotoIndex]?.image ? `url("${items[activePhotoIndex].image}")` : 'none'
-          }}
-          aria-hidden="true"
-        />
-      )}
-
-      {/* MODE 1: MorphSlider (Desktop only) */}
-      {!isMobile && (
-        <div className={`gallery-slider-wrap${showDetailMode ? ' hide-slider' : ''}`}>
-          <MorphSlider
-            items={morphItems}
-            transition="melt"
-            intensity={0.55}
-            aberration={0.35}
-            drift={0.4}
-            autoplay={true}
-            autoplayDelay={4}
-            overlayColor="#000000"
-            scale={2.4}
-            showCaptions={true}
-            radius={16}
-            onIndexChange={setActivePhotoIndex}
-          />
-        </div>
-      )}
-
-      {/* Main Gallery / Stream View (Always active on mobile as primary gallery) */}
-      <div className={`gallery-detail-view${(isMobile || showDetailMode) ? ' active' : ''}`}>
+      {/* Main Gallery / Stream View */}
+      <div className="gallery-detail-view active">
         <div className="chry-thumbnail-rail left-rail">
           {items.map((photo, i) => {
             const isActive = i === activePhotoIndex;
@@ -388,7 +309,7 @@ const GalleryPage = ({ category, onBack }) => {
                       <p className="chry-intro-desc">
                         <MatrixTypewriterText
                           text={photo.storyText}
-                          trigger={isMobile || (showDetailMode && activePhotoIndex === i)}
+                          trigger={true}
                           speed={30}
                         />
                       </p>
@@ -432,7 +353,7 @@ const GalleryPage = ({ category, onBack }) => {
                         <p className="chry-intro-desc">
                           <TypewriterText
                             text={category.description ?? CATEGORY_DESC[category?.id] ?? 'Visual art portfolio collection captured by JUBISATAKA.'}
-                            trigger={showDetailMode && activePhotoIndex === 0}
+                            trigger={true}
                             speed={24}
                           />
                         </p>
@@ -445,7 +366,7 @@ const GalleryPage = ({ category, onBack }) => {
                         <p className="chry-intro-desc">
                           <MatrixTypewriterText
                             text={photo.storyText}
-                            trigger={showDetailMode && activePhotoIndex === i}
+                            trigger={activePhotoIndex === i}
                             speed={30}
                           />
                         </p>

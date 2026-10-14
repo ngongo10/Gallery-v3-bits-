@@ -192,41 +192,17 @@
   color: rgba(255, 255, 255, 0.25);
 }
 
-/* ─── MorphSlider Wrapper ─── */
-.gallery-slider-wrap {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: auto;
-}
-
-.gallery-slider-wrap.hide-slider {
-  opacity: 0;
-  transform: scale(0.96);
-  pointer-events: none;
-}
-
-/* ─── DETAIL VIEW LAYOUT ─── */
+/* ─── GALLERY VIEW (Split layout: Images on Left + Text on Right) ─── */
 .gallery-detail-view {
   position: absolute;
   inset: 0;
   z-index: 5;
-  opacity: 0;
-  transform: translateY(30px);
-  pointer-events: none;
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
   background: transparent;
   display: flex;
   flex-direction: row;
-}
-
-.gallery-detail-view.active {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
 }
 
 /* Thumbnail Rail on LEFT (Inverted: Dot on left, Thumbnail on right)
