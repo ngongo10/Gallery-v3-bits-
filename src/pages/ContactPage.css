@@ -646,7 +646,7 @@
   border-left-color: rgba(255, 255, 255, 0.4);
 }
 
-/* Master Editorial Modal with ReflectBackground */
+/* Master Editorial Modal with Luxury Designer Document & Folded Dog-ear Corner */
 .contact-modal-card--master {
   position: relative;
   max-width: 760px;
@@ -654,95 +654,212 @@
   max-height: 85vh;
   overflow: hidden;
   padding: 0;
-  border-radius: 20px;
-  background: #09090b;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45);
+  border-radius: 16px;
+  /* Dạng giấy tài liệu cao cấp: grain texture nhẹ & tone màu sang trọng */
+  background: #fbfbfd;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(240, 235, 225, 0.45) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(220, 225, 235, 0.45) 0px, transparent 50%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.contact-master-reflect-bg {
+[data-theme="dark"] .contact-modal-card--master {
+  background: #111115;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(35, 35, 45, 0.6) 0px, transparent 60%),
+    radial-gradient(at 100% 100%, rgba(20, 20, 28, 0.6) 0px, transparent 60%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 32px 80px -20px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Nếp gập góc trên bên phải (Dog-ear folded corner icon style) */
+.contact-document-fold {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 46px 46px 0;
+  border-color: transparent #000000 transparent transparent;
+  opacity: 0.08;
+  z-index: 15;
   pointer-events: none;
-  opacity: 0.65;
+}
+
+[data-theme="dark"] .contact-document-fold {
+  border-color: transparent #000000 transparent transparent;
+  opacity: 0.6;
+}
+
+.contact-document-fold-edge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 46px 0 0 46px;
+  border-color: transparent transparent transparent #e8e8ee;
+  box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.12);
+  z-index: 16;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .contact-document-fold-edge {
+  border-color: transparent transparent transparent #22222a;
+  box-shadow: -4px 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.contact-modal-card--master .contact-modal-close {
+  top: 18px;
+  right: 58px; /* Lùi sang trái để nhường góc gập đẹp mắt */
+  z-index: 20;
 }
 
 .contact-master-content-body {
   position: relative;
   z-index: 10;
-  padding: 40px 36px 36px;
+  padding: 44px 40px 38px;
   overflow-y: auto;
   max-height: 85vh;
-  color: #ffffff;
+  color: #1a1a1f;
   scrollbar-width: thin;
 }
 
+[data-theme="dark"] .contact-master-content-body {
+  color: #f3f3f6;
+}
+
 .contact-master-badge {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
+  color: #52525b;
+  margin-bottom: 14px;
+}
+
+.contact-master-badge::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #111111;
+}
+
+[data-theme="dark"] .contact-master-badge {
   color: #a1a1aa;
-  margin-bottom: 12px;
+}
+
+[data-theme="dark"] .contact-master-badge::before {
+  background: #60a5fa;
 }
 
 .contact-master-headline {
-  margin: 0 0 12px 0;
-  font-size: 1.7rem;
-  font-weight: 300;
-  letter-spacing: -0.02em;
+  margin: 0 0 14px 0;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  color: #09090b;
+  line-height: 1.35;
+}
+
+[data-theme="dark"] .contact-master-headline {
   color: #ffffff;
-  line-height: 1.3;
 }
 
 .contact-master-lead {
   font-size: 14px;
-  line-height: 1.7;
-  color: #d4d4d8;
-  margin: 0 0 24px 0;
+  line-height: 1.75;
+  color: rgba(0, 0, 0, 0.68);
+  margin: 0 0 26px 0;
+  font-style: italic;
+  border-left: 2px solid rgba(0, 0, 0, 0.2);
+  padding-left: 16px;
+}
+
+[data-theme="dark"] .contact-master-lead {
+  color: rgba(255, 255, 255, 0.7);
+  border-left-color: rgba(255, 255, 255, 0.25);
 }
 
 .contact-master-divider {
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   margin: 0 0 28px 0;
+}
+
+[data-theme="dark"] .contact-master-divider {
+  border-top-color: rgba(255, 255, 255, 0.1);
 }
 
 .contact-master-sections {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-bottom: 32px;
+  gap: 26px;
+  margin-bottom: 34px;
 }
 
 .contact-master-sec-block {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+[data-theme="dark"] .contact-master-sec-block {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .contact-master-sec-title {
   margin: 0;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #67e8f9;
+  color: #27272a;
+}
+
+[data-theme="dark"] .contact-master-sec-title {
+  color: #93c5fd;
 }
 
 .contact-master-sec-desc {
   margin: 0;
-  font-size: 13px;
-  line-height: 1.75;
-  color: #e4e4e7;
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+[data-theme="dark"] .contact-master-sec-desc {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .contact-master-actions {
   display: flex;
   justify-content: flex-end;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .contact-master-actions {
+  border-top-color: rgba(255, 255, 255, 0.1);
 }
