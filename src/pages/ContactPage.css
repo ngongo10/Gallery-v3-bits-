@@ -67,9 +67,15 @@
   gap: 40px;
 }
 
+.contact-header-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .contact-page-title {
   font-family: 'Inter', sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -81,17 +87,81 @@
   color: #ffffff;
 }
 
-.contact-shop-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 40px;
+.contact-page-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0;
+  line-height: 1.5;
 }
 
-.contact-shop-card {
+[data-theme="dark"] .contact-page-subtitle {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.contact-glass-folders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 48px 36px;
+  justify-items: center;
+  align-items: start;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.contact-glass-folder-wrapper {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.contact-folder-quick-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 16px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #111111;
   cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="dark"] .contact-folder-quick-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.contact-folder-quick-btn:hover {
+  background: rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+[data-theme="dark"] .contact-folder-quick-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.contact-folder-price-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: #1a73e8;
+  background: rgba(26, 115, 232, 0.1);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+[data-theme="dark"] .contact-folder-price-tag {
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.15);
 }
 
 .contact-shop-frame {
