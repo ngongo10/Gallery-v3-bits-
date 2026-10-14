@@ -25,6 +25,20 @@
     1.001 85%,
     1
   );
+
+  /* Màu particles – light theme (nền trắng): dùng màu tối/sắc nét */
+  --color-1: #e63946;
+  --color-2: #2196f3;
+  --color-3: #ff9800;
+  --color-4: #9c27b0;
+}
+
+/* Dark theme: particles màu sáng/neon */
+[data-theme="dark"] {
+  --color-1: #ff6b6b;
+  --color-2: #74c0fc;
+  --color-3: #ffd43b;
+  --color-4: #da77f2;
 }
 
 .gooey-nav-container {
@@ -65,7 +79,6 @@
   border-radius: 100vw;
   position: relative;
   cursor: pointer;
-  overflow: visible; /* Cho phép particles hiển thị bên ngoài li */
   transition:
     background-color 0.3s ease,
     color 0.3s ease,
@@ -82,7 +95,7 @@
   display: inline-block;
   padding: 0.6em 1em;
   position: relative;
-  z-index: 2; /* Chữ luôn trên pill */
+  z-index: 2;
 }
 
 @media (max-width: 768px) {
@@ -100,7 +113,7 @@
   box-shadow: 0 0 0.5px 1.5px white;
 }
 
-/* Pill highlight dùng ::after — trượt smooth khi active */
+/* Pill tĩnh của li::after – fallback / nền khi active */
 .gooey-nav-container nav ul li::after {
   content: '';
   position: absolute;
@@ -109,9 +122,7 @@
   background: #111111;
   opacity: 0;
   transform: scale(0);
-  transition:
-    opacity 0.3s ease,
-    transform 0.3s var(--linear-ease, ease);
+  transition: all 0.3s ease;
   z-index: 1;
 }
 
@@ -119,7 +130,6 @@
   background: white;
 }
 
-/* Chữ active đổi màu tương phản với pill */
 .gooey-nav-container nav ul li.active {
   color: white;
   text-shadow: none;
@@ -130,10 +140,70 @@
   text-shadow: none;
 }
 
-/* Pill hiện ra khi active */
 .gooey-nav-container nav ul li.active::after {
   opacity: 1;
   transform: scale(1);
+}
+
+/* ── Effect overlay (JS-driven pill animation) ── */
+.gooey-nav-container .effect {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  opacity: 1;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  z-index: 4; /* Trên ul (z-index:3) để particles hiển thị */
+  overflow: visible;
+}
+
+.gooey-nav-container .effect.text {
+  display: none !important; /* Tránh đè chữ lồng nhau */
+}
+
+[data-theme="dark"] .gooey-nav-container .effect.text {
+  color: white;
+}
+
+.gooey-nav-container .effect.text.active {
+  color: white;
+}
+
+[data-theme="dark"] .gooey-nav-container .effect.text.active {
+  color: black;
+}
+
+.gooey-nav-container .effect.filter {
+  filter: none;
+  mix-blend-mode: normal;
+}
+
+[data-theme="dark"] .gooey-nav-container .effect.filter {
+  mix-blend-mode: normal;
+}
+
+.gooey-nav-container .effect.filter::before {
+  content: '';
+  position: absolute;
+  inset: -75px;
+  z-index: -2;
+  background: transparent;
+}
+
+/* Pill animation của effect.filter – không dùng vì li::after đã cover,
+   nhưng giữ lại để không phá cấu trúc */
+.gooey-nav-container .effect.filter::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  transform: scale(0);
+  opacity: 0;
+  z-index: -1;
+  border-radius: 100vw;
 }
 
 /* ── Particles ── */
@@ -152,7 +222,7 @@
   position: absolute;
   top: calc(50% - 8px);
   left: calc(50% - 8px);
-  z-index: 10; /* Hiển thị trên tất cả */
+  z-index: 10;
   pointer-events: none;
   animation: particle calc(var(--time)) ease 1 -350ms;
 }
