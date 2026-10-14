@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import GlassFolder from '../components/ui/glass-folder-cards';
 import ReflectBackground from '../components/lightswind/reflect-background';
+import ImageLightbox from '../components/ImageLightbox';
 import { categories } from '../data/portfolio';
 import './ContactPage.css';
 
@@ -173,8 +174,10 @@ const shopProducts = [
 ];
 
 const ContactPage = ({ theme = 'light', onCategorySelect }) => {
-  // activeModal: { type: 'album' | 'pricing' | 'master', product }
+  // activeModal: { type: 'pricing' | 'master', product }
   const [activeModal, setActiveModal] = useState(null);
+  // previewImage: { src, alt } | null
+  const [previewImage, setPreviewImage] = useState(null);
 
   const handleContact = (product) => {
     window.open('https://zalo.me/0348007036', '_blank', 'noopener,noreferrer');
@@ -185,7 +188,11 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
 
   const handleSheetSelect = (product, fileIndex) => {
     if (fileIndex === 0) {
-      setActiveModal({ type: 'album', product });
+      // (1) Mở trực tiếp ảnh mẫu gắn kèm của gói
+      setPreviewImage({
+        src: product.image,
+        alt: `${product.title} - Ảnh mẫu`,
+      });
     } else if (fileIndex === 1) {
       setActiveModal({ type: 'pricing', product });
     } else {
@@ -193,60 +200,15 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
     }
   };
 
-  const handleOpenAlbumGallery = (album) => {
-    setActiveModal(null);
-    if (onCategorySelect) {
-      onCategorySelect(album);
-    }
-  };
-
   return (
     <div className="contact-page">
-      {/* 1. ALBUM SHOWCASE MODAL (SHOW CÁC ALBUM RA Ở MỤC 1) */}
-      {activeModal && activeModal.type === 'album' && (
-        <div className="contact-modal-overlay" onClick={() => setActiveModal(null)}>
-          <div className="contact-modal-card contact-modal-card--album" onClick={(e) => e.stopPropagation()}>
-            <button className="contact-modal-close" onClick={() => setActiveModal(null)}>
-              ← ĐÓNG
-            </button>
-            <div className="contact-album-modal-header">
-              <span className="contact-pricing-badge">PORTFOLIO VISUAL GALLERY</span>
-              <h2 className="contact-album-modal-title">Các Album Mẫu — {activeModal.product.title}</h2>
-              <p className="contact-album-modal-desc">
-                Chọn một album bên dưới để xem bộ sưu tập chi tiết hoặc đặt lịch buổi chụp tương tự.
-              </p>
-            </div>
-
-            {/* Showcase lưới các album */}
-            <div className="contact-albums-grid-showcase">
-              {categories.map((cat) => (
-                <div
-                  key={cat.id}
-                  className="contact-album-card-item"
-                  onClick={() => handleOpenAlbumGallery(cat)}
-                >
-                  <div className="contact-album-cover-wrap">
-                    <img src={cat.cover} alt={cat.label} className="contact-album-cover-img" loading="lazy" />
-                    <span className="contact-album-items-count">{cat.items?.length || 0} ảnh</span>
-                  </div>
-                  <div className="contact-album-card-info">
-                    <h4 className="contact-album-name">{cat.label}</h4>
-                    <span className="contact-album-open-link">Xem Album &rarr;</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="contact-album-footer-actions">
-              <button
-                className="contact-modal-btn"
-                onClick={() => handleContact(activeModal.product)}
-              >
-                LIÊN HỆ TƯ VẤN GÓI NÀY
-              </button>
-            </div>
-          </div>
-        </div>
+      {/* Lightbox xem ảnh mẫu trực tiếp khi bấm vào mục 1 */}
+      {previewImage && (
+        <ImageLightbox
+          src={previewImage.src}
+          alt={previewImage.alt}
+          onClose={() => setPreviewImage(null)}
+        />
       )}
 
       {/* 2. PRICING & SERVICES MODAL */}
@@ -342,8 +304,8 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
           {shopProducts.map((product, idx) => {
             const folderFiles = [
               {
-                name: '1. Album Mẫu & Visuals',
-                meta: 'Xem các Album mẫu',
+                name: '1. Ảnh mẫu',
+                meta: 'Xem ảnh',
                 image: product.image,
               },
               {
