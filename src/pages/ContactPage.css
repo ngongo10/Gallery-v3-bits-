@@ -47,6 +47,16 @@
     justify-items: center;
   }
 
+  /* Khi màn hình quá nhỏ (< 380px), chuyển thành 1 cột để thư mục to rõ không bị co rúm */
+  @media (max-width: 380px) {
+    .contact-glass-folders-grid {
+      grid-template-columns: 1fr !important;
+      gap: 28px !important;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+  }
+
   .contact-glass-folder-wrapper {
     max-width: 100% !important;
     width: 100% !important;
