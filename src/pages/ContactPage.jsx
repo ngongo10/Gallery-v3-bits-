@@ -368,7 +368,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                     files={folderFiles}
                     action="none"
                     onFileSelect={(file, fileIndex) => handleSheetSelect(product, fileIndex)}
-                    width={290}
+                    width={310}
                     appear={true}
                     appearDelay={idx * 60}
                   />
@@ -382,7 +382,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                     files={folderFiles}
                     action="none"
                     onFileSelect={(file, fileIndex) => handleSheetSelect(product, fileIndex)}
-                    width={165}
+                    width={182}
                     appear={false}
                   />
                 </div>
