@@ -1,5 +1,5 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-10-13T07:06:29.704505Z
+// Generated: 2026-10-14T18:08:54.776665Z
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
@@ -88,53 +88,38 @@ export const categories = [
       },
       {
         "id": "ky-yeu-1",
-        "image": cloudinaryUrl("/20210505-DSC01007") ,
+        "image": cloudinaryUrl("/20210525-DSC01694") ,
         "caption": "Kỷ Yếu #2",
       },
       {
         "id": "ky-yeu-2",
-        "image": cloudinaryUrl("/20210525-DSC01694") ,
+        "image": cloudinaryUrl("/20210525-DSC01701") ,
         "caption": "Kỷ Yếu #3",
       },
       {
         "id": "ky-yeu-3",
-        "image": cloudinaryUrl("/20210525-DSC01701") ,
+        "image": cloudinaryUrl("/20210525-DSC01707") ,
         "caption": "Kỷ Yếu #4",
       },
       {
         "id": "ky-yeu-4",
-        "image": cloudinaryUrl("/20210525-DSC01707") ,
+        "image": cloudinaryUrl("/20210525-DSC01711") ,
         "caption": "Kỷ Yếu #5",
       },
       {
         "id": "ky-yeu-5",
-        "image": cloudinaryUrl("/20210525-DSC01708-Enhanced-NR") ,
+        "image": cloudinaryUrl("/20210525-DSC01713") ,
         "caption": "Kỷ Yếu #6",
       },
       {
         "id": "ky-yeu-6",
-        "image": cloudinaryUrl("/20210525-DSC01711") ,
+        "image": cloudinaryUrl("/20210525-DSC01747") ,
         "caption": "Kỷ Yếu #7",
       },
       {
         "id": "ky-yeu-7",
-        "image": cloudinaryUrl("/20210525-DSC01713") ,
-        "caption": "Kỷ Yếu #8",
-      },
-      {
-        "id": "ky-yeu-8",
-        "image": cloudinaryUrl("/20210525-DSC01747") ,
-        "caption": "Kỷ Yếu #9",
-      },
-      {
-        "id": "ky-yeu-9",
         "image": cloudinaryUrl("/20210525-DSC01765") ,
-        "caption": "Kỷ Yếu #10",
-      },
-      {
-        "id": "ky-yeu-10",
-        "image": cloudinaryUrl("/20210525-DSC01926") ,
-        "caption": "Kỷ Yếu #11",
+        "caption": "Kỷ Yếu #8",
       },
     ]
   },
@@ -210,198 +195,173 @@ export const categories = [
       },
       {
         "id": "tiec-bai-bien-cos-6",
-        "image": cloudinaryUrl("/20210504-DSC00603") ,
+        "image": cloudinaryUrl("/20210505-DSC00671") ,
         "caption": "Tiệc Bãi Biển (cos) #7",
       },
       {
         "id": "tiec-bai-bien-cos-7",
-        "image": cloudinaryUrl("/20210505-DSC00671") ,
+        "image": cloudinaryUrl("/20210505-DSC00676") ,
         "caption": "Tiệc Bãi Biển (cos) #8",
       },
       {
         "id": "tiec-bai-bien-cos-8",
-        "image": cloudinaryUrl("/20210505-DSC00676") ,
+        "image": cloudinaryUrl("/20210505-DSC00681") ,
         "caption": "Tiệc Bãi Biển (cos) #9",
       },
       {
         "id": "tiec-bai-bien-cos-9",
-        "image": cloudinaryUrl("/20210505-DSC00681") ,
+        "image": cloudinaryUrl("/20210505-DSC00693") ,
         "caption": "Tiệc Bãi Biển (cos) #10",
       },
       {
         "id": "tiec-bai-bien-cos-10",
-        "image": cloudinaryUrl("/20210505-DSC00693") ,
+        "image": cloudinaryUrl("/20210505-DSC00694") ,
         "caption": "Tiệc Bãi Biển (cos) #11",
       },
       {
         "id": "tiec-bai-bien-cos-11",
-        "image": cloudinaryUrl("/20210505-DSC00694") ,
+        "image": cloudinaryUrl("/20210505-DSC00709") ,
         "caption": "Tiệc Bãi Biển (cos) #12",
       },
       {
         "id": "tiec-bai-bien-cos-12",
-        "image": cloudinaryUrl("/20210505-DSC00709") ,
+        "image": cloudinaryUrl("/20210505-DSC00711") ,
         "caption": "Tiệc Bãi Biển (cos) #13",
       },
       {
         "id": "tiec-bai-bien-cos-13",
-        "image": cloudinaryUrl("/20210505-DSC00711") ,
+        "image": cloudinaryUrl("/20210505-DSC00713") ,
         "caption": "Tiệc Bãi Biển (cos) #14",
       },
       {
         "id": "tiec-bai-bien-cos-14",
-        "image": cloudinaryUrl("/20210505-DSC00713") ,
+        "image": cloudinaryUrl("/20210505-DSC00719") ,
         "caption": "Tiệc Bãi Biển (cos) #15",
       },
       {
         "id": "tiec-bai-bien-cos-15",
-        "image": cloudinaryUrl("/20210505-DSC00719") ,
+        "image": cloudinaryUrl("/20210505-DSC00731") ,
         "caption": "Tiệc Bãi Biển (cos) #16",
       },
       {
         "id": "tiec-bai-bien-cos-16",
-        "image": cloudinaryUrl("/20210505-DSC00731") ,
+        "image": cloudinaryUrl("/20210505-DSC00739") ,
         "caption": "Tiệc Bãi Biển (cos) #17",
       },
       {
         "id": "tiec-bai-bien-cos-17",
-        "image": cloudinaryUrl("/20210505-DSC00739") ,
+        "image": cloudinaryUrl("/20210505-DSC00767") ,
         "caption": "Tiệc Bãi Biển (cos) #18",
       },
       {
         "id": "tiec-bai-bien-cos-18",
-        "image": cloudinaryUrl("/20210505-DSC00767") ,
+        "image": cloudinaryUrl("/20210505-DSC00769") ,
         "caption": "Tiệc Bãi Biển (cos) #19",
       },
       {
         "id": "tiec-bai-bien-cos-19",
-        "image": cloudinaryUrl("/20210505-DSC00769") ,
+        "image": cloudinaryUrl("/20210505-DSC00772") ,
         "caption": "Tiệc Bãi Biển (cos) #20",
       },
       {
         "id": "tiec-bai-bien-cos-20",
-        "image": cloudinaryUrl("/20210505-DSC00772") ,
+        "image": cloudinaryUrl("/20210505-DSC00785") ,
         "caption": "Tiệc Bãi Biển (cos) #21",
       },
       {
         "id": "tiec-bai-bien-cos-21",
-        "image": cloudinaryUrl("/20210505-DSC00782") ,
+        "image": cloudinaryUrl("/20210505-DSC00790") ,
         "caption": "Tiệc Bãi Biển (cos) #22",
       },
       {
         "id": "tiec-bai-bien-cos-22",
-        "image": cloudinaryUrl("/20210505-DSC00785") ,
+        "image": cloudinaryUrl("/20210505-DSC00794") ,
         "caption": "Tiệc Bãi Biển (cos) #23",
       },
       {
         "id": "tiec-bai-bien-cos-23",
-        "image": cloudinaryUrl("/20210505-DSC00790") ,
+        "image": cloudinaryUrl("/20210505-DSC00806") ,
         "caption": "Tiệc Bãi Biển (cos) #24",
       },
       {
         "id": "tiec-bai-bien-cos-24",
-        "image": cloudinaryUrl("/20210505-DSC00794") ,
+        "image": cloudinaryUrl("/20210505-DSC00838") ,
         "caption": "Tiệc Bãi Biển (cos) #25",
       },
       {
         "id": "tiec-bai-bien-cos-25",
-        "image": cloudinaryUrl("/20210505-DSC00798") ,
+        "image": cloudinaryUrl("/20210505-DSC00841") ,
         "caption": "Tiệc Bãi Biển (cos) #26",
       },
       {
         "id": "tiec-bai-bien-cos-26",
-        "image": cloudinaryUrl("/20210505-DSC00806") ,
+        "image": cloudinaryUrl("/20210505-DSC00843") ,
         "caption": "Tiệc Bãi Biển (cos) #27",
       },
       {
         "id": "tiec-bai-bien-cos-27",
-        "image": cloudinaryUrl("/20210505-DSC00838") ,
+        "image": cloudinaryUrl("/20210505-DSC00849") ,
         "caption": "Tiệc Bãi Biển (cos) #28",
       },
       {
         "id": "tiec-bai-bien-cos-28",
-        "image": cloudinaryUrl("/20210505-DSC00841") ,
+        "image": cloudinaryUrl("/20210505-DSC00850") ,
         "caption": "Tiệc Bãi Biển (cos) #29",
       },
       {
         "id": "tiec-bai-bien-cos-29",
-        "image": cloudinaryUrl("/20210505-DSC00843") ,
+        "image": cloudinaryUrl("/20210505-DSC00864") ,
         "caption": "Tiệc Bãi Biển (cos) #30",
       },
       {
         "id": "tiec-bai-bien-cos-30",
-        "image": cloudinaryUrl("/20210505-DSC00849") ,
+        "image": cloudinaryUrl("/20210505-DSC00870") ,
         "caption": "Tiệc Bãi Biển (cos) #31",
       },
       {
         "id": "tiec-bai-bien-cos-31",
-        "image": cloudinaryUrl("/20210505-DSC00850") ,
+        "image": cloudinaryUrl("/20210505-DSC00876") ,
         "caption": "Tiệc Bãi Biển (cos) #32",
       },
       {
         "id": "tiec-bai-bien-cos-32",
-        "image": cloudinaryUrl("/20210505-DSC00864") ,
+        "image": cloudinaryUrl("/20210505-DSC00883") ,
         "caption": "Tiệc Bãi Biển (cos) #33",
       },
       {
         "id": "tiec-bai-bien-cos-33",
-        "image": cloudinaryUrl("/20210505-DSC00870") ,
+        "image": cloudinaryUrl("/20210505-DSC00886") ,
         "caption": "Tiệc Bãi Biển (cos) #34",
       },
       {
         "id": "tiec-bai-bien-cos-34",
-        "image": cloudinaryUrl("/20210505-DSC00876") ,
+        "image": cloudinaryUrl("/20210505-DSC00938") ,
         "caption": "Tiệc Bãi Biển (cos) #35",
       },
       {
         "id": "tiec-bai-bien-cos-35",
-        "image": cloudinaryUrl("/20210505-DSC00883") ,
+        "image": cloudinaryUrl("/20210505-DSC00939") ,
         "caption": "Tiệc Bãi Biển (cos) #36",
       },
       {
         "id": "tiec-bai-bien-cos-36",
-        "image": cloudinaryUrl("/20210505-DSC00886") ,
+        "image": cloudinaryUrl("/20210505-DSC00953") ,
         "caption": "Tiệc Bãi Biển (cos) #37",
       },
       {
         "id": "tiec-bai-bien-cos-37",
-        "image": cloudinaryUrl("/20210505-DSC00932") ,
+        "image": cloudinaryUrl("/20210505-DSC00957") ,
         "caption": "Tiệc Bãi Biển (cos) #38",
       },
       {
         "id": "tiec-bai-bien-cos-38",
-        "image": cloudinaryUrl("/20210505-DSC00938") ,
+        "image": cloudinaryUrl("/20210505-DSC00958") ,
         "caption": "Tiệc Bãi Biển (cos) #39",
       },
       {
         "id": "tiec-bai-bien-cos-39",
-        "image": cloudinaryUrl("/20210505-DSC00939") ,
-        "caption": "Tiệc Bãi Biển (cos) #40",
-      },
-      {
-        "id": "tiec-bai-bien-cos-40",
-        "image": cloudinaryUrl("/20210505-DSC00947") ,
-        "caption": "Tiệc Bãi Biển (cos) #41",
-      },
-      {
-        "id": "tiec-bai-bien-cos-41",
-        "image": cloudinaryUrl("/20210505-DSC00953") ,
-        "caption": "Tiệc Bãi Biển (cos) #42",
-      },
-      {
-        "id": "tiec-bai-bien-cos-42",
-        "image": cloudinaryUrl("/20210505-DSC00957") ,
-        "caption": "Tiệc Bãi Biển (cos) #43",
-      },
-      {
-        "id": "tiec-bai-bien-cos-43",
-        "image": cloudinaryUrl("/20210505-DSC00958") ,
-        "caption": "Tiệc Bãi Biển (cos) #44",
-      },
-      {
-        "id": "tiec-bai-bien-cos-44",
         "image": cloudinaryUrl("/20210505-DSC00959") ,
-        "caption": "Tiệc Bãi Biển (cos) #45",
+        "caption": "Tiệc Bãi Biển (cos) #40",
       },
     ]
   },
@@ -596,7 +556,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-1",
-    "image": cloudinaryUrl("/20210505-DSC01007") ,
+    "image": cloudinaryUrl("/20210525-DSC01694") ,
     "title": "Kỷ Yếu #2",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -604,7 +564,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-2",
-    "image": cloudinaryUrl("/20210525-DSC01694") ,
+    "image": cloudinaryUrl("/20210525-DSC01701") ,
     "title": "Kỷ Yếu #3",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -612,7 +572,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-3",
-    "image": cloudinaryUrl("/20210525-DSC01701") ,
+    "image": cloudinaryUrl("/20210525-DSC01707") ,
     "title": "Kỷ Yếu #4",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -620,7 +580,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-4",
-    "image": cloudinaryUrl("/20210525-DSC01707") ,
+    "image": cloudinaryUrl("/20210525-DSC01711") ,
     "title": "Kỷ Yếu #5",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -628,7 +588,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-5",
-    "image": cloudinaryUrl("/20210525-DSC01708-Enhanced-NR") ,
+    "image": cloudinaryUrl("/20210525-DSC01713") ,
     "title": "Kỷ Yếu #6",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -636,7 +596,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-6",
-    "image": cloudinaryUrl("/20210525-DSC01711") ,
+    "image": cloudinaryUrl("/20210525-DSC01747") ,
     "title": "Kỷ Yếu #7",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -644,32 +604,8 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-7",
-    "image": cloudinaryUrl("/20210525-DSC01713") ,
-    "title": "Kỷ Yếu #8",
-    "category": "ky-yeu",
-    "categoryLabel": "Kỷ Yếu",
-    "mode": "art",
-  },
-  {
-    "id": "ky-yeu-8",
-    "image": cloudinaryUrl("/20210525-DSC01747") ,
-    "title": "Kỷ Yếu #9",
-    "category": "ky-yeu",
-    "categoryLabel": "Kỷ Yếu",
-    "mode": "art",
-  },
-  {
-    "id": "ky-yeu-9",
     "image": cloudinaryUrl("/20210525-DSC01765") ,
-    "title": "Kỷ Yếu #10",
-    "category": "ky-yeu",
-    "categoryLabel": "Kỷ Yếu",
-    "mode": "art",
-  },
-  {
-    "id": "ky-yeu-10",
-    "image": cloudinaryUrl("/20210525-DSC01926") ,
-    "title": "Kỷ Yếu #11",
+    "title": "Kỷ Yếu #8",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
     "mode": "art",
@@ -764,7 +700,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-6",
-    "image": cloudinaryUrl("/20210504-DSC00603") ,
+    "image": cloudinaryUrl("/20210505-DSC00671") ,
     "title": "Tiệc Bãi Biển (cos) #7",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -772,7 +708,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-7",
-    "image": cloudinaryUrl("/20210505-DSC00671") ,
+    "image": cloudinaryUrl("/20210505-DSC00676") ,
     "title": "Tiệc Bãi Biển (cos) #8",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -780,7 +716,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-8",
-    "image": cloudinaryUrl("/20210505-DSC00676") ,
+    "image": cloudinaryUrl("/20210505-DSC00681") ,
     "title": "Tiệc Bãi Biển (cos) #9",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -788,7 +724,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-9",
-    "image": cloudinaryUrl("/20210505-DSC00681") ,
+    "image": cloudinaryUrl("/20210505-DSC00693") ,
     "title": "Tiệc Bãi Biển (cos) #10",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -796,7 +732,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-10",
-    "image": cloudinaryUrl("/20210505-DSC00693") ,
+    "image": cloudinaryUrl("/20210505-DSC00694") ,
     "title": "Tiệc Bãi Biển (cos) #11",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -804,7 +740,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-11",
-    "image": cloudinaryUrl("/20210505-DSC00694") ,
+    "image": cloudinaryUrl("/20210505-DSC00709") ,
     "title": "Tiệc Bãi Biển (cos) #12",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -812,7 +748,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-12",
-    "image": cloudinaryUrl("/20210505-DSC00709") ,
+    "image": cloudinaryUrl("/20210505-DSC00711") ,
     "title": "Tiệc Bãi Biển (cos) #13",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -820,7 +756,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-13",
-    "image": cloudinaryUrl("/20210505-DSC00711") ,
+    "image": cloudinaryUrl("/20210505-DSC00713") ,
     "title": "Tiệc Bãi Biển (cos) #14",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -828,7 +764,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-14",
-    "image": cloudinaryUrl("/20210505-DSC00713") ,
+    "image": cloudinaryUrl("/20210505-DSC00719") ,
     "title": "Tiệc Bãi Biển (cos) #15",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -836,7 +772,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-15",
-    "image": cloudinaryUrl("/20210505-DSC00719") ,
+    "image": cloudinaryUrl("/20210505-DSC00731") ,
     "title": "Tiệc Bãi Biển (cos) #16",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -844,7 +780,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-16",
-    "image": cloudinaryUrl("/20210505-DSC00731") ,
+    "image": cloudinaryUrl("/20210505-DSC00739") ,
     "title": "Tiệc Bãi Biển (cos) #17",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -852,7 +788,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-17",
-    "image": cloudinaryUrl("/20210505-DSC00739") ,
+    "image": cloudinaryUrl("/20210505-DSC00767") ,
     "title": "Tiệc Bãi Biển (cos) #18",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -860,7 +796,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-18",
-    "image": cloudinaryUrl("/20210505-DSC00767") ,
+    "image": cloudinaryUrl("/20210505-DSC00769") ,
     "title": "Tiệc Bãi Biển (cos) #19",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -868,7 +804,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-19",
-    "image": cloudinaryUrl("/20210505-DSC00769") ,
+    "image": cloudinaryUrl("/20210505-DSC00772") ,
     "title": "Tiệc Bãi Biển (cos) #20",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -876,7 +812,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-20",
-    "image": cloudinaryUrl("/20210505-DSC00772") ,
+    "image": cloudinaryUrl("/20210505-DSC00785") ,
     "title": "Tiệc Bãi Biển (cos) #21",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -884,7 +820,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-21",
-    "image": cloudinaryUrl("/20210505-DSC00782") ,
+    "image": cloudinaryUrl("/20210505-DSC00790") ,
     "title": "Tiệc Bãi Biển (cos) #22",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -892,7 +828,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-22",
-    "image": cloudinaryUrl("/20210505-DSC00785") ,
+    "image": cloudinaryUrl("/20210505-DSC00794") ,
     "title": "Tiệc Bãi Biển (cos) #23",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -900,7 +836,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-23",
-    "image": cloudinaryUrl("/20210505-DSC00790") ,
+    "image": cloudinaryUrl("/20210505-DSC00806") ,
     "title": "Tiệc Bãi Biển (cos) #24",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -908,7 +844,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-24",
-    "image": cloudinaryUrl("/20210505-DSC00794") ,
+    "image": cloudinaryUrl("/20210505-DSC00838") ,
     "title": "Tiệc Bãi Biển (cos) #25",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -916,7 +852,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-25",
-    "image": cloudinaryUrl("/20210505-DSC00798") ,
+    "image": cloudinaryUrl("/20210505-DSC00841") ,
     "title": "Tiệc Bãi Biển (cos) #26",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -924,7 +860,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-26",
-    "image": cloudinaryUrl("/20210505-DSC00806") ,
+    "image": cloudinaryUrl("/20210505-DSC00843") ,
     "title": "Tiệc Bãi Biển (cos) #27",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -932,7 +868,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-27",
-    "image": cloudinaryUrl("/20210505-DSC00838") ,
+    "image": cloudinaryUrl("/20210505-DSC00849") ,
     "title": "Tiệc Bãi Biển (cos) #28",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -940,7 +876,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-28",
-    "image": cloudinaryUrl("/20210505-DSC00841") ,
+    "image": cloudinaryUrl("/20210505-DSC00850") ,
     "title": "Tiệc Bãi Biển (cos) #29",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -948,7 +884,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-29",
-    "image": cloudinaryUrl("/20210505-DSC00843") ,
+    "image": cloudinaryUrl("/20210505-DSC00864") ,
     "title": "Tiệc Bãi Biển (cos) #30",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -956,7 +892,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-30",
-    "image": cloudinaryUrl("/20210505-DSC00849") ,
+    "image": cloudinaryUrl("/20210505-DSC00870") ,
     "title": "Tiệc Bãi Biển (cos) #31",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -964,7 +900,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-31",
-    "image": cloudinaryUrl("/20210505-DSC00850") ,
+    "image": cloudinaryUrl("/20210505-DSC00876") ,
     "title": "Tiệc Bãi Biển (cos) #32",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -972,7 +908,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-32",
-    "image": cloudinaryUrl("/20210505-DSC00864") ,
+    "image": cloudinaryUrl("/20210505-DSC00883") ,
     "title": "Tiệc Bãi Biển (cos) #33",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -980,7 +916,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-33",
-    "image": cloudinaryUrl("/20210505-DSC00870") ,
+    "image": cloudinaryUrl("/20210505-DSC00886") ,
     "title": "Tiệc Bãi Biển (cos) #34",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -988,7 +924,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-34",
-    "image": cloudinaryUrl("/20210505-DSC00876") ,
+    "image": cloudinaryUrl("/20210505-DSC00938") ,
     "title": "Tiệc Bãi Biển (cos) #35",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -996,7 +932,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-35",
-    "image": cloudinaryUrl("/20210505-DSC00883") ,
+    "image": cloudinaryUrl("/20210505-DSC00939") ,
     "title": "Tiệc Bãi Biển (cos) #36",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -1004,7 +940,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-36",
-    "image": cloudinaryUrl("/20210505-DSC00886") ,
+    "image": cloudinaryUrl("/20210505-DSC00953") ,
     "title": "Tiệc Bãi Biển (cos) #37",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -1012,7 +948,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-37",
-    "image": cloudinaryUrl("/20210505-DSC00932") ,
+    "image": cloudinaryUrl("/20210505-DSC00957") ,
     "title": "Tiệc Bãi Biển (cos) #38",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -1020,7 +956,7 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-38",
-    "image": cloudinaryUrl("/20210505-DSC00938") ,
+    "image": cloudinaryUrl("/20210505-DSC00958") ,
     "title": "Tiệc Bãi Biển (cos) #39",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
@@ -1028,48 +964,8 @@ export const allItems = [
   },
   {
     "id": "tiec-bai-bien-cos-39",
-    "image": cloudinaryUrl("/20210505-DSC00939") ,
-    "title": "Tiệc Bãi Biển (cos) #40",
-    "category": "tiec-bai-bien-cos",
-    "categoryLabel": "Tiệc Bãi Biển (cos)",
-    "mode": "art",
-  },
-  {
-    "id": "tiec-bai-bien-cos-40",
-    "image": cloudinaryUrl("/20210505-DSC00947") ,
-    "title": "Tiệc Bãi Biển (cos) #41",
-    "category": "tiec-bai-bien-cos",
-    "categoryLabel": "Tiệc Bãi Biển (cos)",
-    "mode": "art",
-  },
-  {
-    "id": "tiec-bai-bien-cos-41",
-    "image": cloudinaryUrl("/20210505-DSC00953") ,
-    "title": "Tiệc Bãi Biển (cos) #42",
-    "category": "tiec-bai-bien-cos",
-    "categoryLabel": "Tiệc Bãi Biển (cos)",
-    "mode": "art",
-  },
-  {
-    "id": "tiec-bai-bien-cos-42",
-    "image": cloudinaryUrl("/20210505-DSC00957") ,
-    "title": "Tiệc Bãi Biển (cos) #43",
-    "category": "tiec-bai-bien-cos",
-    "categoryLabel": "Tiệc Bãi Biển (cos)",
-    "mode": "art",
-  },
-  {
-    "id": "tiec-bai-bien-cos-43",
-    "image": cloudinaryUrl("/20210505-DSC00958") ,
-    "title": "Tiệc Bãi Biển (cos) #44",
-    "category": "tiec-bai-bien-cos",
-    "categoryLabel": "Tiệc Bãi Biển (cos)",
-    "mode": "art",
-  },
-  {
-    "id": "tiec-bai-bien-cos-44",
     "image": cloudinaryUrl("/20210505-DSC00959") ,
-    "title": "Tiệc Bãi Biển (cos) #45",
+    "title": "Tiệc Bãi Biển (cos) #40",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
     "mode": "art",
