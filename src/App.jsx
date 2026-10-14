@@ -34,10 +34,10 @@ function App() {
 
   const mobile = useMemo(() => isMobileDevice(), []);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(() => (isMobileDevice() ? 'contact' : 'home'));
+  const [currentPage, setCurrentPage] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [navActiveIndex, setNavActiveIndex] = useState(() => (isMobileDevice() ? 1 : 0));
+  const [navActiveIndex, setNavActiveIndex] = useState(0);
 
   const [isExitingHome, setIsExitingHome] = useState(false);
   const exitTimerRef = useRef(null);
@@ -89,11 +89,15 @@ function App() {
     if (mobile) {
       return [
         {
-          label: 'Service',
-          href: '#service',
+          label: 'Home',
+          href: '#home',
           onClick: () => {
+            if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
             setNavActiveIndex(0);
-            setCurrentPage('contact');
+            setIsExitingHome(false);
+            setSelectedCategory(null);
+            setIsTransitioning(false);
+            setCurrentPage('home');
           }
         },
         {
@@ -102,6 +106,14 @@ function App() {
           onClick: () => {
             setNavActiveIndex(1);
             setCurrentPage('about');
+          }
+        },
+        {
+          label: 'Service',
+          href: '#service',
+          onClick: () => {
+            setNavActiveIndex(2);
+            setCurrentPage('contact');
           }
         }
       ];
@@ -244,7 +256,7 @@ function App() {
             </div>
           )}
 
-          {!mobile && currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
+          {currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
             <div className={`page-wrapper ${isExitingHome ? 'is-gallery-active' : ''}`}>
               <HomePage
                 theme={theme}

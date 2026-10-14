@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import OptionWheel from "../components/OptionWheel";
 import DriftWall from "../components/DriftWall";
 import ThreeDHoverGallery from "../components/ThreeDHoverGallery";
+import MobileDraggableHome from "../components/MobileDraggableHome";
 import HomeMosaic from "../components/HomeMosaic";
 import ModeLoadingOverlay from "../components/ModeLoadingOverlay";
 import { categories, allItems } from "../data/portfolio";
@@ -131,27 +132,13 @@ const HomePage = ({
       {/* ── ART / WORK mode ── */}
       {effectiveMode === "art" && (
         <>
-          {/* MOBILE: 3D Hover Gallery */}
+          {/* MOBILE: Draggable Card Home */}
           {isMobile ? (
-            <div className={`home-mobile-hover-gallery${isLoaded ? " is-revealed" : ""}`}>
-              <ThreeDHoverGallery
-                items={mobileHoverGalleryItems}
-                itemHeight={380}
-                gap={12}
-                perspective={900}
-                hoverScale={1.06}
-                transitionDuration={0.45}
-                enableKeyboardNavigation={true}
-                autoPlay={false}
-                onImageClick={(index, item) => {
-                  if (item?.categoryObj) {
-                    handleCategorySelect(item.categoryObj);
-                  }
-                }}
+            <div className={`home-mobile-draggable-wrap${isLoaded ? " is-revealed" : ""}`}>
+              <MobileDraggableHome
+                categories={artCategories}
+                onCategorySelect={handleCategorySelect}
               />
-              <div className="home-mobile-gallery-hint">
-                <span>Chạm vào ảnh để mở album</span>
-              </div>
             </div>
           ) : (
             /* DESKTOP: DriftWall + OptionWheel unchanged */
