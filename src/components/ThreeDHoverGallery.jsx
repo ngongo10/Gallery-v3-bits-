@@ -1,8 +1,7 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-
-const cn = (...classes) => classes.filter(Boolean).join(" ");
+import "./ThreeDHoverGallery.css";
 
 const DEFAULT_ITEMS = [
   {
@@ -32,42 +31,21 @@ const DEFAULT_ITEMS = [
     category: "Digital Art",
     description: "Floating islands and dreamlike columns rising from serene oceans.",
     glow: "rgba(245,158,11,0.35)"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=compress&cs=tinysrgb&w=800&q=80",
-    title: "Apex Horizon",
-    category: "Automotive",
-    description: "Aerodynamic lines of a futuristic hypercar glowing in carbon fibers.",
-    glow: "rgba(239,68,68,0.35)"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=compress&cs=tinysrgb&w=800&q=80",
-    title: "Carbon Monolith",
-    category: "Architecture",
-    description: "Minimalist brutalist angles playing with architectural shadows.",
-    glow: "rgba(16,185,129,0.35)"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=compress&cs=tinysrgb&w=800&q=80",
-    title: "Cosmic Cradle",
-    category: "Astronomy",
-    description: "Deep violet stellar nurseries dust clouds lightyears across.",
-    glow: "rgba(168,85,247,0.35)"
   }
 ];
 
 const ThreeDHoverGallery = ({
   images,
   items,
-  itemHeight = 500,
+  itemHeight = 380,
   gap = 10,
-  perspective = 1000,
+  perspective = 900,
   hoverScale = 1.05,
-  transitionDuration = 0.5,
+  transitionDuration = 0.45,
   enableKeyboardNavigation = true,
   autoPlay = false,
   autoPlayDelay = 4000,
-  className,
+  className = "",
   style,
   onImageClick,
   onImageHover,
@@ -113,7 +91,7 @@ const ThreeDHoverGallery = ({
   }, [autoPlay, autoPlayDelay, galleryItems.length]);
 
   const handleImageClick = (index, item) => {
-    setActiveIndex(activeIndex === index ? null : index);
+    setActiveIndex(index);
     onImageClick?.(index, item);
   };
 
@@ -122,10 +100,6 @@ const ThreeDHoverGallery = ({
       setActiveIndex(index);
     }
     onImageHover?.(index, item);
-  };
-
-  const handleImageLeave = () => {
-    // Keep last active index on mobile so card doesn't collapse awkwardly
   };
 
   const handleKeyDown = (event, index) => {
@@ -157,19 +131,14 @@ const ThreeDHoverGallery = ({
 
   return (
     <div
-      className={cn(
-        "w-full flex items-center justify-center overflow-hidden py-4",
-        className
-      )}
+      className={`threed-gallery-wrapper ${className}`}
       style={style}
-      onMouseLeave={handleImageLeave}
     >
       <div
         ref={containerRef}
-        className="flex justify-center items-center w-full"
+        className="threed-gallery-container"
         style={{
           perspective: `${perspective}px`,
-          transformStyle: "preserve-3d",
           gap: `${gap}px`,
         }}
       >
@@ -194,34 +163,21 @@ const ThreeDHoverGallery = ({
                 rotateY: activeIndex === null ? 0 : index < activeIndex ? 22 : index > activeIndex ? -22 : 0,
               }}
               transition={{
-                layout: { type: "spring", stiffness: 100, damping: 17 },
-                rotateY: { type: "spring", stiffness: 90, damping: 15 },
-                filter: { duration: 0.3 }
+                layout: { type: "spring", stiffness: 120, damping: 18 },
+                rotateY: { type: "spring", stiffness: 100, damping: 16 },
               }}
               style={{
                 height: typeof itemHeight === "number" ? `${itemHeight}px` : itemHeight,
                 zIndex: isActive ? 20 : 10,
                 flex: isActive ? 4.8 : 1,
                 minWidth: isActive ? "220px" : "48px",
-                transformStyle: "preserve-3d",
               }}
-              className={cn(
-                "relative cursor-pointer select-none overflow-hidden rounded-2xl border transition-all duration-300",
-                isActive
-                  ? "border-zinc-300/80 dark:border-zinc-700/60"
-                  : activeIndex === null
-                    ? "grayscale-[0.25] brightness-[0.8] dark:brightness-[0.7] border-zinc-200/50 dark:border-zinc-800/40 hover:border-zinc-300 dark:hover:border-zinc-700/60"
-                    : "grayscale brightness-[0.4] dark:brightness-[0.3] border-zinc-200/30 dark:border-zinc-800/20",
-                isFocused
-                  ? "ring-2 ring-primarylw ring-offset-2 dark:ring-offset-zinc-950 scale-[1.01] border-primarylw/50"
-                  : "",
-                "bg-zinc-100 dark:bg-zinc-900 shadow-sm"
-              )}
+              className={`threed-gallery-card${isActive ? " is-active" : ""}${isFocused ? " is-focused" : ""}`}
             >
               {/* Outer Neon Shadow Glow when Active */}
               {isActive && item.glow && (
                 <div
-                  className="absolute inset-0 pointer-events-none rounded-2xl transition-all duration-500 z-10"
+                  className="threed-gallery-glow"
                   style={{
                     boxShadow: `inset 0 0 20px ${item.glow}, 0 0 15px ${item.glow}`,
                   }}
@@ -232,37 +188,34 @@ const ThreeDHoverGallery = ({
               <motion.div
                 animate={{ scale: isActive ? hoverScale : 1.0 }}
                 transition={{ duration: transitionDuration, ease: [0.1, 0.7, 0, 1] }}
-                className="absolute inset-0 w-full h-full"
+                className="threed-gallery-bg-img"
                 style={{
                   backgroundImage: `url(${item.url})`,
-                  backgroundSize: "cover",
-                  backgroundPosition: "center",
                 }}
               />
 
               {/* Text Readable Gradient Overlay */}
-              <div
-                className={cn(
-                  "absolute inset-0 bg-gradient-to-t transition-opacity duration-300 z-[2]",
-                  isActive
-                    ? "from-black/90 via-black/40 to-black/10 opacity-100"
-                    : "from-black/60 via-transparent to-transparent opacity-40"
-                )}
-              />
+              <div className="threed-gallery-gradient" />
 
               {/* Dynamic Overlay Content (shown only on active card) */}
-              <div className="absolute inset-0 flex flex-col justify-end p-4 z-[4] text-white overflow-hidden">
+              <div className="threed-gallery-content">
                 <AnimatePresence>
                   {isActive && (
-                    <div className="flex flex-col items-start w-full">
+                    <motion.div
+                      key={`content-${index}`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      style={{ display: "flex", flexDirection: "column", width: "100%" }}
+                    >
                       {/* Category */}
                       {item.category && (
                         <motion.span
-                          initial={{ opacity: 0, y: 10 }}
+                          initial={{ opacity: 0, y: 8 }}
                           animate={{ opacity: 0.9, y: 0 }}
                           exit={{ opacity: 0, y: 5 }}
-                          transition={{ duration: 0.3, delay: 0.05 }}
-                          className="text-[9px] font-black tracking-widest uppercase text-white/70 mb-1"
+                          transition={{ duration: 0.25 }}
+                          className="threed-gallery-category"
                         >
                           {item.category}
                         </motion.span>
@@ -270,11 +223,11 @@ const ThreeDHoverGallery = ({
 
                       {/* Title */}
                       <motion.h4
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 5 }}
-                        transition={{ duration: 0.3, delay: 0.1 }}
-                        className="text-base md:text-lg font-bold leading-tight tracking-tight mb-1 text-zinc-50"
+                        transition={{ duration: 0.25, delay: 0.05 }}
+                        className="threed-gallery-title"
                       >
                         {item.title}
                       </motion.h4>
@@ -282,11 +235,11 @@ const ThreeDHoverGallery = ({
                       {/* Description */}
                       {item.description && (
                         <motion.p
-                          initial={{ opacity: 0, y: 15 }}
-                          animate={{ opacity: 0.7, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.3, delay: 0.15 }}
-                          className="text-[11px] font-medium leading-relaxed tracking-wide text-zinc-300 mb-2 max-w-[240px]"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 0.75, y: 0 }}
+                          exit={{ opacity: 0, y: 8 }}
+                          transition={{ duration: 0.25, delay: 0.1 }}
+                          className="threed-gallery-desc"
                         >
                           {item.description}
                         </motion.p>
@@ -294,16 +247,16 @@ const ThreeDHoverGallery = ({
 
                       {/* Explore Arrow button */}
                       <motion.div
-                        initial={{ opacity: 0, x: -10 }}
+                        initial={{ opacity: 0, x: -8 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -5 }}
-                        transition={{ duration: 0.3, delay: 0.2 }}
-                        className="flex items-center gap-1 text-[9px] font-bold tracking-widest uppercase text-zinc-100 hover:text-white group/btn"
+                        transition={{ duration: 0.25, delay: 0.15 }}
+                        className="threed-gallery-btn"
                       >
                         <span>Open Gallery</span>
-                        <ArrowRight className="w-3 h-3 transition-transform duration-200 group-hover/btn:translate-x-1" />
+                        <ArrowRight size={12} />
                       </motion.div>
-                    </div>
+                    </motion.div>
                   )}
                 </AnimatePresence>
               </div>

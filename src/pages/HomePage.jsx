@@ -29,13 +29,18 @@ const HomePage = ({
   transitioning = false,
   onTransitionDone
 }) => {
-  // ART state
   const [selectedCategory, setSelectedCategory] = useState(artCategories[0]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isChanging, setIsChanging] = useState(false);
   const changeTimerRef = useRef(null);
-  const isMobile = useMemo(() => isMobileDevice(), []);
+  const [isMobile, setIsMobile] = useState(() => isMobileDevice());
   const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(isMobileDevice());
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const artCategoryLabels = artCategories.map((c) => c.label);
 

@@ -1,0 +1,132 @@
+.threed-gallery-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 1rem 0;
+  user-select: none;
+}
+
+.threed-gallery-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  transform-style: preserve-3d;
+}
+
+.threed-gallery-card {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgba(228, 228, 231, 0.6);
+  background-color: #18181b;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.3s ease;
+  transform-style: preserve-3d;
+  will-change: transform, flex;
+}
+
+[data-theme="dark"] .threed-gallery-card {
+  border-color: rgba(63, 63, 70, 0.4);
+}
+
+.threed-gallery-card.is-active {
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.5);
+}
+
+.threed-gallery-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 1rem;
+  transition: all 0.5s ease;
+  z-index: 10;
+}
+
+.threed-gallery-bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+
+.threed-gallery-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.1) 100%);
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.threed-gallery-card:not(.is-active) .threed-gallery-gradient {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.2) 60%, transparent 100%);
+  opacity: 0.8;
+}
+
+.threed-gallery-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.25rem;
+  z-index: 4;
+  color: #ffffff;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.threed-gallery-category {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 4px;
+}
+
+.threed-gallery-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin: 0 0 4px 0;
+}
+
+.threed-gallery-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 10px 0;
+  max-width: 240px;
+}
+
+.threed-gallery-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #ffffff;
+  pointer-events: auto;
+  cursor: pointer;
+}
