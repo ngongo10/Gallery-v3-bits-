@@ -11,10 +11,7 @@ const GooeyNav = ({
   colors = [1, 2, 3, 1, 2, 3, 1, 4],
   initialActiveIndex = 0
 }) => {
-  const containerRef = useRef(null);
   const navRef = useRef(null);
-  const filterRef = useRef(null);
-  const textRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
 
   useEffect(() => {
@@ -49,7 +46,6 @@ const GooeyNav = ({
     for (let i = 0; i < particleCount; i++) {
       const t = animationTime * 2 + noise(timeVariance * 2);
       const p = createParticle(i, t, d, r);
-      element.classList.remove('active');
 
       setTimeout(() => {
         const particle = document.createElement('span');
@@ -66,10 +62,8 @@ const GooeyNav = ({
 
         point.classList.add('point');
         particle.appendChild(point);
+        // Gắn particle vào li element (overflow: visible) thay vì effect span
         element.appendChild(particle);
-        requestAnimationFrame(() => {
-          element.classList.add('active');
-        });
         setTimeout(() => {
           try {
             element.removeChild(particle);
@@ -81,22 +75,6 @@ const GooeyNav = ({
     }
   };
 
-  const updateEffectPosition = element => {
-    if (!containerRef.current || !filterRef.current || !textRef.current) return;
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const pos = element.getBoundingClientRect();
-
-    const styles = {
-      left: `${pos.x - containerRect.x}px`,
-      top: `${pos.y - containerRect.y}px`,
-      width: `${pos.width}px`,
-      height: `${pos.height}px`
-    };
-    Object.assign(filterRef.current.style, styles);
-    Object.assign(textRef.current.style, styles);
-    textRef.current.innerText = element.innerText;
-  };
-
   const handleClick = (e, index) => {
     e.preventDefault?.();
     const liEl = e.currentTarget.closest?.('li') || e.currentTarget;
@@ -106,23 +84,13 @@ const GooeyNav = ({
     if (activeIndex === index) return;
 
     setActiveIndex(index);
-    updateEffectPosition(liEl);
 
-    if (filterRef.current) {
-      const particles = filterRef.current.querySelectorAll('.particle');
-      particles.forEach(p => filterRef.current.removeChild(p));
-    }
+    // Xoá particle cũ còn lại trên li
+    const oldParticles = liEl.querySelectorAll('.particle');
+    oldParticles.forEach(p => liEl.removeChild(p));
 
-    if (textRef.current) {
-      textRef.current.classList.remove('active');
-
-      void textRef.current.offsetWidth;
-      textRef.current.classList.add('active');
-    }
-
-    if (filterRef.current) {
-      makeParticles(filterRef.current);
-    }
+    // Tạo particle burst trên li element
+    makeParticles(liEl);
   };
 
   const handleKeyDown = (e, index) => {
@@ -135,29 +103,10 @@ const GooeyNav = ({
     }
   };
 
-  useEffect(() => {
-    if (!navRef.current || !containerRef.current) return;
-    const activeLi = navRef.current.querySelectorAll('li')[activeIndex];
-    if (activeLi) {
-      updateEffectPosition(activeLi);
-      textRef.current?.classList.add('active');
-    }
-
-    const resizeObserver = new ResizeObserver(() => {
-      const currentActiveLi = navRef.current?.querySelectorAll('li')[activeIndex];
-      if (currentActiveLi) {
-        updateEffectPosition(currentActiveLi);
-      }
-    });
-
-    resizeObserver.observe(containerRef.current);
-    return () => resizeObserver.disconnect();
-  }, [activeIndex]);
-
   return (
-    <div className="gooey-nav-container" ref={containerRef}>
+    <div className="gooey-nav-container" ref={navRef}>
       <nav>
-        <ul ref={navRef}>
+        <ul>
           {items.map((item, index) => (
             <li key={index} className={activeIndex === index ? 'active' : ''}>
               <a href={item.href} onClick={e => handleClick(e, index)} onKeyDown={e => handleKeyDown(e, index)}>
@@ -167,8 +116,6 @@ const GooeyNav = ({
           ))}
         </ul>
       </nav>
-      <span className="effect filter" ref={filterRef} />
-      <span className="effect text" ref={textRef} />
     </div>
   );
 };
