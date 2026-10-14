@@ -32,16 +32,16 @@ function App() {
     return 'light'; // Mặc định là nền trắng theo yêu cầu
   });
 
+  const mobile = useMemo(() => isMobileDevice(), []);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState(() => (isMobileDevice() ? 'contact' : 'home'));
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [navActiveIndex, setNavActiveIndex] = useState(0);
+  const [navActiveIndex, setNavActiveIndex] = useState(() => (isMobileDevice() ? 1 : 0));
 
   const [isExitingHome, setIsExitingHome] = useState(false);
   const exitTimerRef = useRef(null);
   const loaderDoneRef = useRef(false);
-  const mobile = useMemo(() => isMobileDevice(), []);
 
   // Mode state (WORK vs MEMORIES)
   const [homeMode, setHomeMode] = useState('art');
@@ -85,36 +85,59 @@ function App() {
     });
   }, []);
 
-  const navItems = useMemo(() => [
-    {
-      label: 'Home',
-      href: '#home',
-      onClick: () => {
-        if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-        setNavActiveIndex(0);
-        setIsExitingHome(false);
-        setSelectedCategory(null);
-        setIsTransitioning(false);
-        setCurrentPage('home');
-      }
-    },
-    {
-      label: 'About',
-      href: '#about',
-      onClick: () => {
-        setNavActiveIndex(1);
-        setCurrentPage('about');
-      }
-    },
-    {
-      label: 'Service',
-      href: '#service',
-      onClick: () => {
-        setNavActiveIndex(2);
-        setCurrentPage('contact');
-      }
+  const navItems = useMemo(() => {
+    if (mobile) {
+      return [
+        {
+          label: 'Service',
+          href: '#service',
+          onClick: () => {
+            setNavActiveIndex(0);
+            setCurrentPage('contact');
+          }
+        },
+        {
+          label: 'About',
+          href: '#about',
+          onClick: () => {
+            setNavActiveIndex(1);
+            setCurrentPage('about');
+          }
+        }
+      ];
     }
-  ], []);
+
+    return [
+      {
+        label: 'Home',
+        href: '#home',
+        onClick: () => {
+          if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+          setNavActiveIndex(0);
+          setIsExitingHome(false);
+          setSelectedCategory(null);
+          setIsTransitioning(false);
+          setCurrentPage('home');
+        }
+      },
+      {
+        label: 'About',
+        href: '#about',
+        onClick: () => {
+          setNavActiveIndex(1);
+          setCurrentPage('about');
+        }
+      },
+      {
+        label: 'Service',
+        href: '#service',
+        onClick: () => {
+          setNavActiveIndex(2);
+          setCurrentPage('contact');
+        }
+      }
+    ];
+  }, [mobile]);
 
   const handleCategorySelect = useCallback((category) => {
     if (isTransitioning) return;
@@ -217,7 +240,15 @@ function App() {
           )}
 
           {currentPage === 'about' && <AboutPage theme={theme} />}
-          {currentPage === 'contact' && <ContactPage theme={theme} />}
+          {currentPage === 'contact' && (
+            <ContactPage
+              theme={theme}
+              onCategorySelect={(category) => {
+                setSelectedCategory(category);
+                setCurrentPage('gallery');
+              }}
+            />
+          )}
           {currentPage === 'gallery' && selectedCategory && (
             <GalleryPage theme={theme} category={selectedCategory} onBack={handleBack} />
           )}

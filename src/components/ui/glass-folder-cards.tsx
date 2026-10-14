@@ -882,11 +882,11 @@ const GF_CSS = `
   --gf-py: 0;
   --gf-ease: cubic-bezier(.2, .8, .2, 1);
   --gf-spring: cubic-bezier(.34, 1.36, .5, 1);
-  --gf-hinge: 0deg;
-  --gf-lift: 42px;
-  --gf-spread: 0px;
-  --gf-fan: 0deg;
-  --gf-stack: 15px;
+  --gf-hinge: -4deg;
+  --gf-lift: -26px; /* Các file nhô sẵn một phần đẹp mắt từ đầu */
+  --gf-spread: 6px;
+  --gf-fan: 1.2deg;
+  --gf-stack: 12px;
   --gf-ink: #141416;
   --gf-ink-soft: rgba(20, 20, 22, .55);
   position: relative;
@@ -899,8 +899,8 @@ const GF_CSS = `
   isolation: isolate;
 }
 .gf-root[data-tone="dark"] { --gf-ink: #f5f5f7; --gf-ink-soft: rgba(245, 245, 247, .58); }
-.gf-root:hover, .gf-root:focus-within { --gf-hinge: -11deg; --gf-lift: -34px; --gf-spread: 8px; --gf-fan: 1.4deg; --gf-stack: 10px; }
-.gf-root[data-open] { --gf-hinge: -24deg; --gf-lift: -96px; --gf-spread: 40px; --gf-fan: 5deg; --gf-stack: 30px; }
+.gf-root:hover, .gf-root:focus-within { --gf-hinge: -12deg; --gf-lift: -46px; --gf-spread: 16px; --gf-fan: 2.4deg; --gf-stack: 14px; }
+.gf-root[data-open] { --gf-hinge: -26deg; --gf-lift: -102px; --gf-spread: 44px; --gf-fan: 5.5deg; --gf-stack: 32px; }
 
 .gf-stage {
   position: absolute;
@@ -1281,15 +1281,15 @@ canvas.gf-sheet-art[data-ready] { opacity: 1; filter: none; }
 
 /* ---- entrance: the folder assembles itself ---------------------------------- */
 .gf-root:not([data-entered]) .gf-back,
-.gf-root:not([data-entered]) .gf-back-rim { translate: 0 22px; opacity: 0; }
-.gf-root:not([data-entered]) .gf-sheet { translate: 0 -120px; opacity: 0; }
-.gf-root:not([data-entered]) .gf-front { translate: 0 46px; opacity: 0; }
-.gf-root:not([data-entered]) .gf-key { opacity: 0; scale: .6; }
+.gf-root:not([data-entered]) .gf-back-rim { translate: 0 10px; opacity: 0; }
+.gf-root:not([data-entered]) .gf-sheet { translate: 0 -40px; opacity: 0; }
+.gf-root:not([data-entered]) .gf-front { translate: 0 20px; opacity: 0; }
+.gf-root:not([data-entered]) .gf-key { opacity: 0; scale: .8; }
 .gf-root:not([data-entered]) .gf-shadow { opacity: 0; }
-.gf-back, .gf-back-rim { transition: translate 1s var(--gf-ease), opacity .9s var(--gf-ease); }
-.gf-root[data-entered] .gf-sheet { transition-delay: calc(var(--gf-depth) * 40ms), 0s, calc(.18s + var(--gf-depth) * 90ms), calc(.18s + var(--gf-depth) * 90ms); }
-.gf-root[data-entered] .gf-front { transition-delay: 0s, .42s, .42s; }
-.gf-key { transition: transform .35s var(--gf-spring), box-shadow .35s var(--gf-ease), opacity .6s var(--gf-ease) .7s, scale .7s var(--gf-spring) .7s; }
+.gf-back, .gf-back-rim { transition: translate .4s var(--gf-ease), opacity .4s var(--gf-ease); }
+.gf-root[data-entered] .gf-sheet { transition-delay: calc(var(--gf-depth) * 20ms), 0s, calc(.08s + var(--gf-depth) * 40ms), calc(.08s + var(--gf-depth) * 40ms); }
+.gf-root[data-entered] .gf-front { transition-delay: 0s, .16s, .16s; }
+.gf-key { transition: transform .25s var(--gf-spring), box-shadow .25s var(--gf-ease), opacity .3s var(--gf-ease) .2s, scale .3s var(--gf-spring) .2s; }
 
 @media (prefers-reduced-motion: reduce) {
   .gf-root *, .gf-root *::before, .gf-root *::after {
