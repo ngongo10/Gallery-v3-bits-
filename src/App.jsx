@@ -5,7 +5,7 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import LoaderScreen from './components/LoaderScreen';
 import GooeyNav from './components/GooeyNav';
-import ThemeToggle from './components/ThemeToggle';
+import AnimatedThemeToggler from './components/AnimatedThemeToggler';
 import ModeToggle from './components/ModeToggle';
 import FlickeringText from './components/ui/flickering-text';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -204,26 +204,38 @@ function App() {
               </div>
 
               <div className="app-top-bar">
+                {/* Desktop: ThemeToggler left of ModeToggle */}
+                {!mobile && (
+                  <AnimatedThemeToggler theme={theme} onToggle={toggleTheme} />
+                )}
                 {currentPage !== 'about' && currentPage !== 'contact' && (
                   <ModeToggle mode={homeMode} onChange={handleModeChange} />
                 )}
                 <GooeyNav
                   items={navItems}
-                  particleCount={mobile ? 0 : 10}
-                  particleDistances={mobile ? [0, 0] : [90, 10]}
-                  particleR={mobile ? 0 : 800}
-                  initialActiveIndex={navActiveIndex}
+                  theme={theme === 'dark' ? 'dark' : 'light'}
+                  frame={true}
+                  size="md"
+                  particleCount={mobile ? 0 : 15}
+                  spread={mobile ? 0 : 56}
                   animationTime={600}
-                  timeVariance={mobile ? 0 : 1700}
-                  colors={theme === 'light' ? [4, 4, 4, 4] : [1, 2, 3, 1, 2, 3, 1, 4]}
+                  timeVariance={mobile ? 0 : 300}
+                  gooeyness={0.5}
+                  wobble={0.5}
+                  hoverEffect={!mobile}
+                  initialActiveIndex={navActiveIndex}
+                  activeIndex={navActiveIndex}
+                  onChange={(index) => {
+                    navItems[index]?.onClick?.();
+                  }}
                 />
               </div>
             </>
           )}
 
-          {currentPage === 'home' && (
+          {mobile && currentPage === 'home' && (
             <div className="app-theme-toggle-bottom">
-              <ThemeToggle theme={theme} onToggle={toggleTheme} />
+              <AnimatedThemeToggler theme={theme} onToggle={toggleTheme} />
             </div>
           )}
 
