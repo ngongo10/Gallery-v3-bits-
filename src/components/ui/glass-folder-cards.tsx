@@ -558,8 +558,25 @@ export default function GlassFolder({
   )
   const [menuOpen, setMenuOpen] = React.useState(false)
   const [entered, setEntered] = React.useState(!appear)
+  const [containerW, setContainerW] = React.useState<number | null>(null)
 
-  const k = width / W
+  React.useEffect(() => {
+    const target = rootRef.current?.parentElement || rootRef.current
+    if (!target) return
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const measured = entry.contentRect.width
+        if (measured > 0) {
+          setContainerW(measured)
+        }
+      }
+    })
+    ro.observe(target)
+    return () => ro.disconnect()
+  }, [])
+
+  const effectiveWidth = Math.min(width, containerW || width)
+  const k = effectiveWidth / W
   const density = Math.min(1.5, Math.max(1, typeof window === "undefined" ? 1 : window.devicePixelRatio || 1)) * k
 
   React.useEffect(() => {
@@ -694,7 +711,7 @@ export default function GlassFolder({
       data-open={open || undefined}
       data-entered={entered || undefined}
       data-place={labelPlacement}
-      style={{ width, height: (H + HEADROOM) * k, ...style }}
+      style={{ width: effectiveWidth, height: (H + HEADROOM) * k, maxWidth: "100%", ...style }}
     >
       <style>{GF_CSS}</style>
       <div className="gf-stage" style={{ transform: "translateY(" + HEADROOM * k + "px) scale(" + k + ")" }}>
