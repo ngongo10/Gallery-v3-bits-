@@ -1,20 +1,63 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import './AnimatedThemeToggler.css';
 
 /**
- * AnimatedThemeToggler — morphing sun↔moon icon button
+ * AnimatedThemeToggler — Magic UI circular ripple theme toggler
  * Props:
  *   theme: 'light' | 'dark'
- *   onToggle: () => void
+ *   onToggle: (newTheme: string) => void
  */
 export default function AnimatedThemeToggler({ theme = 'light', onToggle }) {
   const isDark = theme === 'dark';
+  const buttonRef = useRef(null);
+
+  const handleClick = (e) => {
+    const nextTheme = isDark ? 'light' : 'dark';
+
+    // Fallback if browser doesn't support View Transitions API
+    if (!document.startViewTransition) {
+      onToggle?.(nextTheme);
+      return;
+    }
+
+    const button = buttonRef.current || e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    const maxRadius = Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    );
+
+    const transition = document.startViewTransition(() => {
+      onToggle?.(nextTheme);
+    });
+
+    transition.ready.then(() => {
+      // Circular ripple / bung tỏa hiệu ứng sóng nước
+      document.documentElement.animate(
+        {
+          clipPath: [
+            `circle(0px at ${x}px ${y}px)`,
+            `circle(${maxRadius}px at ${x}px ${y}px)`
+          ]
+        },
+        {
+          duration: 500,
+          easing: 'ease-in-out',
+          pseudoElement: '::view-transition-new(root)'
+        }
+      );
+    });
+  };
 
   return (
     <button
+      ref={buttonRef}
       type="button"
       className={`att-btn${isDark ? ' att-btn--dark' : ''}`}
-      onClick={onToggle}
+      onClick={handleClick}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       <span className="att-track">

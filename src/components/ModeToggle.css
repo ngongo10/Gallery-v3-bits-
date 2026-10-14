@@ -1,91 +1,73 @@
-/* ── Minimalist Switch Button (iPhone / Mac style) ── */
-.mode-switch-only {
-  position: relative;
-  width: 44px;
-  height: 26px;
-  border-radius: 100px;
-  background: rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+/* ── Mode Button Group ── */
+.mode-btn-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .mode-btn-group {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.mode-btn {
+  padding: 5px 14px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   cursor: pointer;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+  white-space: nowrap;
   user-select: none;
-  transition: background 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-              border-color 0.35s ease,
-              transform 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-[data-theme="dark"] .mode-switch-only {
-  background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+[data-theme="dark"] .mode-btn {
+  color: rgba(255, 255, 255, 0.4);
 }
 
-.mode-switch-only:hover {
-  transform: scale(1.06);
-  border-color: rgba(0, 0, 0, 0.25);
-  background: rgba(0, 0, 0, 0.14);
+.mode-btn:hover {
+  color: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.06);
 }
 
-[data-theme="dark"] .mode-switch-only:hover {
-  border-color: rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.24);
+[data-theme="dark"] .mode-btn:hover {
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.mode-switch-only.is-on {
+/* Active (selected) state */
+.mode-btn--active {
   background: #111111;
-  border-color: #111111;
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-[data-theme="dark"] .mode-switch-only.is-on {
+[data-theme="dark"] .mode-btn--active {
   background: #ffffff;
-  border-color: #ffffff;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.35);
+  color: #111111;
+  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.2);
 }
 
-.mode-switch-thumb {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
+.mode-btn--active:hover {
   background: #111111;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 0.35s ease;
+  color: #ffffff;
 }
 
-[data-theme="dark"] .mode-switch-thumb {
+[data-theme="dark"] .mode-btn--active:hover {
   background: #ffffff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-}
-
-.mode-switch-only.is-on .mode-switch-thumb {
-  transform: translateX(18px);
-  background: #ffffff;
-}
-
-[data-theme="dark"] .mode-switch-only.is-on .mode-switch-thumb {
-  transform: translateX(18px);
-  background: #050507;
-}
-
-/* Mobile size */
-@media (max-width: 768px) {
-  .mode-switch-only {
-    width: 38px;
-    height: 22px;
-  }
-  .mode-switch-thumb {
-    width: 14px;
-    height: 14px;
-    top: 3px;
-    left: 3px;
-  }
-  .mode-switch-only.is-on .mode-switch-thumb {
-    transform: translateX(16px);
-  }
+  color: #111111;
 }

@@ -53,7 +53,7 @@ html, body, #root {
 .app-top-bar {
   position: absolute;
   top: 2rem;
-  right: 2rem;
+  right: 4rem; /* Đẩy nav sang trái hơn so với cạnh phải */
   z-index: 100;
   display: flex;
   align-items: center;
