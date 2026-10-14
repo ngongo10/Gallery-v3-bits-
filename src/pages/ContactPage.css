@@ -39,28 +39,29 @@
     font-size: 11.5px;
   }
 
-  /* Lưới ngang 2 ô cho Mobile cân đối, rộng rãi */
+  /* Mặc định trên màn hình dọc (portrait mobile) hoặc thiết bị cầm tay: hiển thị 1 cột to rõ, vừa vặn */
   .contact-glass-folders-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 20px 8px !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 32px !important;
     width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
     justify-items: center;
   }
 
-  /* Khi màn hình quá nhỏ (< 380px), chuyển thành 1 cột để thư mục to rõ không bị co rúm */
-  @media (max-width: 380px) {
+  /* Khi xoay ngang (landscape) hoặc màn hình đủ rộng (> 520px): tự động chuyển 2 cột nếu đủ chỗ */
+  @media (min-width: 520px) {
     .contact-glass-folders-grid {
-      grid-template-columns: 1fr !important;
-      gap: 28px !important;
-      max-width: 320px;
-      margin: 0 auto;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      max-width: 680px;
+      gap: 28px 16px !important;
     }
   }
 
   .contact-glass-folder-wrapper {
     max-width: 100% !important;
     width: 100% !important;
-    gap: 8px !important;
+    gap: 10px !important;
   }
 
   .contact-folder-desktop-view {
