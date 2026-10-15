@@ -72,8 +72,17 @@ export default function LoaderScreen({ onComplete }) {
       .map((cat) => cat.cover || cat.items?.[0]?.image)
       .filter(Boolean);
 
+    // Thêm các ảnh đầu tiên hiển thị trên Mobile Draggable Home (nếu là mobile)
+    const mobileArtImages = mobile
+      ? categories
+          .filter((c) => c.mode === 'art')
+          .flatMap((c) => (c.items || []).slice(0, 4).map((i) => i.image))
+          .filter(Boolean)
+          .slice(0, 16)
+      : [];
+
     // Tập hợp danh sách các URL ảnh duy nhất để nạp sẵn vào cache
-    const urlsToPreload = Array.from(new Set([...serviceImages, ...albumCoverUrls]));
+    const urlsToPreload = Array.from(new Set([...serviceImages, ...albumCoverUrls, ...mobileArtImages]));
     const total = Math.max(urlsToPreload.length, 1);
     let loaded = 0;
 
