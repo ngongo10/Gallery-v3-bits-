@@ -48,19 +48,18 @@ export default function LoaderScreen({ onComplete }) {
       if (!isMounted || finished) return;
       finished = true;
       setProgress(100);
-      setStatusText('Ready');
-      // Short fade — don't stack long timeouts on weak devices
-      const fadeMs = mobile ? 200 : 400;
+      setStatusText('Sẵn sàng');
+      const fadeMs = mobile ? 250 : 450;
       setTimeout(() => {
         if (!isMounted) return;
         setIsFadingOut(true);
         setTimeout(() => {
           if (isMounted) onCompleteRef.current?.();
         }, fadeMs);
-      }, mobile ? 80 : 160);
+      }, 150);
     };
 
-    // Danh sách tất cả ảnh trọng tâm cần tải trước (bao gồm cả các gói dịch vụ và các album ảnh)
+    // Danh sách ảnh dịch vụ trọng tâm
     const serviceImages = [
       'https://res.cloudinary.com/g55oyjhn/image/upload/v1790935995/DSC00990.avif',
       'https://res.cloudinary.com/g55oyjhn/image/upload/v1788545041/Still_2026-09-05_010136_1.3.1.jpg',
@@ -68,21 +67,33 @@ export default function LoaderScreen({ onComplete }) {
       'https://res.cloudinary.com/g55oyjhn/image/upload/v1790936046/DSC01094.avif',
     ];
 
+    // Ảnh bìa tất cả album
     const albumCoverUrls = categories
       .map((cat) => cat.cover || cat.items?.[0]?.image)
       .filter(Boolean);
 
-    // Thêm các ảnh đầu tiên hiển thị trên Mobile Draggable Home (nếu là mobile)
-    const mobileArtImages = mobile
-      ? categories
-          .filter((c) => c.mode === 'art')
-          .flatMap((c) => (c.items || []).slice(0, 4).map((i) => i.image))
-          .filter(Boolean)
-          .slice(0, 16)
-      : [];
+    // Ảnh hiển thị ban đầu tại màn hình Home
+    // Mobile: Các ảnh thẻ kéo thả đầu tiên của chế độ Art
+    // Desktop: Ảnh của album Art đầu tiên hiển thị trên DriftWall (cả URL gốc và biến thể kích thước buildSrc)
+    let homeInitialImages = [];
+    if (mobile) {
+      homeInitialImages = categories
+        .filter((c) => c.mode === 'art')
+        .flatMap((c) => (c.items || []).slice(0, 5).map((i) => i.image))
+        .filter(Boolean)
+        .slice(0, 15);
+    } else {
+      const firstArtCategory = categories.find((c) => c.mode === 'art');
+      const initialItems = firstArtCategory?.items?.slice(0, 10) || [];
+      const rawUrls = initialItems.map((i) => i.image).filter(Boolean);
+      const transformedUrls = rawUrls.map((url) => buildSrc(url, { w: 288 }));
+      homeInitialImages = [...rawUrls, ...transformedUrls];
+    }
 
-    // Tập hợp danh sách các URL ảnh duy nhất để nạp sẵn vào cache
-    const urlsToPreload = Array.from(new Set([...serviceImages, ...albumCoverUrls, ...mobileArtImages]));
+    // Tập hợp toàn bộ danh sách ảnh cần tải trước
+    const urlsToPreload = Array.from(
+      new Set([...albumCoverUrls, ...homeInitialImages, ...serviceImages])
+    );
     const total = Math.max(urlsToPreload.length, 1);
     let loaded = 0;
 
@@ -95,12 +106,17 @@ export default function LoaderScreen({ onComplete }) {
       setProgress(pct);
       setStatusText(
         pct < 40
-          ? 'Đang nạp ảnh dịch vụ...'
-          : pct < 85
-          ? 'Đang chuẩn bị album...'
-          : 'Sẵn sàng trải nghiệm!'
+          ? 'Đang nạp ảnh...'
+          : pct < 90
+          ? 'Đang chuẩn bị giao diện...'
+          : pct < 100
+          ? 'Hoàn tất dữ liệu...'
+          : 'Sẵn sàng!'
       );
-      if (loaded >= total) finish();
+      if (loaded >= total) {
+        // Đã nạp đủ 100% ảnh cần hiển thị
+        finish();
+      }
     };
 
     if (urlsToPreload.length === 0) {
@@ -111,13 +127,13 @@ export default function LoaderScreen({ onComplete }) {
       });
     }
 
-    const failSafe = setTimeout(finish, MAX_WAIT_MS);
+    // Thời gian tối đa cho mạng yếu / chập chờn để không treo vô hạn
+    const failSafe = setTimeout(finish, 8000);
 
     return () => {
       isMounted = false;
       clearTimeout(failSafe);
     };
-    // Intentionally empty — onComplete via ref to avoid remount loops
   }, []);
 
   return (
