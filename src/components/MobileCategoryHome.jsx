@@ -1,6 +1,7 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { buildSrc } from '../utils/cloudinary';
+import ImageLightbox from './ImageLightbox';
 import './MobileCategoryHome.css';
 
 const Folder = lazy(() => import('./Folder'));
@@ -14,23 +15,40 @@ const MobileCategoryHome = ({ categories = [], onCategorySelect, theme = 'light'
     () => artCategories[0]?.id ?? ''
   );
   const [folderOpen, setFolderOpen] = useState(false);
+  const [activeLightbox, setActiveLightbox] = useState(null); // { index, items, category }
+
   const selectedCategory = artCategories.find((category) => category.id === selectedCategoryId) ?? artCategories[0];
   const selectedIndex = Math.max(0, artCategories.findIndex((category) => category.id === selectedCategory?.id));
-  const folderItems = useMemo(
-    () => (selectedCategory?.items || [])
-      .filter((item) => item.image)
-      .slice(0, 2)
-      .map((item, index) => ({
-        title: item.caption || `${selectedCategory.label} ${index + 1}`,
-        image: buildSrc(item.image, { w: 640, dprAuto: true }),
-        alt: item.caption || `${selectedCategory.label} ${index + 1}`
-      })),
+
+  const validCategoryItems = useMemo(
+    () => (selectedCategory?.items || []).filter((item) => item.image),
     [selectedCategory]
+  );
+
+  const folderItems = useMemo(
+    () => validCategoryItems
+      .slice(0, 4)
+      .map((item, index) => ({
+        title: item.caption || `${selectedCategory?.label || ''} ${index + 1}`,
+        image: buildSrc(item.image, { w: 640, dprAuto: true }),
+        alt: item.caption || `${selectedCategory?.label || ''} ${index + 1}`,
+        rawItem: item
+      })),
+    [validCategoryItems, selectedCategory]
   );
 
   const chooseCategory = (category) => {
     setSelectedCategoryId(category.id);
     setFolderOpen(false);
+  };
+
+  const handleItemClick = (item, index) => {
+    // Khi bấm vào ảnh trong folder, mở xem ảnh lớn (lightbox)
+    setActiveLightbox({
+      index,
+      items: validCategoryItems,
+      category: selectedCategory
+    });
   };
 
   return (
@@ -71,6 +89,7 @@ const MobileCategoryHome = ({ categories = [], onCategorySelect, theme = 'light'
                 size={1.04}
                 open={folderOpen}
                 onOpenChange={setFolderOpen}
+                onItemClick={handleItemClick}
                 draggable={false}
                 zoomOnClick={false}
                 peek={false}
@@ -82,18 +101,31 @@ const MobileCategoryHome = ({ categories = [], onCategorySelect, theme = 'light'
                 className="mch-react-folder"
               />
             </Suspense>
-            {folderOpen && (
-              <button
-                type="button"
-                className="mch-gallery-button"
-                onClick={() => onCategorySelect?.(selectedCategory)}
-              >
-                Mở gallery
-                <ArrowUpRight size={16} aria-hidden="true" />
-              </button>
-            )}
           </section>
         </main>
+      )}
+
+      {/* Lightbox: chỉ khi bấm xem ảnh lớn mới hiển thị và có button Mở gallery */}
+      {activeLightbox && (
+        <ImageLightbox
+          items={activeLightbox.items}
+          initialIndex={activeLightbox.index}
+          onClose={() => setActiveLightbox(null)}
+          actionButton={
+            <button
+              type="button"
+              className="mch-lightbox-gallery-btn"
+              onClick={() => {
+                const cat = activeLightbox.category;
+                setActiveLightbox(null);
+                onCategorySelect?.(cat);
+              }}
+            >
+              <span>Xem toàn bộ album</span>
+              <ArrowUpRight size={15} aria-hidden="true" />
+            </button>
+          }
+        />
       )}
     </div>
   );

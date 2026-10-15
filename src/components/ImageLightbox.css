@@ -190,6 +190,14 @@
   white-space: nowrap;
 }
 
+.lb-action-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  pointer-events: auto;
+}
+
 /* Mobile responsive */
 @media (max-width: 768px) {
   .lb-header {

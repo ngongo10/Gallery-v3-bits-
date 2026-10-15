@@ -7,7 +7,8 @@ export default function ImageLightbox({
   src,
   alt,
   onClose,
-  onChangeIndex
+  onChangeIndex,
+  actionButton
 }) {
   // Normalize items
   const galleryItems = items.length > 0
@@ -241,8 +242,13 @@ export default function ImageLightbox({
         />
       </div>
 
-      {/* Bottom Footer: Hint or Caption */}
+      {/* Bottom Footer: Hint, Action Button, Caption */}
       <div className="lb-footer">
+        {actionButton && (
+          <div className="lb-action-wrap">
+            {actionButton}
+          </div>
+        )}
         {currentItem.storyText ? (
           <p className="lb-caption">{currentItem.storyText}</p>
         ) : currentItem.caption ? (
