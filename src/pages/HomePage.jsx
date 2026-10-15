@@ -136,8 +136,7 @@ const HomePage = ({
           {isMobile ? (
             <div className={`home-mobile-draggable-wrap${isLoaded ? " is-revealed" : ""}`}>
               <MobileDraggableHome
-                categories={artCategories}
-                onCategorySelect={handleCategorySelect}
+                items={allItems.filter((i) => i.mode === "art")}
               />
             </div>
           ) : (

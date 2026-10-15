@@ -5,6 +5,7 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import LoaderScreen from './components/LoaderScreen';
 import GooeyNav from './components/GooeyNav';
+import SimpleMobileNav from './components/SimpleMobileNav';
 import AnimatedThemeToggler from './components/AnimatedThemeToggler';
 import ModeToggle from './components/ModeToggle';
 import FlickeringText from './components/ui/flickering-text';
@@ -220,24 +221,34 @@ function App() {
                 {!mobile && (
                   <AnimatedThemeToggler theme={theme} onToggle={toggleTheme} />
                 )}
-                <GooeyNav
-                  items={navItems}
-                  theme={theme === 'dark' ? 'dark' : 'light'}
-                  frame={true}
-                  size="md"
-                  particleCount={mobile ? 0 : 15}
-                  spread={mobile ? 0 : 56}
-                  animationTime={600}
-                  timeVariance={mobile ? 0 : 300}
-                  gooeyness={0.5}
-                  wobble={0.5}
-                  hoverEffect={!mobile}
-                  initialActiveIndex={navActiveIndex}
-                  activeIndex={navActiveIndex}
-                  onChange={(index) => {
-                    navItems[index]?.onClick?.();
-                  }}
-                />
+                {mobile ? (
+                  <SimpleMobileNav
+                    items={navItems}
+                    activeIndex={navActiveIndex}
+                    onChange={(index) => {
+                      navItems[index]?.onClick?.();
+                    }}
+                  />
+                ) : (
+                  <GooeyNav
+                    items={navItems}
+                    theme={theme === 'dark' ? 'dark' : 'light'}
+                    frame={true}
+                    size="md"
+                    particleCount={15}
+                    spread={56}
+                    animationTime={600}
+                    timeVariance={300}
+                    gooeyness={0.5}
+                    wobble={0.5}
+                    hoverEffect={true}
+                    initialActiveIndex={navActiveIndex}
+                    activeIndex={navActiveIndex}
+                    onChange={(index) => {
+                      navItems[index]?.onClick?.();
+                    }}
+                  />
+                )}
               </div>
             </>
           )}

@@ -1,0 +1,66 @@
+/* ── Simple Mobile Nav (Đơn giản nhất, không effect) ── */
+.simple-mobile-nav {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 999px;
+  background: rgba(240, 240, 243, 0.85);
+  border: 1px solid rgba(24, 24, 27, 0.08);
+  box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  user-select: none;
+}
+
+[data-theme="dark"] .simple-mobile-nav {
+  background: rgba(30, 28, 36, 0.85);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 18px -4px rgba(0, 0, 0, 0.5);
+}
+
+.simple-mobile-nav__list {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.simple-mobile-nav__item {
+  display: flex;
+}
+
+.simple-mobile-nav__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(39, 39, 42, 0.65);
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+[data-theme="dark"] .simple-mobile-nav__link {
+  color: rgba(244, 244, 245, 0.6);
+}
+
+/* Active tab: pill màu đơn giản trực tiếp */
+.simple-mobile-nav__item.is-active .simple-mobile-nav__link {
+  background: #18181b;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .simple-mobile-nav__item.is-active .simple-mobile-nav__link {
+  background: #f4f4f5;
+  color: #18181b;
+}

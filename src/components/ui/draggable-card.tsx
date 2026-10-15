@@ -13,10 +13,12 @@ import {
 
 export const DraggableCardBody = ({
   className,
+  style,
   children,
   onClick,
 }: {
   className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
   onClick?: () => void;
 }) => {
@@ -30,6 +32,8 @@ export const DraggableCardBody = ({
     right: 0,
     bottom: 0,
   });
+
+  const isDraggingRef = useRef(false);
 
   // physics
   const velocityX = useVelocity(mouseX);
@@ -111,13 +115,22 @@ export const DraggableCardBody = ({
       ref={cardRef}
       drag
       dragConstraints={constraints}
-      onClick={onClick}
+      onClick={() => {
+        if (!isDraggingRef.current) {
+          onClick?.();
+        }
+      }}
       onDragStart={() => {
+        isDraggingRef.current = true;
         if (typeof document !== "undefined") {
           document.body.style.cursor = "grabbing";
         }
       }}
       onDragEnd={(event, info) => {
+        setTimeout(() => {
+          isDraggingRef.current = false;
+        }, 50);
+
         if (typeof document !== "undefined") {
           document.body.style.cursor = "default";
         }
@@ -160,6 +173,7 @@ export const DraggableCardBody = ({
         });
       }}
       style={{
+        ...style,
         rotateX,
         rotateY,
         opacity,
