@@ -1,17 +1,18 @@
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import HomePage from './pages/HomePage';
-import GalleryPage from './pages/GalleryPage';
-import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
 import LoaderScreen from './components/LoaderScreen';
-import GooeyNav from './components/GooeyNav';
 import SimpleMobileNav from './components/SimpleMobileNav';
 import AnimatedThemeToggler from './components/AnimatedThemeToggler';
-import ModeToggle from './components/ModeToggle';
 import FlickeringText from './components/ui/flickering-text';
 import ErrorBoundary from './components/ErrorBoundary';
 
 import './App.css';
+
+const GooeyNav = lazy(() => import('./components/GooeyNav'));
+const ModeToggle = lazy(() => import('./components/ModeToggle'));
+const GalleryPage = lazy(() => import('./pages/GalleryPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
 
 /** Must match OptionWheel reel-spin exit (~1100ms). */
 const HOME_EXIT_MS = 1200;
@@ -33,7 +34,7 @@ function App() {
     return 'light'; // Mặc định là nền trắng theo yêu cầu
   });
 
-  const mobile = useMemo(() => isMobileDevice(), []);
+  const [mobile, setMobile] = useState(() => isMobileDevice());
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -48,6 +49,13 @@ function App() {
   const [homeMode, setHomeMode] = useState('art');
   const [pendingMode, setPendingMode] = useState(null);
   const [transitioningMode, setTransitioningMode] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    const handleViewportChange = () => setMobile(isMobileDevice());
+    mediaQuery.addEventListener('change', handleViewportChange);
+    return () => mediaQuery.removeEventListener('change', handleViewportChange);
+  }, []);
 
   const handleModeChange = useCallback((newMode) => {
     if (newMode === homeMode || transitioningMode) return;
@@ -230,24 +238,26 @@ function App() {
                     }}
                   />
                 ) : (
-                  <GooeyNav
-                    items={navItems}
-                    theme={theme === 'dark' ? 'dark' : 'light'}
-                    frame={true}
-                    size="md"
-                    particleCount={15}
-                    spread={56}
-                    animationTime={600}
-                    timeVariance={300}
-                    gooeyness={0.5}
-                    wobble={0.5}
-                    hoverEffect={true}
-                    initialActiveIndex={navActiveIndex}
-                    activeIndex={navActiveIndex}
-                    onChange={(index) => {
-                      navItems[index]?.onClick?.();
-                    }}
-                  />
+                  <Suspense fallback={null}>
+                    <GooeyNav
+                      items={navItems}
+                      theme={theme === 'dark' ? 'dark' : 'light'}
+                      frame={true}
+                      size="md"
+                      particleCount={15}
+                      spread={56}
+                      animationTime={600}
+                      timeVariance={300}
+                      gooeyness={0.5}
+                      wobble={0.5}
+                      hoverEffect={true}
+                      initialActiveIndex={navActiveIndex}
+                      activeIndex={navActiveIndex}
+                      onChange={(index) => {
+                        navItems[index]?.onClick?.();
+                      }}
+                    />
+                  </Suspense>
                 )}
               </div>
             </>
@@ -256,7 +266,9 @@ function App() {
           {/* ModeToggle góc dưới phải — chỉ desktop, chỉ trang Home */}
           {!mobile && currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
             <div className="app-mode-toggle-bottom">
-              <ModeToggle mode={homeMode} onChange={handleModeChange} />
+              <Suspense fallback={null}>
+                <ModeToggle mode={homeMode} onChange={handleModeChange} />
+              </Suspense>
             </div>
           )}
 
@@ -281,18 +293,26 @@ function App() {
             </div>
           )}
 
-          {currentPage === 'about' && <AboutPage theme={theme} />}
+          {currentPage === 'about' && (
+            <Suspense fallback={null}>
+              <AboutPage theme={theme} />
+            </Suspense>
+          )}
           {currentPage === 'contact' && (
-            <ContactPage
-              theme={theme}
-              onCategorySelect={(category) => {
-                setSelectedCategory(category);
-                setCurrentPage('gallery');
-              }}
-            />
+            <Suspense fallback={null}>
+              <ContactPage
+                theme={theme}
+                onCategorySelect={(category) => {
+                  setSelectedCategory(category);
+                  setCurrentPage('gallery');
+                }}
+              />
+            </Suspense>
           )}
           {currentPage === 'gallery' && selectedCategory && (
-            <GalleryPage theme={theme} category={selectedCategory} onBack={handleBack} />
+            <Suspense fallback={null}>
+              <GalleryPage theme={theme} category={selectedCategory} onBack={handleBack} />
+            </Suspense>
           )}
         </ErrorBoundary>
       )}
