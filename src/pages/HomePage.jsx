@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useRef, useMemo, useCallback } from "react";
-import MobileInfiniteScrollHome from "../components/MobileInfiniteScrollHome";
+import MobileParallaxUnfurlingHome from "../components/MobileParallaxUnfurlingHome";
 
 import ModeLoadingOverlay from "../components/ModeLoadingOverlay";
 import { categories, allItems } from "../data/portfolio";
@@ -103,8 +103,8 @@ const HomePage = ({
       {effectiveMode === "art" && (
         <>
           {isMobile ? (
-            /* ── Mobile: Infinite Drag Scroll Grid ── */
-            <MobileInfiniteScrollHome
+            /* ── Mobile: 3D Parallax Unfurling Gallery (mỗi album 1 cột, vuốt ngang đưa album ra giữa, vuốt dọc xem ảnh) ── */
+            <MobileParallaxUnfurlingHome
               categories={artCategories}
               allItems={allItems}
               onCategorySelect={handleCategorySelect}
