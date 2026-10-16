@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useRef, useMemo, useCallback } from "react";
-import MobileCategoryHome from "../components/MobileCategoryHome";
+import MobileInfiniteScrollHome from "../components/MobileInfiniteScrollHome";
 
 import ModeLoadingOverlay from "../components/ModeLoadingOverlay";
 import { categories, allItems } from "../data/portfolio";
@@ -103,11 +103,11 @@ const HomePage = ({
       {effectiveMode === "art" && (
         <>
           {isMobile ? (
-            /* ── Mobile: editorial vertical album list ── */
-            <MobileCategoryHome
+            /* ── Mobile: Infinite Drag Scroll Grid ── */
+            <MobileInfiniteScrollHome
               categories={artCategories}
+              allItems={allItems}
               onCategorySelect={handleCategorySelect}
-              theme={theme}
             />
           ) : (
             /* ── Desktop: DriftWall + OptionWheel ── */
