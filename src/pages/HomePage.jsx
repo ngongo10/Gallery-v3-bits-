@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useRef, useMemo, useCallback } from "react";
-import MobileParallaxUnfurlingHome from "../components/MobileParallaxUnfurlingHome";
+import MobileInstagramHome from "../components/MobileInstagramHome";
 
 import ModeLoadingOverlay from "../components/ModeLoadingOverlay";
 import { categories, allItems } from "../data/portfolio";
@@ -103,11 +103,12 @@ const HomePage = ({
       {effectiveMode === "art" && (
         <>
           {isMobile ? (
-            /* ── Mobile: 3D Parallax Unfurling Gallery (mỗi album 1 cột, vuốt ngang đưa album ra giữa, vuốt dọc xem ảnh) ── */
-            <MobileParallaxUnfurlingHome
+            /* ── Mobile: Instagram Album Feed & Grid ── */
+            <MobileInstagramHome
               categories={artCategories}
               allItems={allItems}
               onCategorySelect={handleCategorySelect}
+              theme={theme}
             />
           ) : (
             /* ── Desktop: DriftWall + OptionWheel ── */
