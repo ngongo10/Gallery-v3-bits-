@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useRef, useMemo, useCallback } from "react";
-import MobileInstagramHome from "../components/MobileInstagramHome";
+import MobileDiscHome from "../components/MobileDiscHome";
 
 import ModeLoadingOverlay from "../components/ModeLoadingOverlay";
 import { categories, allItems } from "../data/portfolio";
@@ -103,8 +103,8 @@ const HomePage = ({
       {effectiveMode === "art" && (
         <>
           {isMobile ? (
-            /* ── Mobile: Instagram Album Feed & Grid ── */
-            <MobileInstagramHome
+            /* ── Mobile: Disc Cascade Carousel (Vinyl Album Style) ── */
+            <MobileDiscHome
               categories={artCategories}
               allItems={allItems}
               onCategorySelect={handleCategorySelect}
