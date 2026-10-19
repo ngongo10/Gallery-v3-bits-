@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useRef, useMemo, useCallback } from "react";
-import MobileDiscHome from "../components/MobileDiscHome";
+import MobileWorksWheelHome from "../components/MobileWorksWheelHome";
 
 import ModeLoadingOverlay from "../components/ModeLoadingOverlay";
 import { categories, allItems } from "../data/portfolio";
@@ -103,12 +103,11 @@ const HomePage = ({
       {effectiveMode === "art" && (
         <>
           {isMobile ? (
-            /* ── Mobile: Disc Cascade Carousel (Vinyl Album Style) ── */
-            <MobileDiscHome
+            /* ── Mobile: Works Wheel Portfolio Index (Ring to Drum 3D Wheel) ── */
+            <MobileWorksWheelHome
               categories={artCategories}
               allItems={allItems}
               onCategorySelect={handleCategorySelect}
-              theme={theme}
             />
           ) : (
             /* ── Desktop: DriftWall + OptionWheel ── */
