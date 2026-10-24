@@ -114,9 +114,17 @@ const GalleryPage = ({ category, onBack }) => {
   const isSyncingRef = useRef(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [lightboxOriginRect, setLightboxOriginRect] = useState(null);
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
 
-  const handleOpenLightbox = useCallback((index) => {
+  const handleOpenLightbox = useCallback((index, event) => {
+    let rect = null;
+    if (event?.currentTarget) {
+      const imgEl = event.currentTarget.querySelector('img') || event.currentTarget;
+      const r = imgEl.getBoundingClientRect();
+      rect = { left: r.left, top: r.top, width: r.width, height: r.height };
+    }
+    setLightboxOriginRect(rect);
     setLightboxIndex(index);
     setActivePhotoIndex(index);
   }, []);
@@ -293,7 +301,7 @@ const GalleryPage = ({ category, onBack }) => {
                 >
                   <div
                     className="chry-image-wrapper medium-size"
-                    onClick={() => handleOpenLightbox(i)}
+                    onClick={(e) => handleOpenLightbox(i, e)}
                     style={{ cursor: 'pointer' }}
                   >
                     <img
@@ -327,7 +335,7 @@ const GalleryPage = ({ category, onBack }) => {
                     key={photo.id || i}
                     ref={(el) => (imageRefs.current[i] = el)}
                     className="chry-image-wrapper medium-size"
-                    onClick={() => handleOpenLightbox(i)}
+                    onClick={(e) => handleOpenLightbox(i, e)}
                     style={{ cursor: 'pointer' }}
                   >
                     <img
@@ -393,6 +401,7 @@ const GalleryPage = ({ category, onBack }) => {
           initialIndex={lightboxIndex}
           onClose={() => setLightboxIndex(null)}
           onChangeIndex={(idx) => setActivePhotoIndex(idx)}
+          originRect={lightboxOriginRect}
         />
       )}
     </div>
