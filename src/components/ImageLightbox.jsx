@@ -98,13 +98,14 @@ export default function ImageLightbox({
     const overlay = overlayRef.current;
     if (!img || !overlay) return;
 
-    // Kill default CSS animation on img — we control it via WAAPI
-    img.style.animation = 'none';
-    overlay.style.animation = 'none';
-
-    requestAnimationFrame(() => {
+    // Trigger hero animation once image layout is ready or loaded
+    const runHeroAnimation = () => {
       const finalRect = img.getBoundingClientRect();
-      if (!finalRect.width || !finalRect.height) return;
+      if (!finalRect.width || !finalRect.height) {
+        // Retry next frame if image dimensions are not measured yet
+        requestAnimationFrame(runHeroAnimation);
+        return;
+      }
 
       const scaleX = originRect.width / finalRect.width;
       const scaleY = originRect.height / finalRect.height;
@@ -112,7 +113,6 @@ export default function ImageLightbox({
       const ty = (originRect.top + originRect.height / 2) - (finalRect.top + finalRect.height / 2);
 
       // Đường bay parabol ngược (hơi võng xuống nhẹ hoặc cong bổng hình cánh cung tự nhiên):
-      // arcOffsetY tạo độ cong võng/uốn lượn parabolic mượt mà giữa điểm xuất phát và đích
       const arcOffsetY = Math.max(30, Math.min(90, Math.abs(tx) * 0.18 + Math.abs(ty) * 0.12));
 
       // Phase 1: Hero fly + arc parabol + elastic warp
@@ -173,9 +173,16 @@ export default function ImageLightbox({
 
       // SVG warp: spike then fade
       animateTurbulence(0.022, 0, 550, 28, 0);
-    });
+    };
+
+    if (img.complete && img.naturalWidth > 0) {
+      runHeroAnimation();
+    } else {
+      img.addEventListener('load', runHeroAnimation, { once: true });
+    }
 
     return () => {
+      img.removeEventListener('load', runHeroAnimation);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []); // only on mount
