@@ -268,7 +268,7 @@ const DriftWall = ({
         e.stopPropagation();
         if (onTileClick) {
           if (item.href) e.preventDefault();
-          onTileClick(item, e);
+          onTileClick(item);
         }
       }
     };
