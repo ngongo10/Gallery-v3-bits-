@@ -114,9 +114,18 @@ const GalleryPage = ({ category, onBack }) => {
   const isSyncingRef = useRef(false);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [lightboxOriginRect, setLightboxOriginRect] = useState(null);
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
 
-  const handleOpenLightbox = useCallback((index) => {
+  const handleOpenLightbox = useCallback((index, e) => {
+    // Capture origin rect for magic zoom animation
+    let originRect = null;
+    if (e && e.currentTarget) {
+      originRect = e.currentTarget.getBoundingClientRect();
+    } else if (imageRefs.current[index]) {
+      originRect = imageRefs.current[index].getBoundingClientRect();
+    }
+    setLightboxOriginRect(originRect);
     setLightboxIndex(index);
     setActivePhotoIndex(index);
   }, []);
@@ -294,7 +303,7 @@ const GalleryPage = ({ category, onBack }) => {
                 >
                   <div
                     className="chry-image-wrapper medium-size"
-                    onClick={() => handleOpenLightbox(i)}
+                    onClick={(e) => handleOpenLightbox(i, e)}
                     style={{ cursor: 'pointer' }}
                   >
                     <img
@@ -328,7 +337,7 @@ const GalleryPage = ({ category, onBack }) => {
                     key={photo.id || i}
                     ref={(el) => (imageRefs.current[i] = el)}
                     className="chry-image-wrapper medium-size"
-                    onClick={() => handleOpenLightbox(i)}
+                    onClick={(e) => handleOpenLightbox(i, e)}
                     style={{ cursor: 'pointer' }}
                   >
                     <img
@@ -392,7 +401,8 @@ const GalleryPage = ({ category, onBack }) => {
         <ImageLightbox
           items={items}
           initialIndex={lightboxIndex}
-          onClose={() => setLightboxIndex(null)}
+          originRect={lightboxOriginRect}
+          onClose={() => { setLightboxIndex(null); setLightboxOriginRect(null); }}
           onChangeIndex={(idx) => setActivePhotoIndex(idx)}
         />
       )}

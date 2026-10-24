@@ -8,7 +8,8 @@ export default function ImageLightbox({
   alt,
   onClose,
   onChangeIndex,
-  actionButton
+  actionButton,
+  originRect = null,
 }) {
   // Normalize items
   const galleryItems = items.length > 0
@@ -24,7 +25,10 @@ export default function ImageLightbox({
     return 0;
   });
 
+  // Magic zoom state: "opening" | "open" | "closing"
+  const [magicState, setMagicState] = useState("opening");
   const overlayRef = useRef(null);
+  const stageRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
   const touchDeltaRef = useRef({ x: 0, y: 0 });
   const doubleTapTimer = useRef(null);
@@ -35,7 +39,45 @@ export default function ImageLightbox({
   const currentSrc = currentItem.image || currentItem.src || src;
   const currentAlt = currentItem.caption || currentItem.alt || alt || `Photo ${currentIndex + 1}`;
 
-  // Next / Prev handlers
+  // ─── Magic Zoom: compute inset clip-path from originRect ─────────────────
+  const getOriginClip = useCallback(() => {
+    if (!originRect) return null;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const top    = ((originRect.top    / vh) * 100).toFixed(2);
+    const bottom = (((vh - originRect.bottom) / vh) * 100).toFixed(2);
+    const left   = ((originRect.left   / vw) * 100).toFixed(2);
+    const right  = (((vw - originRect.right)  / vw) * 100).toFixed(2);
+    return `inset(${top}% ${right}% ${bottom}% ${left}% round 8px)`;
+  }, [originRect]);
+
+  // On mount: kick off open animation
+  useEffect(() => {
+    if (!originRect) {
+      setMagicState("open");
+      return;
+    }
+    setMagicState("opening");
+    const raf = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setMagicState("open");
+      });
+    });
+    return () => cancelAnimationFrame(raf);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ─── Close with reverse animation ────────────────────────────────────────
+  const handleClose = useCallback(() => {
+    if (!originRect) {
+      onClose();
+      return;
+    }
+    setMagicState("closing");
+    setTimeout(() => onClose(), 400);
+  }, [originRect, onClose]);
+
+  // Next / Prev
   const handleNext = useCallback((e) => {
     if (e) e.stopPropagation();
     if (total <= 1) return;
@@ -56,107 +98,88 @@ export default function ImageLightbox({
     });
   }, [total, onChangeIndex]);
 
-  // Keyboard navigation
+  // Keyboard
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") {
-        onClose();
-      } else if (e.key === "ArrowRight") {
-        handleNext();
-      } else if (e.key === "ArrowLeft") {
-        handlePrev();
-      }
+      if (e.key === "Escape")      { handleClose(); }
+      else if (e.key === "ArrowRight") { handleNext(); }
+      else if (e.key === "ArrowLeft")  { handlePrev(); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, handleNext, handlePrev]);
+  }, [handleClose, handleNext, handlePrev]);
 
-  // Prevent background scrolling
+  // Lock scroll
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
+    return () => { document.body.style.overflow = prev; };
   }, []);
 
-  // Overlay click to close
+  // Overlay backdrop click
   const handleOverlayClick = useCallback((e) => {
-    if (e.target === overlayRef.current) {
-      onClose();
-    }
-  }, [onClose]);
+    if (e.target === overlayRef.current) handleClose();
+  }, [handleClose]);
 
-  // Double-click to close (Desktop)
+  // Double-click image to close
   const handleImageDoubleClick = useCallback((e) => {
     e.stopPropagation();
-    onClose();
-  }, [onClose]);
+    handleClose();
+  }, [handleClose]);
 
-  // Touch Swipe & Double-tap Handlers
+  // Touch
   const handleTouchStart = (e) => {
     if (e.touches.length === 1) {
-      const touch = e.touches[0];
-      touchStartRef.current = {
-        x: touch.clientX,
-        y: touch.clientY,
-        time: Date.now()
-      };
+      const t = e.touches[0];
+      touchStartRef.current = { x: t.clientX, y: t.clientY, time: Date.now() };
       touchDeltaRef.current = { x: 0, y: 0 };
       isSwipingRef.current = true;
     }
   };
-
   const handleTouchMove = (e) => {
     if (!isSwipingRef.current || e.touches.length !== 1) return;
-    const touch = e.touches[0];
+    const t = e.touches[0];
     touchDeltaRef.current = {
-      x: touch.clientX - touchStartRef.current.x,
-      y: touch.clientY - touchStartRef.current.y
+      x: t.clientX - touchStartRef.current.x,
+      y: t.clientY - touchStartRef.current.y,
     };
   };
-
-  const handleTouchEnd = (e) => {
+  const handleTouchEnd = () => {
     if (!isSwipingRef.current) return;
     isSwipingRef.current = false;
-
-    const deltaX = touchDeltaRef.current.x;
-    const deltaY = touchDeltaRef.current.y;
-    const absX = Math.abs(deltaX);
-    const absY = Math.abs(deltaY);
-
-    // If swipe horizontal > 45px and more horizontal than vertical
-    if (absX > 45 && absX > absY) {
-      if (deltaX < 0) {
-        // Swiped Left -> Go Next
-        handleNext();
-      } else {
-        // Swiped Right -> Go Prev
-        handlePrev();
-      }
-      return;
-    }
-
-    // Double-tap to close detection
-    if (absX < 10 && absY < 10) {
+    const { x: dx, y: dy } = touchDeltaRef.current;
+    const ax = Math.abs(dx), ay = Math.abs(dy);
+    if (ax > 45 && ax > ay) { dx < 0 ? handleNext() : handlePrev(); return; }
+    if (ax < 10 && ay < 10) {
       if (doubleTapTimer.current) {
         clearTimeout(doubleTapTimer.current);
         doubleTapTimer.current = null;
-        onClose();
+        handleClose();
       } else {
-        doubleTapTimer.current = setTimeout(() => {
-          doubleTapTimer.current = null;
-        }, 320);
+        doubleTapTimer.current = setTimeout(() => { doubleTapTimer.current = null; }, 320);
       }
     }
   };
 
   if (!currentSrc) return null;
 
+  // ─── Build inline style for magic clip ───────────────────────────────────
+  const originClip = getOriginClip();
+  const isAnimating = originClip && (magicState === "opening" || magicState === "closing");
+  const overlayStyle = isAnimating
+    ? {
+        clipPath: originClip,
+        backgroundColor: "rgba(0,0,0,0.08)",
+        backdropFilter: "blur(0px)",
+        WebkitBackdropFilter: "blur(0px)",
+      }
+    : {};
+
   return (
     <div
       ref={overlayRef}
-      className="lb-overlay"
+      className={`lb-overlay lb-overlay--${magicState}`}
+      style={overlayStyle}
       onClick={handleOverlayClick}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -165,7 +188,7 @@ export default function ImageLightbox({
       aria-modal="true"
       aria-label="Image gallery zoom"
     >
-      {/* Top Header Bar: Counter & Close */}
+      {/* Header */}
       <div className="lb-header">
         {total > 1 && (
           <div className="lb-counter">
@@ -174,64 +197,31 @@ export default function ImageLightbox({
             <span>{total}</span>
           </div>
         )}
-        <button
-          type="button"
-          className="lb-close"
-          onClick={onClose}
-          aria-label="Đóng (Close)"
-        >
+        <button type="button" className="lb-close" onClick={handleClose} aria-label="Đóng">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M18 6 6 18M6 6l12 12"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
+            <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           </svg>
         </button>
       </div>
 
-      {/* Navigation Arrows */}
+      {/* Arrows */}
       {total > 1 && (
         <>
-          <button
-            type="button"
-            className="lb-arrow lb-arrow--prev"
-            onClick={handlePrev}
-            aria-label="Ảnh trước"
-          >
+          <button type="button" className="lb-arrow lb-arrow--prev" onClick={handlePrev} aria-label="Ảnh trước">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M15 19l-7-7 7-7"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              <path d="M15 19l-7-7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
-
-          <button
-            type="button"
-            className="lb-arrow lb-arrow--next"
-            onClick={handleNext}
-            aria-label="Ảnh tiếp theo"
-          >
+          <button type="button" className="lb-arrow lb-arrow--next" onClick={handleNext} aria-label="Ảnh tiếp theo">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M9 5l7 7-7 7"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+              <path d="M9 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </>
       )}
 
-      {/* Main Image Stage */}
-      <div className="lb-stage">
+      {/* Image Stage */}
+      <div className="lb-stage" ref={stageRef}>
         <img
           key={currentSrc}
           className="lb-img"
@@ -242,18 +232,14 @@ export default function ImageLightbox({
         />
       </div>
 
-      {/* Bottom Footer: Hint, Action Button, Caption */}
+      {/* Footer */}
       <div className="lb-footer">
-        {actionButton && (
-          <div className="lb-action-wrap">
-            {actionButton}
-          </div>
-        )}
-        {currentItem.storyText ? (
-          <p className="lb-caption">{currentItem.storyText}</p>
-        ) : currentItem.caption ? (
-          <p className="lb-caption">{currentItem.caption}</p>
-        ) : null}
+        {actionButton && <div className="lb-action-wrap">{actionButton}</div>}
+        {currentItem.storyText
+          ? <p className="lb-caption">{currentItem.storyText}</p>
+          : currentItem.caption
+            ? <p className="lb-caption">{currentItem.caption}</p>
+            : null}
         <p className="lb-hint">Vuốt hoặc dùng mũi tên để chuyển ảnh • Nhấn đúp để đóng</p>
       </div>
     </div>

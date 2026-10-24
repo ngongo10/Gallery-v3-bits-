@@ -10,11 +10,32 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  animation: lbFadeIn 0.22s ease;
   user-select: none;
   touch-action: pan-y;
   box-sizing: border-box;
   overflow: hidden;
+
+  /* Magic Zoom clip-path transition */
+  clip-path: inset(0% 0% 0% 0% round 0px);
+  transition:
+    clip-path       0.45s cubic-bezier(0.32, 0.72, 0, 1),
+    background-color 0.45s cubic-bezier(0.32, 0.72, 0, 1),
+    backdrop-filter 0.45s cubic-bezier(0.32, 0.72, 0, 1),
+    -webkit-backdrop-filter 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: clip-path;
+}
+
+/* Fully open state: expand to full screen */
+.lb-overlay--open {
+  clip-path: inset(0% 0% 0% 0% round 0px) !important;
+  background: rgba(0, 0, 0, 0.94) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+}
+
+/* Fallback fade for no-originRect case */
+.lb-overlay--open.lb-no-origin {
+  animation: lbFadeIn 0.22s ease;
 }
 
 @keyframes lbFadeIn {
@@ -104,7 +125,7 @@
   object-fit: contain;
   border-radius: 3px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
-  animation: lbImgIn 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  /* animation handled by overlay clip-path */
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: auto;
