@@ -1,5 +1,5 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-10-14T18:08:54.776665Z
+// Generated: 2026-10-24T06:59:12.711394Z
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
@@ -362,6 +362,84 @@ export const categories = [
         "id": "tiec-bai-bien-cos-39",
         "image": cloudinaryUrl("/20210505-DSC00959") ,
         "caption": "Tiệc Bãi Biển (cos) #40",
+      },
+    ]
+  },
+  {
+    "id": "tomoyo-cos",
+    "label": "Tomoyo (cos)",
+    "mode": "art",
+    "cover": cloudinaryUrl("/DSC01244") ,
+    "items": [
+      {
+        "id": "tomoyo-cos-0",
+        "image": cloudinaryUrl("/DSC01244") ,
+        "caption": "Tomoyo (cos) #1",
+      },
+      {
+        "id": "tomoyo-cos-1",
+        "image": cloudinaryUrl("/DSC01254") ,
+        "caption": "Tomoyo (cos) #2",
+      },
+      {
+        "id": "tomoyo-cos-2",
+        "image": cloudinaryUrl("/DSC01259") ,
+        "caption": "Tomoyo (cos) #3",
+      },
+      {
+        "id": "tomoyo-cos-3",
+        "image": cloudinaryUrl("/DSC01260") ,
+        "caption": "Tomoyo (cos) #4",
+      },
+      {
+        "id": "tomoyo-cos-4",
+        "image": cloudinaryUrl("/DSC01262") ,
+        "caption": "Tomoyo (cos) #5",
+      },
+      {
+        "id": "tomoyo-cos-5",
+        "image": cloudinaryUrl("/DSC01289") ,
+        "caption": "Tomoyo (cos) #6",
+      },
+      {
+        "id": "tomoyo-cos-6",
+        "image": cloudinaryUrl("/DSC01295") ,
+        "caption": "Tomoyo (cos) #7",
+      },
+      {
+        "id": "tomoyo-cos-7",
+        "image": cloudinaryUrl("/DSC01303-Enhanced-NR") ,
+        "caption": "Tomoyo (cos) #8",
+      },
+      {
+        "id": "tomoyo-cos-8",
+        "image": cloudinaryUrl("/DSC01307") ,
+        "caption": "Tomoyo (cos) #9",
+      },
+      {
+        "id": "tomoyo-cos-9",
+        "image": cloudinaryUrl("/DSC01370") ,
+        "caption": "Tomoyo (cos) #10",
+      },
+      {
+        "id": "tomoyo-cos-10",
+        "image": cloudinaryUrl("/DSC01423") ,
+        "caption": "Tomoyo (cos) #11",
+      },
+      {
+        "id": "tomoyo-cos-11",
+        "image": cloudinaryUrl("/DSC01472") ,
+        "caption": "Tomoyo (cos) #12",
+      },
+      {
+        "id": "tomoyo-cos-12",
+        "image": cloudinaryUrl("/DSC01480") ,
+        "caption": "Tomoyo (cos) #13",
+      },
+      {
+        "id": "tomoyo-cos-13",
+        "image": cloudinaryUrl("/DSC01604") ,
+        "caption": "Tomoyo (cos) #14",
       },
     ]
   },
@@ -968,6 +1046,118 @@ export const allItems = [
     "title": "Tiệc Bãi Biển (cos) #40",
     "category": "tiec-bai-bien-cos",
     "categoryLabel": "Tiệc Bãi Biển (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-0",
+    "image": cloudinaryUrl("/DSC01244") ,
+    "title": "Tomoyo (cos) #1",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-1",
+    "image": cloudinaryUrl("/DSC01254") ,
+    "title": "Tomoyo (cos) #2",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-2",
+    "image": cloudinaryUrl("/DSC01259") ,
+    "title": "Tomoyo (cos) #3",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-3",
+    "image": cloudinaryUrl("/DSC01260") ,
+    "title": "Tomoyo (cos) #4",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-4",
+    "image": cloudinaryUrl("/DSC01262") ,
+    "title": "Tomoyo (cos) #5",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-5",
+    "image": cloudinaryUrl("/DSC01289") ,
+    "title": "Tomoyo (cos) #6",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-6",
+    "image": cloudinaryUrl("/DSC01295") ,
+    "title": "Tomoyo (cos) #7",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-7",
+    "image": cloudinaryUrl("/DSC01303-Enhanced-NR") ,
+    "title": "Tomoyo (cos) #8",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-8",
+    "image": cloudinaryUrl("/DSC01307") ,
+    "title": "Tomoyo (cos) #9",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-9",
+    "image": cloudinaryUrl("/DSC01370") ,
+    "title": "Tomoyo (cos) #10",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-10",
+    "image": cloudinaryUrl("/DSC01423") ,
+    "title": "Tomoyo (cos) #11",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-11",
+    "image": cloudinaryUrl("/DSC01472") ,
+    "title": "Tomoyo (cos) #12",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-12",
+    "image": cloudinaryUrl("/DSC01480") ,
+    "title": "Tomoyo (cos) #13",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
+    "mode": "art",
+  },
+  {
+    "id": "tomoyo-cos-13",
+    "image": cloudinaryUrl("/DSC01604") ,
+    "title": "Tomoyo (cos) #14",
+    "category": "tomoyo-cos",
+    "categoryLabel": "Tomoyo (cos)",
     "mode": "art",
   },
   {
