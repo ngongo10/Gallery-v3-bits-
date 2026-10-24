@@ -1,96 +1,253 @@
-/* ── Mode Icon Button (Minimalist Glass Icon) ── */
-.mode-icon-btn {
+/* ── Ghost Glitch Dust (Easter Egg Mode Toggle) ── */
+.ghost-dust-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Nút bấm vô hình kích thước vừa phải (dễ click) nhưng phần visual bên trong siêu nhỏ */
+.ghost-dust-trigger {
   position: relative;
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px) saturate(1.6);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  border: none;
+  background: transparent;
   cursor: pointer;
   padding: 0;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #18181b;
-  transition:
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s ease,
-    background 0.3s ease,
-    border-color 0.3s ease;
-  user-select: none;
+  outline: none;
   -webkit-tap-highlight-color: transparent;
 }
 
-[data-theme="dark"] .mode-icon-btn {
-  background: rgba(24, 24, 27, 0.65);
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #f4f4f5;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+/* Aura ánh sáng mờ ảo xung quanh hạt bụi: ẩn ẩn hiện hiện (breathing) */
+.dust-ambient-aura {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, rgba(59, 130, 246, 0.15) 50%, transparent 75%);
+  filter: blur(4px);
+  pointer-events: none;
+  animation: dustPulse 6.5s ease-in-out infinite;
 }
 
-.mode-icon-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
-  border-color: rgba(0, 0, 0, 0.18);
+[data-theme="dark"] .dust-ambient-aura {
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.5) 0%, rgba(147, 51, 234, 0.25) 50%, transparent 80%);
 }
 
-[data-theme="dark"] .mode-icon-btn:hover {
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.7);
-  border-color: rgba(255, 255, 255, 0.25);
+.ghost-dust-container.is-memories .dust-ambient-aura {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.6) 0%, rgba(239, 68, 68, 0.2) 60%, transparent 80%);
 }
 
-.mode-icon-btn:active {
-  transform: translateY(0) scale(0.95);
+/* Hạt nhân bụi trung tâm: kích thước chỉ 5px, mờ ảo như hạt bụi trôi lơ lửng */
+.dust-core {
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow:
+    0 0 8px 1px rgba(255, 255, 255, 0.8),
+    0 0 16px 3px rgba(168, 85, 247, 0.5);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  animation: dustFloat 5s ease-in-out infinite;
 }
 
-/* Track trượt icon chuyển đổi */
-.mode-icon-track {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 200%;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-  transform: translateY(0%);
+[data-theme="light"] .dust-core {
+  background: #18181b;
+  box-shadow:
+    0 0 6px 1px rgba(24, 24, 27, 0.6),
+    0 0 12px 2px rgba(124, 58, 237, 0.4);
 }
 
-.mode-icon-btn.is-memories .mode-icon-track {
-  transform: translateY(-50%);
+.dust-core-inner {
+  position: absolute;
+  inset: 1px;
+  border-radius: 50%;
+  background: #ffffff;
+  filter: blur(0.5px);
 }
 
-.mode-icon-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 50%;
-  flex-shrink: 0;
+/* Các vi hạt bụi lơ lửng xung quanh */
+.dust-orbit {
+  position: absolute;
+  width: 2.5px;
+  height: 2.5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
+  pointer-events: none;
+  transition: all 0.4s ease;
 }
 
-.mode-icon-item svg {
-  width: 20px;
-  height: 20px;
-  display: block;
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease;
+.dust-orbit-1 {
+  top: 10px;
+  left: 12px;
+  animation: orbitDrift1 4s ease-in-out infinite;
 }
 
-/* Hiệu ứng xoay nhẹ lúc xuất hiện / biến mất */
-.mode-icon-btn.is-memories .mode-icon--sparkles svg {
-  transform: scale(0.6) rotate(45deg);
+.dust-orbit-2 {
+  bottom: 12px;
+  right: 11px;
+  animation: orbitDrift2 5.5s ease-in-out infinite;
+}
+
+.dust-orbit-3 {
+  top: 14px;
+  right: 13px;
+  opacity: 0.2;
+  animation: orbitDrift3 4.8s ease-in-out infinite;
+}
+
+/* Biểu tượng game/sparkle ẩn giấu bên trong, chỉ thức tỉnh khi hover */
+.dust-symbol {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  color: #ffffff;
   opacity: 0;
+  transform: scale(0.3) rotate(-30deg);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
 }
 
-.mode-icon--work svg {
-  transform: scale(0.6) rotate(-30deg);
-  opacity: 0;
+[data-theme="light"] .dust-symbol {
+  color: #18181b;
+  filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.7));
 }
 
-.mode-icon-btn.is-memories .mode-icon--work svg {
-  transform: scale(1) rotate(0deg);
+/* ── KHI HOVER: Hạt bụi bừng tỉnh, kích thích tò mò ── */
+.ghost-dust-trigger:hover .dust-ambient-aura {
+  width: 36px;
+  height: 36px;
+  filter: blur(6px);
+  animation-duration: 2s;
   opacity: 1;
+}
+
+.ghost-dust-trigger:hover .dust-core {
+  transform: scale(0);
+  opacity: 0;
+}
+
+.ghost-dust-trigger:hover .dust-symbol {
+  opacity: 1;
+  transform: scale(1.15) rotate(0deg);
+}
+
+.ghost-dust-trigger:hover .dust-orbit-1 {
+  transform: translate(-4px, -4px) scale(1.4);
+  opacity: 0.8;
+}
+
+.ghost-dust-trigger:hover .dust-orbit-2 {
+  transform: translate(5px, 4px) scale(1.4);
+  opacity: 0.8;
+}
+
+/* Tooltip mờ nhạt xuất hiện tinh tế */
+.dust-tooltip {
+  position: absolute;
+  right: 48px;
+  white-space: nowrap;
+  font-family: 'Inter', monospace, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: currentColor;
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  font-weight: 500;
+}
+
+.ghost-dust-container:hover .dust-tooltip {
+  opacity: 0.6;
+  transform: translateX(0);
+}
+
+/* ── HIỆU ỨNG BURST KHI CLICK (BUNG TỎA NHƯ GAME) ── */
+.dust-burst-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.burst-shard {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px #a855f7;
+  animation: shardFly 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.burst-shard-0 { --dx: -20px; --dy: -18px; }
+.burst-shard-1 { --dx: 22px; --dy: -15px; }
+.burst-shard-2 { --dx: -24px; --dy: 12px; }
+.burst-shard-3 { --dx: 18px; --dy: 20px; }
+.burst-shard-4 { --dx: 0px; --dy: -25px; }
+.burst-shard-5 { --dx: 0px; --dy: 24px; }
+
+@keyframes shardFly {
+  0% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0);
+    opacity: 0;
+  }
+}
+
+/* ── ANIMATIONS LƠ LỬNG VÀ THỞ ── */
+@keyframes dustFloat {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-1.5px, -2px);
+  }
+  50% {
+    transform: translate(1px, -3.5px);
+  }
+  75% {
+    transform: translate(2px, -1px);
+  }
+}
+
+@keyframes dustPulse {
+  0%, 100% {
+    opacity: 0.18;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes orbitDrift1 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(2px, -2px); }
+}
+
+@keyframes orbitDrift2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-3px, 1.5px); }
+}
+
+@keyframes orbitDrift3 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(1.5px, 2px); }
 }
