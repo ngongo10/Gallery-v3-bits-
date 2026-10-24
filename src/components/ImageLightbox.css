@@ -250,11 +250,12 @@
 /* ── Hero Mode: JS WAAPI handles animations, disable CSS defaults ── */
 .lb-overlay--hero {
   animation: none !important;
-  background: rgba(0, 0, 0, 0.94);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(0, 0, 0, 0) !important;
+  backdrop-filter: blur(0px) !important;
+  -webkit-backdrop-filter: blur(0px) !important;
 }
 
 .lb-overlay--hero .lb-img {
   animation: none !important;
+  opacity: 0;
 }

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
+﻿import { lazy, Suspense, useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import HomePage from './pages/HomePage';
 import LoaderScreen from './components/LoaderScreen';
 import SimpleMobileNav from './components/SimpleMobileNav';
@@ -43,6 +43,7 @@ function App() {
   const [navActiveIndex, setNavActiveIndex] = useState(0);
 
   const [isExitingHome, setIsExitingHome] = useState(false);
+  const [heroFlight, setHeroFlight] = useState(null);
   const exitTimerRef = useRef(null);
   const loaderDoneRef = useRef(false);
 
@@ -161,16 +162,28 @@ function App() {
     ];
   }, [mobile]);
 
-  const handleCategorySelect = useCallback((category) => {
+  const handleCategorySelect = useCallback((category, event) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setSelectedCategory(category);
     setIsExitingHome(true);
 
+    // Hero Flight Arc Parabol tu thumbnail DriftWall sang Gallery
+    if (event?.currentTarget) {
+      const imgEl = event.currentTarget.querySelector('img') || event.currentTarget;
+      const r = imgEl.getBoundingClientRect();
+      const firstImage = category?.items?.[0]?.image || category?.cover || imgEl.src;
+      setHeroFlight({
+        src: firstImage,
+        rect: { left: r.left, top: r.top, width: r.width, height: r.height }
+      });
+    }
+
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
     exitTimerRef.current = setTimeout(() => {
       setCurrentPage('gallery');
       setIsTransitioning(false);
+      setTimeout(() => setHeroFlight(null), 120);
     }, HOME_EXIT_MS);
   }, [isTransitioning]);
 
@@ -299,6 +312,21 @@ function App() {
             </div>
           )}
 
+          {/* Hero Flight Arc Parabol overlay between Home -> Gallery */}
+          {heroFlight && (
+            <div
+              className="hero-flight-portal"
+              style={{
+                '--start-x': heroFlight.rect.left + 'px',
+                '--start-y': heroFlight.rect.top + 'px',
+                '--start-w': heroFlight.rect.width + 'px',
+                '--start-h': heroFlight.rect.height + 'px',
+              }}
+            >
+              <img src={heroFlight.src} alt="" className="hero-flight-img" />
+            </div>
+          )}
+
           {currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
             <div className={`page-wrapper ${isExitingHome ? 'is-gallery-active' : ''}`}>
               <HomePage
@@ -341,3 +369,4 @@ function App() {
 }
 
 export default App;
+

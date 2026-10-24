@@ -63,7 +63,7 @@ const HomePage = ({
   }, []);
 
   // ── Art mode category select ──────────────────────────────────────────
-  const handleCategorySelect = useCallback((itemOrCat) => {
+  const handleCategorySelect = useCallback((itemOrCat, event) => {
     let target = selectedCategory;
     if (itemOrCat) {
       if (itemOrCat.category) {
@@ -73,7 +73,7 @@ const HomePage = ({
         target = itemOrCat;
       }
     }
-    if (onCategorySelect) onCategorySelect(target);
+    if (onCategorySelect) onCategorySelect(target, event);
   }, [selectedCategory, onCategorySelect]);
 
   // ── Memories mode item click → find category and open gallery ──────────

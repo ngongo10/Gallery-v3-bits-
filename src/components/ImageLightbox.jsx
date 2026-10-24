@@ -102,10 +102,12 @@ export default function ImageLightbox({
     const runHeroAnimation = () => {
       const finalRect = img.getBoundingClientRect();
       if (!finalRect.width || !finalRect.height) {
-        // Retry next frame if image dimensions are not measured yet
         requestAnimationFrame(runHeroAnimation);
         return;
       }
+
+      // Restore opacity for WAAPI
+      img.style.opacity = '1';
 
       const scaleX = originRect.width / finalRect.width;
       const scaleY = originRect.height / finalRect.height;

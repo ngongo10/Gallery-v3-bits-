@@ -125,3 +125,53 @@ html, body, #root {
   z-index: 1;
   pointer-events: none;
 }
+
+/* --- Hero Flight Arc Parabol (Home -> Gallery) --- */
+.hero-flight-portal {
+  position: fixed;
+  top: var(--start-y);
+  left: var(--start-x);
+  width: var(--start-w);
+  height: var(--start-h);
+  z-index: 99999;
+  pointer-events: none;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+  animation: heroFlightArc 1.05s cubic-bezier(0.18, 0.95, 0.28, 1) forwards;
+  transform-origin: center center;
+}
+
+.hero-flight-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@keyframes heroFlightArc {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+    border-radius: 8px;
+  }
+  35% {
+    /* Qu? d?o parabol ngu?c vng xu?ng t?o d bay lu?n */
+    transform: translate(calc((50vw - var(--start-x) - (var(--start-w) / 2)) * 0.45), calc((50vh - var(--start-y) - (var(--start-h) / 2)) * 0.4 + 55px)) scale(1.65) rotate(-2deg);
+    opacity: 1;
+    border-radius: 6px;
+  }
+  75% {
+    /* Bay lu?t ln phng to ra kch thu?c tuong duong gallery view */
+    transform: translate(calc(50vw - var(--start-x) - (var(--start-w) / 2)), calc(50vh - var(--start-y) - (var(--start-h) / 2))) scale(3.2) rotate(0deg);
+    opacity: 0.95;
+    border-radius: 4px;
+    filter: blur(0px);
+  }
+  100% {
+    transform: translate(calc(50vw - var(--start-x) - (var(--start-w) / 2)), calc(50vh - var(--start-y) - (var(--start-h) / 2))) scale(3.6);
+    opacity: 0;
+    border-radius: 2px;
+    filter: blur(8px);
+  }
+}
