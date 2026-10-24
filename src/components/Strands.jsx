@@ -322,9 +322,11 @@ export default function Strands({
       const width = ctn.offsetWidth;
       const height = ctn.offsetHeight;
       renderer.setSize(width, height);
-      program.uniforms.uResolution.value = [width, height];
+      const drawW = gl.drawingBufferWidth || width;
+      const drawH = gl.drawingBufferHeight || height;
+      program.uniforms.uResolution.value = [drawW, drawH];
       renderTarget.setSize(width, height);
-      glassProgram.uniforms.uResolution.value = [width, height];
+      glassProgram.uniforms.uResolution.value = [drawW, drawH];
     }
     window.addEventListener('resize', resize);
     resize();
