@@ -202,18 +202,18 @@ function App() {
       {/* ── SwarmCursor — desktop only, pointer-events:none overlay ── */}
       {!mobile && !isLoading && (
         <SwarmCursor
-          color={theme === 'dark' ? '#aac4ff' : '#3d6fff'}
-          accentColor={theme === 'dark' ? '#ffffff' : '#0a1aff'}
-          count={9}
-          size={9}
-          merge={0.74}
-          glow={0.82}
-          opacity={0.72}
-          spread={90}
-          separation={0.18}
-          speed={2.2}
-          wander={0.22}
-          trail={0.68}
+          color={theme === 'dark' ? '#e8eeff' : '#c8d8ff'}
+          accentColor={theme === 'dark' ? '#ffffff' : '#ffffff'}
+          count={5}
+          size={14}
+          merge={0.62}
+          glow={0.45}
+          opacity={0.55}
+          spread={52}
+          separation={0.28}
+          speed={1.6}
+          wander={0.10}
+          trail={0.42}
           scatterOnClick={true}
         />
       )}
