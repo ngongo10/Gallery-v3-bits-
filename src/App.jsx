@@ -5,6 +5,7 @@ import SimpleMobileNav from './components/SimpleMobileNav';
 import AnimatedThemeToggler from './components/AnimatedThemeToggler';
 import FlickeringText from './components/ui/flickering-text';
 import ErrorBoundary from './components/ErrorBoundary';
+import SwarmCursor from './components/SwarmCursor';
 
 import './App.css';
 
@@ -198,6 +199,25 @@ function App() {
 
   return (
     <div className="app" data-theme={theme}>
+      {/* ── SwarmCursor — desktop only, pointer-events:none overlay ── */}
+      {!mobile && !isLoading && (
+        <SwarmCursor
+          color={theme === 'dark' ? '#aac4ff' : '#3d6fff'}
+          accentColor={theme === 'dark' ? '#ffffff' : '#0a1aff'}
+          count={9}
+          size={9}
+          merge={0.74}
+          glow={0.82}
+          opacity={0.72}
+          spread={90}
+          separation={0.18}
+          speed={2.2}
+          wander={0.22}
+          trail={0.68}
+          scatterOnClick={true}
+        />
+      )}
+
       {isLoading && (
         <LoaderScreen theme={theme} onComplete={handleLoaderComplete} />
       )}
