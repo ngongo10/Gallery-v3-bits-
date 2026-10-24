@@ -111,41 +111,53 @@ export default function ImageLightbox({
       const tx = (originRect.left + originRect.width / 2) - (finalRect.left + finalRect.width / 2);
       const ty = (originRect.top + originRect.height / 2) - (finalRect.top + finalRect.height / 2);
 
-      // Phase 1: Hero fly + elastic warp
+      // Đường bay parabol ngược (hơi võng xuống nhẹ hoặc cong bổng hình cánh cung tự nhiên):
+      // arcOffsetY tạo độ cong võng/uốn lượn parabolic mượt mà giữa điểm xuất phát và đích
+      const arcOffsetY = Math.max(30, Math.min(90, Math.abs(tx) * 0.18 + Math.abs(ty) * 0.12));
+
+      // Phase 1: Hero fly + arc parabol + elastic warp
       img.animate([
         {
-          transform: `translate(${tx}px, ${ty}px) scale(${scaleX}, ${scaleY})`,
+          transform: `translate(${tx}px, ${ty}px) scale(${scaleX}, ${scaleY}) rotate(${-tx * 0.008}deg)`,
           filter: 'url(#lb-magic-warp)',
           borderRadius: '8px',
           opacity: 1,
           offset: 0,
         },
         {
-          // Elastic squish: image arrives wider & shorter momentarily
-          transform: `translate(${tx * 0.08}px, ${ty * 0.08}px) scale(${1 + (1 - scaleX) * 0.04}, ${1 - (1 - scaleY) * 0.03})`,
+          // Điểm 35% quỹ đạo: rơi vào bụng parabol ngược (võng xuống tạo đà mềm mại)
+          transform: `translate(${tx * 0.62}px, ${ty * 0.52 + arcOffsetY}px) scale(${scaleX + (1 - scaleX) * 0.45}, ${scaleY + (1 - scaleY) * 0.42}) rotate(${-tx * 0.005}deg)`,
+          filter: 'url(#lb-magic-warp)',
+          borderRadius: '6px',
+          opacity: 1,
+          offset: 0.35,
+        },
+        {
+          // Điểm 70%: lượn lên từ parabol, nở rộng hơn (elastic squish nhẹ)
+          transform: `translate(${tx * 0.12}px, ${ty * 0.08 + arcOffsetY * 0.2}px) scale(${1 + (1 - scaleX) * 0.04}, ${1 - (1 - scaleY) * 0.03}) rotate(${-tx * 0.002}deg)`,
           filter: 'url(#lb-magic-warp)',
           borderRadius: '4px',
           opacity: 1,
           offset: 0.72,
         },
         {
-          // Slight stretch overshoot
-          transform: `translate(0,0) scale(${1 - (1 - scaleX) * 0.015}, ${1 + (1 - scaleY) * 0.01})`,
+          // Stretch overshoot nhẹ trước khi vào form
+          transform: `translate(0, ${-arcOffsetY * 0.05}px) scale(${1 - (1 - scaleX) * 0.015}, ${1 + (1 - scaleY) * 0.01}) rotate(0deg)`,
           filter: 'none',
           borderRadius: '3px',
           opacity: 1,
           offset: 0.88,
         },
         {
-          transform: 'translate(0,0) scale(1)',
+          transform: 'translate(0, 0) scale(1) rotate(0deg)',
           filter: 'none',
           borderRadius: '3px',
           opacity: 1,
           offset: 1,
         },
       ], {
-        duration: 580,
-        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        duration: 640,
+        easing: 'cubic-bezier(0.18, 0.95, 0.28, 1)',
         fill: 'both',
       });
 
@@ -197,13 +209,16 @@ export default function ImageLightbox({
       displEl.setAttribute('scale', '20');
     }
 
+    // Quỹ đạo parabol ngược khi thu lại về thumbnail
+    const arcOffsetY = Math.max(25, Math.min(80, Math.abs(tx) * 0.15 + Math.abs(ty) * 0.1));
+
     img.animate([
-      { transform: 'translate(0,0) scale(1)', filter: 'url(#lb-magic-warp)', opacity: 1, offset: 0 },
-      { transform: `translate(${tx * 0.3}px, ${ty * 0.3}px) scale(${(scaleX + 1) / 2}, ${(scaleY + 1) / 2})`, filter: 'url(#lb-magic-warp)', opacity: 0.85, offset: 0.35 },
-      { transform: `translate(${tx}px, ${ty}px) scale(${scaleX}, ${scaleY})`, filter: 'url(#lb-magic-warp)', opacity: 0, offset: 1 },
+      { transform: 'translate(0,0) scale(1) rotate(0deg)', filter: 'url(#lb-magic-warp)', opacity: 1, offset: 0 },
+      { transform: `translate(${tx * 0.4}px, ${ty * 0.35 + arcOffsetY}px) scale(${(scaleX + 1) / 2}, ${(scaleY + 1) / 2}) rotate(${tx * 0.004}deg)`, filter: 'url(#lb-magic-warp)', opacity: 0.9, offset: 0.42 },
+      { transform: `translate(${tx}px, ${ty}px) scale(${scaleX}, ${scaleY}) rotate(${tx * 0.008}deg)`, filter: 'url(#lb-magic-warp)', opacity: 0, offset: 1 },
     ], {
-      duration: 360,
-      easing: 'cubic-bezier(0.4, 0, 0.8, 0.5)',
+      duration: 380,
+      easing: 'cubic-bezier(0.35, 0, 0.6, 0.9)',
       fill: 'both',
     });
 
