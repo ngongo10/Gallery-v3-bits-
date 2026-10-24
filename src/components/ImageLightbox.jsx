@@ -168,14 +168,13 @@ export default function ImageLightbox({
       animateTurbulence(0.022, 0, 550, 28, 0);
     };
 
-    if (img.complete && img.naturalWidth > 0) {
+    // Chay ngay lap tuc sau frame render de dam bao luon luon thay animation bay
+    const timer = setTimeout(() => {
       runHeroAnimation();
-    } else {
-      img.addEventListener('load', runHeroAnimation, { once: true });
-    }
+    }, 20);
 
     return () => {
-      img.removeEventListener('load', runHeroAnimation);
+      clearTimeout(timer);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []); // only on mount

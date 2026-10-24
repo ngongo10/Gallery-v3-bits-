@@ -104,11 +104,15 @@
   object-fit: contain;
   border-radius: 3px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
-  animation: lbImgIn 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: auto;
   cursor: zoom-out;
+}
+
+/* Chi chay fallback animation khi khong phai hero mode */
+.lb-overlay:not(.lb-overlay--hero) .lb-img {
+  animation: lbImgIn 0.24s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes lbImgIn {
@@ -250,12 +254,8 @@
 /* ── Hero Mode: JS WAAPI handles animations, disable CSS defaults ── */
 .lb-overlay--hero {
   animation: none !important;
-  background: rgba(0, 0, 0, 0) !important;
-  backdrop-filter: blur(0px) !important;
-  -webkit-backdrop-filter: blur(0px) !important;
 }
 
 .lb-overlay--hero .lb-img {
   animation: none !important;
-  opacity: 0;
 }
