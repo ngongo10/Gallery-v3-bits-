@@ -310,6 +310,38 @@
   display: none;
 }
 
+/* ─── Staggered Fade Up Entrance on Gallery Mount & Scroll ─── */
+.chry-image-wrapper.medium-size,
+.chry-mobile-item .chry-image-wrapper {
+  opacity: 0;
+  transform: translateY(45px);
+  filter: blur(4px);
+  transition:
+    opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+}
+
+/* Khi gallery da vao hoac anh scroll vao view */
+.gallery-page--entered .chry-image-wrapper.is-in-view,
+.gallery-page--entered .chry-image-column > div:nth-child(1),
+.gallery-page--entered .chry-image-column > div:nth-child(2),
+.gallery-page--entered .chry-mobile-stream > div:nth-child(2) .chry-image-wrapper {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Stagger delay so le nhau cho 2 anh dau tien khi moi mo trang */
+.gallery-page--entered .chry-image-column > div:nth-child(1) {
+  transition-delay: 0.12s;
+}
+
+.gallery-page--entered .chry-image-column > div:nth-child(2) {
+  transition-delay: 0.28s;
+}
+
 .chry-image-wrapper.medium-size {
   position: relative;
   width: 100%;

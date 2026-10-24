@@ -168,6 +168,7 @@ const GalleryPage = ({ category, onBack }) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
               setActivePhotoIndex(index);
+              entry.target.classList.add('is-in-view');
             }
           });
         },
