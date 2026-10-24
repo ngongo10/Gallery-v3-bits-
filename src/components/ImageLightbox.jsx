@@ -99,6 +99,7 @@ export default function ImageLightbox({
     if (!img || !overlay) return;
 
     // Trigger hero animation once image layout is ready or loaded
+    // Trigger hero animation once image layout is ready or loaded
     const runHeroAnimation = () => {
       const finalRect = img.getBoundingClientRect();
       if (!finalRect.width || !finalRect.height) {
@@ -106,7 +107,6 @@ export default function ImageLightbox({
         return;
       }
 
-      // Restore opacity for WAAPI
       img.style.opacity = '1';
 
       const scaleX = originRect.width / finalRect.width;
@@ -114,52 +114,43 @@ export default function ImageLightbox({
       const tx = (originRect.left + originRect.width / 2) - (finalRect.left + finalRect.width / 2);
       const ty = (originRect.top + originRect.height / 2) - (finalRect.top + finalRect.height / 2);
 
-      // Đường bay parabol ngược (hơi võng xuống nhẹ hoặc cong bổng hình cánh cung tự nhiên):
-      const arcOffsetY = Math.max(30, Math.min(90, Math.abs(tx) * 0.18 + Math.abs(ty) * 0.12));
+      // Quỹ đạo parabol rõ rệt (uốn võng sâu xuống tạo cánh cung mềm mại)
+      const arcOffsetY = Math.max(90, Math.min(220, Math.abs(tx) * 0.35 + 110));
 
-      // Phase 1: Hero fly + arc parabol + elastic warp
-      img.animate([
+            img.animate([
         {
-          transform: `translate(${tx}px, ${ty}px) scale(${scaleX}, ${scaleY}) rotate(${-tx * 0.008}deg)`,
-          filter: 'url(#lb-magic-warp)',
-          borderRadius: '8px',
-          opacity: 1,
+          transform: 'translate3d(' + tx + 'px, ' + ty + 'px, 0) scale(' + scaleX + ', ' + scaleY + ') rotate(' + (-tx * 0.012) + 'deg)',
+          borderRadius: '12px',
+          opacity: 0.9,
           offset: 0,
         },
         {
-          // Điểm 35% quỹ đạo: rơi vào bụng parabol ngược (võng xuống tạo đà mềm mại)
-          transform: `translate(${tx * 0.62}px, ${ty * 0.52 + arcOffsetY}px) scale(${scaleX + (1 - scaleX) * 0.45}, ${scaleY + (1 - scaleY) * 0.42}) rotate(${-tx * 0.005}deg)`,
-          filter: 'url(#lb-magic-warp)',
-          borderRadius: '6px',
+          transform: 'translate3d(' + (tx * 0.52) + 'px, ' + (ty * 0.42 + arcOffsetY) + 'px, 0) scale(' + (scaleX + (1 - scaleX) * 0.58) + ', ' + (scaleY + (1 - scaleY) * 0.52) + ') rotate(' + (-tx * 0.007) + 'deg)',
+          borderRadius: '8px',
           opacity: 1,
-          offset: 0.35,
+          offset: 0.4,
         },
         {
-          // Điểm 70%: lượn lên từ parabol, nở rộng hơn (elastic squish nhẹ)
-          transform: `translate(${tx * 0.12}px, ${ty * 0.08 + arcOffsetY * 0.2}px) scale(${1 + (1 - scaleX) * 0.04}, ${1 - (1 - scaleY) * 0.03}) rotate(${-tx * 0.002}deg)`,
-          filter: 'url(#lb-magic-warp)',
+          transform: 'translate3d(' + (tx * 0.1) + 'px, ' + (ty * 0.08 + arcOffsetY * 0.15) + 'px, 0) scale(1.05, 0.98) rotate(0deg)',
           borderRadius: '4px',
           opacity: 1,
-          offset: 0.72,
+          offset: 0.75,
         },
         {
-          // Stretch overshoot nhẹ trước khi vào form
-          transform: `translate(0, ${-arcOffsetY * 0.05}px) scale(${1 - (1 - scaleX) * 0.015}, ${1 + (1 - scaleY) * 0.01}) rotate(0deg)`,
-          filter: 'none',
+          transform: 'translate3d(0, ' + (-arcOffsetY * 0.04) + 'px, 0) scale(0.99, 1.01) rotate(0deg)',
           borderRadius: '3px',
           opacity: 1,
           offset: 0.88,
         },
         {
-          transform: 'translate(0, 0) scale(1) rotate(0deg)',
-          filter: 'none',
+          transform: 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
           borderRadius: '3px',
           opacity: 1,
           offset: 1,
         },
       ], {
-        duration: 640,
-        easing: 'cubic-bezier(0.18, 0.95, 0.28, 1)',
+        duration: 720,
+        easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
         fill: 'both',
       });
 
