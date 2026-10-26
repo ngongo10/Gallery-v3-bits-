@@ -1,5 +1,5 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-10-24T09:28:07.708223Z
+// Generated: 2026-10-26T15:38:28.131357Z
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
