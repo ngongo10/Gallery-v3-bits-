@@ -20,7 +20,7 @@ export default function ImageLightbox({
   );
 
   // "opening" | "open" | "closing"
-  const [phase, setPhase] = useState(originRect ? "opening" : "open");
+  const [phase, setPhase] = useState("opening");
   const overlayRef = useRef(null);
   const imgRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0 });
@@ -34,7 +34,7 @@ export default function ImageLightbox({
   const currentSrc = currentItem.image || currentItem.src || src;
   const currentAlt = currentItem.caption || currentItem.alt || alt || `Photo ${currentIndex + 1}`;
 
-  // ── True Double-rAF FLIP Animation on Mount ──────────────────────────────
+  // ── Bulletproof WAAPI Animation on Mount ─────────────────────────────────
   useLayoutEffect(() => {
     const img = imgRef.current;
     if (!originRect || !img) {
@@ -54,25 +54,30 @@ export default function ImageLightbox({
       const sx = originRect.width / finalRect.width;
       const sy = originRect.height / finalRect.height;
 
-      // 1. Instantly set starting transform (over the thumbnail)
-      img.style.transition = 'none';
-      img.style.transformOrigin = 'center center';
-      img.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`;
-      img.style.borderRadius = originRect.borderRadius || '2px';
-      img.style.visibility = 'visible';
+      // WAAPI guarantees the starting frame is rendered regardless of reflow timing
+      const anim = img.animate(
+        [
+          {
+            transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
+            borderRadius: originRect.borderRadius || '2px',
+          },
+          {
+            transform: 'translate3d(0, 0, 0) scale(1, 1)',
+            borderRadius: '3px',
+          }
+        ],
+        {
+          duration: 520,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)', // Smooth deceleration
+          fill: 'both'
+        }
+      );
 
-      // 2. Force reflow
-      void img.offsetWidth;
-
-      // 3. Double requestAnimationFrame ensures browser paints the start position to screen
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setPhase("open");
-          img.style.transition = 'transform 0.46s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.46s ease';
-          img.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
-          img.style.borderRadius = '3px';
-        });
-      });
+      anim.onfinish = () => {
+        setPhase("open");
+        img.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
+        img.style.borderRadius = '3px';
+      };
     };
 
     if (img.complete && img.naturalWidth > 0) {
@@ -96,13 +101,27 @@ export default function ImageLightbox({
       const sx = originRect.width / finalRect.width;
       const sy = originRect.height / finalRect.height;
 
-      img.style.transition = 'transform 0.38s cubic-bezier(0.2, 0, 0, 1), border-radius 0.38s ease';
-      img.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`;
-      img.style.borderRadius = originRect.borderRadius || '2px';
+      const anim = img.animate(
+        [
+          {
+            transform: 'translate3d(0, 0, 0) scale(1, 1)',
+            borderRadius: '3px',
+          },
+          {
+            transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
+            borderRadius: originRect.borderRadius || '2px',
+          }
+        ],
+        {
+          duration: 400,
+          easing: 'cubic-bezier(0.2, 0, 0, 1)',
+          fill: 'forwards'
+        }
+      );
 
-      setTimeout(() => {
+      anim.onfinish = () => {
         onClose();
-      }, 380);
+      };
     } else {
       onClose();
     }
@@ -265,7 +284,6 @@ export default function ImageLightbox({
           src={currentSrc}
           alt={currentAlt}
           draggable={false}
-          style={originRect && phase === 'opening' ? { visibility: 'hidden' } : undefined}
           onDoubleClick={(e) => {
             e.stopPropagation();
             handleClose();
