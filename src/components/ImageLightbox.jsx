@@ -34,7 +34,7 @@ export default function ImageLightbox({
   const currentSrc = currentItem.image || currentItem.src || src;
   const currentAlt = currentItem.caption || currentItem.alt || alt || `Photo ${currentIndex + 1}`;
 
-  // ── Exact Reverse of Close: Symmetrical Travel from Thumbnail to Center ──
+  // ── Animation MỞ: Tính toán từ kích thước tự nhiên của ảnh đã load ────────
   useLayoutEffect(() => {
     const img = imgRef.current;
     if (!originRect || !img) {
@@ -43,18 +43,30 @@ export default function ImageLightbox({
     }
 
     const runEntrance = () => {
-      const finalRect = img.getBoundingClientRect();
-      if (!finalRect.width || !finalRect.height) {
-        requestAnimationFrame(runEntrance);
-        return;
-      }
+      // Tính toán kích thước hiển thị mục tiêu của ảnh giữa màn hình
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const maxW = vw - (vw <= 768 ? 20 : 160);
+      const maxH = vh * (vw <= 768 ? 0.80 : 0.84);
 
-      const dx = (originRect.left + originRect.width / 2) - (finalRect.left + finalRect.width / 2);
-      const dy = (originRect.top + originRect.height / 2) - (finalRect.top + finalRect.height / 2);
-      const sx = originRect.width / finalRect.width;
-      const sy = originRect.height / finalRect.height;
+      let targetW = img.naturalWidth || originRect.width;
+      let targetH = img.naturalHeight || originRect.height;
 
-      // Exactly the reverse of close animation
+      // Giữ đúng tỉ lệ aspect-ratio của bức ảnh
+      const scaleDown = Math.min(maxW / targetW, maxH / targetH, 1);
+      const finalW = targetW * scaleDown;
+      const finalH = targetH * scaleDown;
+
+      // Tâm giữa màn hình
+      const finalLeft = (vw - finalW) / 2;
+      const finalTop = (vh - finalH) / 2;
+
+      // Độ lệch tuyệt đối từ thumbnail đến tâm
+      const dx = (originRect.left + originRect.width / 2) - (finalLeft + finalW / 2);
+      const dy = (originRect.top + originRect.height / 2) - (finalTop + finalH / 2);
+      const sx = originRect.width / finalW;
+      const sy = originRect.height / finalH;
+
       const anim = img.animate(
         [
           {
@@ -68,7 +80,7 @@ export default function ImageLightbox({
         ],
         {
           duration: 400,
-          easing: 'cubic-bezier(0, 0, 0.2, 1)', // Exact reverse of close curve cubic-bezier(0.2, 0, 0, 1)
+          easing: 'cubic-bezier(0.2, 0, 0, 1)',
           fill: 'both'
         }
       );
@@ -80,10 +92,14 @@ export default function ImageLightbox({
       };
     };
 
-    runEntrance();
+    if (img.complete && img.naturalWidth > 0) {
+      runEntrance();
+    } else {
+      img.onload = runEntrance;
+    }
   }, [originRect]);
 
-  // ── Pure Fluid Motion Close: Travel back to thumbnail position ──────────
+  // ── Animation ĐÓNG: Giống hệt công thức lúc mở nhưng chạy ngược chiều ─────
   const handleClose = useCallback(() => {
     if (isClosingRef.current) return;
     isClosingRef.current = true;
