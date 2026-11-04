@@ -34,7 +34,7 @@ export default function ImageLightbox({
   const currentSrc = currentItem.image || currentItem.src || src;
   const currentAlt = currentItem.caption || currentItem.alt || alt || `Photo ${currentIndex + 1}`;
 
-  // ── Bulletproof WAAPI Animation on Mount ─────────────────────────────────
+  // ── Exact Reverse of Close: Symmetrical Travel from Thumbnail to Center ──
   useLayoutEffect(() => {
     const img = imgRef.current;
     if (!originRect || !img) {
@@ -42,10 +42,10 @@ export default function ImageLightbox({
       return;
     }
 
-    const startAnimation = () => {
+    const runEntrance = () => {
       const finalRect = img.getBoundingClientRect();
       if (!finalRect.width || !finalRect.height) {
-        requestAnimationFrame(startAnimation);
+        requestAnimationFrame(runEntrance);
         return;
       }
 
@@ -54,7 +54,7 @@ export default function ImageLightbox({
       const sx = originRect.width / finalRect.width;
       const sy = originRect.height / finalRect.height;
 
-      // WAAPI guarantees the starting frame is rendered regardless of reflow timing
+      // Exactly the reverse of close animation
       const anim = img.animate(
         [
           {
@@ -67,8 +67,8 @@ export default function ImageLightbox({
           }
         ],
         {
-          duration: 520,
-          easing: 'cubic-bezier(0.16, 1, 0.3, 1)', // Smooth deceleration
+          duration: 400,
+          easing: 'cubic-bezier(0, 0, 0.2, 1)', // Exact reverse of close curve cubic-bezier(0.2, 0, 0, 1)
           fill: 'both'
         }
       );
@@ -80,11 +80,7 @@ export default function ImageLightbox({
       };
     };
 
-    if (img.complete && img.naturalWidth > 0) {
-      startAnimation();
-    } else {
-      img.onload = startAnimation;
-    }
+    runEntrance();
   }, [originRect]);
 
   // ── Pure Fluid Motion Close: Travel back to thumbnail position ──────────
