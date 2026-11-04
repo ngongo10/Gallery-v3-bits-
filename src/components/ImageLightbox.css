@@ -3,9 +3,9 @@
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: rgba(0, 0, 0, 0.92);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,18 +14,43 @@
   touch-action: pan-y;
   box-sizing: border-box;
   overflow: hidden;
-  /* Fade in overlay independently of stage animation */
-  animation: lbOverlayIn 0.32s ease forwards;
+  transition: background 0.45s cubic-bezier(0.32, 0.72, 0, 1),
+              backdrop-filter 0.45s cubic-bezier(0.32, 0.72, 0, 1),
+              -webkit-backdrop-filter 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: background, backdrop-filter;
 }
 
-@keyframes lbOverlayIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+.lb-overlay--open {
+  background: rgba(0, 0, 0, 0.93);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
-/* Fallback fade for no-origin case */
-.lb-overlay--open:not(.lb-overlay--entering) .lb-stage {
-  transform: none !important;
+.lb-overlay--closing {
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
+/* Header & Controls fade-in smoothly when fully open */
+.lb-header,
+.lb-footer,
+.lb-arrow {
+  opacity: 0;
+  transition: opacity 0.3s ease 0.15s;
+}
+
+.lb-overlay--open .lb-header,
+.lb-overlay--open .lb-footer,
+.lb-overlay--open .lb-arrow {
+  opacity: 1;
+}
+
+.lb-overlay--closing .lb-header,
+.lb-overlay--closing .lb-footer,
+.lb-overlay--closing .lb-arrow {
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
 /* Top Header */
@@ -109,17 +134,12 @@
   height: auto;
   object-fit: contain;
   border-radius: 3px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8);
-
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.85);
   user-select: none;
   -webkit-user-drag: none;
   pointer-events: auto;
   cursor: zoom-out;
-}
-
-@keyframes lbImgIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  will-change: transform, border-radius;
 }
 
 /* Navigation Arrows */

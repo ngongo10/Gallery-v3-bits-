@@ -118,12 +118,19 @@ const GalleryPage = ({ category, onBack }) => {
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
 
   const handleOpenLightbox = useCallback((index, e) => {
-    // Capture origin rect for magic zoom animation
+    // Capture exact <img> element bounding rect for true FLIP animation
     let originRect = null;
-    if (e && e.currentTarget) {
-      originRect = e.currentTarget.getBoundingClientRect();
-    } else if (imageRefs.current[index]) {
-      originRect = imageRefs.current[index].getBoundingClientRect();
+    const targetEl = e?.currentTarget || imageRefs.current[index];
+    if (targetEl) {
+      const imgEl = targetEl.querySelector('img') || targetEl;
+      const r = imgEl.getBoundingClientRect();
+      originRect = {
+        left: r.left,
+        top: r.top,
+        width: r.width,
+        height: r.height,
+        borderRadius: window.getComputedStyle(imgEl).borderRadius || '0px'
+      };
     }
     setLightboxOriginRect(originRect);
     setLightboxIndex(index);
