@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { LiquidGlassCarousel } from "./ui/liquid-glass-carousel";
-import { LivingOrigamiBg } from "./ui/living-origami-bg";
+import { Particles } from "./ui/Particles";
 import { buildSrc } from "../utils/cloudinary";
 
 export default function MobileWorksWheelHome({
@@ -53,8 +53,24 @@ export default function MobileWorksWheelHome({
       className="w-full h-dvh overflow-hidden select-none flex flex-col justify-center items-center relative"
       style={{ background: isDark ? "#060713" : "#ffffff" }}
     >
-      {/* Dark Ambient Gradient Mesh matching user design */}
-      {isDark && <LivingOrigamiBg className="z-0" />}
+      {/* Dynamic Animated Particles Background from React Bits */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+        <Particles
+          particleColors={isDark ? ["#ffffff", "#eefffb", "#70b5ff"] : ["#1a202c", "#2d3748", "#4a5568"]}
+          particleCount={290}
+          particleSpread={9}
+          speed={0.1}
+          particleBaseSize={90}
+          glow={isDark ? 0.65 : 0.2}
+          twinkle={0.3}
+          moveParticlesOnHover={false}
+          hoverEffect="parallax"
+          depthOfField={0.15}
+          clickBurst={false}
+          lightMode={!isDark}
+          className="w-full h-full"
+        />
+      </div>
 
       {/* 3D Liquid Glass Carousel on top with transparent canvas */}
       <div className="relative z-10 w-full h-full">
@@ -63,7 +79,7 @@ export default function MobileWorksWheelHome({
           panelHeight={380}
           gap={12}
           background="transparent"
-                    entry={true}
+          entry={true}
           onActiveChange={handleActiveChange}
           onFocusChange={handleFocusChange}
           className="w-full h-full"
