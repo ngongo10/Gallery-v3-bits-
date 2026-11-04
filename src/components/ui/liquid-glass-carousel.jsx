@@ -72,10 +72,10 @@ const LENS = {
   zoom: 0,
   dispersion: 11,
   blur: 0,
-  glow: 4.2,
-  whiteGlow: 0.24,
+  glow: 0.0,
+  whiteGlow: 0.0,
   novaSize: 12,
-  blueRing: 6,
+  blueRing: 0.0,
   ringRadius: 0.49,
   ringWidth: 0.014,
   shimmer: true,
@@ -88,7 +88,7 @@ const LENS = {
   rimFreq1: 2,
   rimFreq2: 1,
   blueColor: "#009dff",
-  rimLine: 1.4,
+  rimLine: 0.0,
   rimLinePos: 0.488,
   rimLineWidth: 0.003,
   vignette: 0,
@@ -370,7 +370,8 @@ function createCarousel(mount, cursorElement, options) {
 
   let renderer;
   try {
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    const isTransparent = options.background === 'transparent';
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: isTransparent });
   } catch {
     return null;
   }
@@ -379,7 +380,11 @@ function createCarousel(mount, cursorElement, options) {
   renderer.setPixelRatio(dpr);
   renderer.setSize(W, H);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.setClearColor(hexToNumber(options.background), 1);
+  if (isTransparent) {
+    renderer.setClearColor(0x000000, 0);
+  } else {
+    renderer.setClearColor(hexToNumber(options.background), 1);
+  }
   renderer.domElement.style.display = "block";
   renderer.domElement.style.width = "100%";
   renderer.domElement.style.height = "100%";
@@ -1464,7 +1469,7 @@ export function LiquidGlassCarousel({
         "relative h-full min-h-[420px] w-full overflow-hidden outline-none focus-visible:ring-2 focus-visible:ring-black/20",
         className,
       )}
-      style={{ background, color: "var(--text-primary, #111111)", ...style }}
+      style={{ background: background === "transparent" ? "transparent" : background, color: "var(--text-primary, #111111)", ...style }}
       tabIndex={0}
       role="region"
       aria-roledescription="carousel"

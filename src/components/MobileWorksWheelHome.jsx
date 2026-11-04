@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { LiquidGlassCarousel } from "./ui/liquid-glass-carousel";
+import { LivingOrigamiBg } from "./ui/living-origami-bg";
 import { buildSrc } from "../utils/cloudinary";
 
 export default function MobileWorksWheelHome({
@@ -20,7 +21,7 @@ export default function MobileWorksWheelHome({
         allItems.find((i) => i.category === cat.id)?.image ||
         "";
 
-      // Crop ảnh theo tỉ lệ 3:4 (portrait) thay vì nén
+      // Crop anh theo ty le 3:4 (portrait)
       const optimizedImage = coverSrc
         ? buildSrc(coverSrc, { w: 900, h: 1200, crop: "fill", dprAuto: true })
         : "";
@@ -41,31 +42,29 @@ export default function MobileWorksWheelHome({
 
   const handleFocusChange = (focused) => {
     if (focused) {
-      // When a card is focused/clicked, navigate to that category
-      const activeItem = carouselItems[0]; // focus doesn't expose index directly
-      // Navigation happens on click via the carousel's built-in focus behavior
+      // Navigate on focus
     }
   };
 
-  const isDark = theme === "dark";
-  const bg = isDark ? "#050507" : "#ffffff";
-
   return (
-    <div
-      className="w-full h-dvh overflow-hidden select-none flex flex-col justify-center items-center relative"
-      style={{ background: bg }}
-    >
-      <LiquidGlassCarousel
-        items={carouselItems}
-        panelHeight={380}
-        gap={12}
-        background={bg}
-        theme={theme}
-        entry={true}
-        onActiveChange={handleActiveChange}
-        onFocusChange={handleFocusChange}
-        className="w-full h-full"
-      />
+    <div className="w-full h-dvh overflow-hidden select-none flex flex-col justify-center items-center relative">
+      {/* Dynamic Animated Living Origami Background */}
+      <LivingOrigamiBg className="z-0" />
+
+      {/* 3D Liquid Glass Carousel on top with transparent canvas */}
+      <div className="relative z-10 w-full h-full">
+        <LiquidGlassCarousel
+          items={carouselItems}
+          panelHeight={380}
+          gap={12}
+          background="transparent"
+          theme={theme}
+          entry={true}
+          onActiveChange={handleActiveChange}
+          onFocusChange={handleFocusChange}
+          className="w-full h-full"
+        />
+      </div>
     </div>
   );
 }

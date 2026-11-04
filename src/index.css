@@ -78,3 +78,144 @@ img {
   outline: 2px solid rgba(255, 255, 255, 0.5);
   outline-offset: 2px;
 }
+
+
+/* ─── Living Origami Background ─── */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  perspective: 1200px;
+  background: radial-gradient(circle at 25% 25%, rgba(65, 40, 140, 0.55), transparent 55%),
+              radial-gradient(circle at 80% 75%, rgba(20, 60, 160, 0.55), transparent 55%),
+              #070714;
+}
+
+[data-theme="light"] .hero-section {
+  background: radial-gradient(circle at 25% 25%, rgba(200, 220, 255, 0.45), transparent 55%),
+              radial-gradient(circle at 80% 75%, rgba(220, 210, 255, 0.45), transparent 55%),
+              #f8f9fc;
+}
+
+.drifter-container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  animation: drift linear infinite;
+  pointer-events: none;
+}
+
+.origami-crane {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  transform-style: preserve-3d;
+  animation: bob 3.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 12px rgba(130, 190, 255, 0.55));
+}
+
+[data-theme="light"] .origami-crane {
+  filter: drop-shadow(0 0 8px rgba(90, 130, 210, 0.35));
+}
+
+.crane-part {
+  position: absolute;
+  transform-style: preserve-3d;
+  backface-visibility: visible;
+}
+
+.crane-part.body {
+  width: 24px;
+  height: 38px;
+  left: 18px;
+  top: 11px;
+  background: linear-gradient(135deg, rgba(235, 245, 255, 0.95), rgba(140, 180, 250, 0.8));
+  clip-path: polygon(50% 0%, 100% 60%, 50% 100%, 0% 60%);
+}
+
+[data-theme="light"] .crane-part.body {
+  background: linear-gradient(135deg, rgba(70, 95, 160, 0.9), rgba(110, 140, 210, 0.75));
+}
+
+.crane-part.wing-left {
+  width: 44px;
+  height: 34px;
+  left: -2px;
+  top: 10px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(170, 210, 255, 0.7));
+  clip-path: polygon(100% 40%, 0% 0%, 50% 100%);
+  transform-origin: right center;
+  animation: flap-left 1.2s ease-in-out infinite;
+}
+
+[data-theme="light"] .crane-part.wing-left {
+  background: linear-gradient(135deg, rgba(80, 110, 180, 0.88), rgba(130, 165, 230, 0.65));
+}
+
+.crane-part.wing-right {
+  width: 44px;
+  height: 34px;
+  left: 20px;
+  top: 10px;
+  background: linear-gradient(225deg, rgba(255, 255, 255, 0.88), rgba(150, 195, 255, 0.65));
+  clip-path: polygon(0% 40%, 100% 0%, 50% 100%);
+  transform-origin: left center;
+  animation: flap-right 1.2s ease-in-out infinite;
+}
+
+[data-theme="light"] .crane-part.wing-right {
+  background: linear-gradient(225deg, rgba(90, 120, 190, 0.85), rgba(140, 175, 240, 0.6));
+}
+
+.crane-part.tail {
+  width: 14px;
+  height: 28px;
+  left: 23px;
+  top: 30px;
+  background: linear-gradient(180deg, rgba(190, 220, 255, 0.85), rgba(110, 160, 240, 0.5));
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  transform-origin: top center;
+  transform: rotateX(25deg);
+}
+
+[data-theme="light"] .crane-part.tail {
+  background: linear-gradient(180deg, rgba(100, 130, 195, 0.8), rgba(140, 170, 225, 0.5));
+}
+
+@keyframes drift {
+  0% {
+    transform: translateX(-20vw) translateY(var(--y-start)) rotateZ(var(--r-start));
+  }
+  100% {
+    transform: translateX(120vw) translateY(var(--y-end)) rotateZ(var(--r-end));
+  }
+}
+
+@keyframes bob {
+  0%, 100% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes flap-left {
+  0%, 100% {
+    transform: translateZ(15px) rotateY(-90deg) skewX(20deg) rotateX(10deg);
+  }
+  50% {
+    transform: translateZ(15px) rotateY(-90deg) skewX(20deg) rotateX(-20deg);
+  }
+}
+
+@keyframes flap-right {
+  0%, 100% {
+    transform: translateZ(15px) rotateY(90deg) skewX(-20deg) rotateX(10deg);
+  }
+  50% {
+    transform: translateZ(15px) rotateY(90deg) skewX(-20deg) rotateX(-20deg);
+  }
+}
