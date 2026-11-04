@@ -6,6 +6,7 @@ export default function MobileWorksWheelHome({
   categories = [],
   allItems = [],
   onCategorySelect,
+  theme = "light",
 }) {
   // Build carousel items from portfolio categories
   const carouselItems = useMemo(() => {
@@ -46,13 +47,20 @@ export default function MobileWorksWheelHome({
     }
   };
 
+  const isDark = theme === "dark";
+  const bg = isDark ? "#050507" : "#ffffff";
+
   return (
-    <div className="w-full h-dvh overflow-hidden select-none bg-white text-black flex flex-col justify-center items-center relative">
+    <div
+      className="w-full h-dvh overflow-hidden select-none flex flex-col justify-center items-center relative"
+      style={{ background: bg }}
+    >
       <LiquidGlassCarousel
         items={carouselItems}
         panelHeight={380}
         gap={12}
-        background="#ffffff"
+        background={bg}
+        theme={theme}
         entry={true}
         onActiveChange={handleActiveChange}
         onFocusChange={handleFocusChange}

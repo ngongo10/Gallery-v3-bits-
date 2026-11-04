@@ -108,6 +108,7 @@ const HomePage = ({
               categories={artCategories}
               allItems={allItems}
               onCategorySelect={handleCategorySelect}
+              theme={theme}
             />
           ) : (
             /* ── Desktop: DriftWall + OptionWheel ── */
