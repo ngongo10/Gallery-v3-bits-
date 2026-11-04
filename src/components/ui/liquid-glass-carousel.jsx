@@ -70,12 +70,12 @@ const LENS = {
   rotation: 65,
   spin: 0,
   zoom: 0,
-  dispersion: 11,
+  dispersion: 4,
   blur: 0,
-  glow: 4.2,
-  whiteGlow: 0.24,
+  glow: 1.0,
+  whiteGlow: 0.05,
   novaSize: 12,
-  blueRing: 6,
+  blueRing: 1.5,
   ringRadius: 0.49,
   ringWidth: 0.014,
   shimmer: true,
@@ -363,6 +363,7 @@ function createCarousel(mount, cursorElement, options) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   renderer.setPixelRatio(dpr);
   renderer.setSize(W, H);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.setClearColor(hexToNumber(options.background), 1);
   renderer.domElement.style.display = "block";
   renderer.domElement.style.width = "100%";
@@ -494,7 +495,7 @@ function createCarousel(mount, cursorElement, options) {
   let lastInput = performance.now();
   let snapped = false;
 
-  const rt = new THREE.WebGLRenderTarget(W * dpr, H * dpr);
+  const rt = new THREE.WebGLRenderTarget(W * dpr, H * dpr, { colorSpace: THREE.SRGBColorSpace });
   const lensScene = new THREE.Scene();
   const lensCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const lensUniforms = {
@@ -1244,6 +1245,7 @@ function createCarousel(mount, cursorElement, options) {
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     renderer.setPixelRatio(ratio);
     rt.setSize(W * ratio, H * ratio);
+    rt.texture.colorSpace = THREE.SRGBColorSpace;
     lensUniforms.uRes.value.set(W * ratio, H * ratio);
     if (!userInteracted) {
       scroll = centerForIndex(0);
