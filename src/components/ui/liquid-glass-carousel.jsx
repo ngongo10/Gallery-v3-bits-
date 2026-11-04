@@ -291,7 +291,13 @@ void main(){
     float vig = 1.0 - uVignette * smoothstep(0.5, 1.0, d);
     outc *= clamp(vig, 0.0, 1.0);
   }
-  gl_FragColor = vec4(outc, 1.0);
+  // Chuyển đổi màu tuyến tính sang sRGB chuẩn (Gamma 2.2) để ảnh không bị tối sầm khi render qua Shader
+  vec3 sRGB = mix(
+    pow(outc, vec3(1.0 / 2.2)),
+    outc * 12.92,
+    vec3(lessThanEqual(outc, vec3(0.0031308)))
+  );
+  gl_FragColor = vec4(sRGB, 1.0);
 }
 `;
 
