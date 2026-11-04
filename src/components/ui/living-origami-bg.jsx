@@ -1,55 +1,39 @@
 import React from 'react';
 
-// Living Origami Background effect
-// Procedurally generates flying, glowing 3D origami cranes drifting across a gradient atmosphere.
-
+// Dark moody ambient glow background (gradient orbs / aurora atmosphere)
 export function LivingOrigamiBg({ className = "" }) {
-  const random = (min, max) => Math.random() * (max - min) + min;
-
-  // 15 drifting origami cranes with procedural variations
-  const drifters = React.useMemo(() => {
-    return Array.from({ length: 15 }, (_, i) => ({
-      id: i,
-      duration: random(20, 40),
-      delay: random(-40, 0),
-      scale: random(0.3, 0.85),
-      yStart: `${random(-35, 35)}vh`,
-      yEnd: `${random(-35, 35)}vh`,
-      rStart: `${random(-30, 30)}deg`,
-      rEnd: `${random(-30, 30)}deg`,
-      flapDelay: `${random(-4, 0)}s`,
-    }));
-  }, []);
-
   return (
-    <div className={`hero-section absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden ${className}`}>
-      {drifters.map((d) => (
-        <div
-          key={d.id}
-          className="drifter-container"
-          style={{
-            '--y-start': d.yStart,
-            '--y-end': d.yEnd,
-            '--r-start': d.rStart,
-            '--r-end': d.rEnd,
-            animationDuration: `${d.duration}s`,
-            animationDelay: `${d.delay}s`,
-          } }
-        >
-          <div
-            className="origami-crane"
-            style={{
-              transform: `scale(${d.scale})`,
-              animationDelay: d.flapDelay,
-            }}
-          >
-            <div className="crane-part body" />
-            <div className="crane-part wing-left" />
-            <div className="crane-part wing-right" />
-            <div className="crane-part tail" />
-          </div>
-        </div>
-      ))}
+    <div className={`absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden ${className}`}>
+      {/* Base deep background */}
+      <div className="absolute inset-0 bg-[#060713]" />
+
+      {/* Top-left deep violet radial glow */}
+      <div
+        className="absolute w-[95vw] h-[95vw] max-w-[650px] max-h-[650px] rounded-full blur-[110px] opacity-75"
+        style={{
+          top: '-10%',
+          left: '-15%',
+          background: 'radial-gradient(circle, rgba(62, 42, 138, 0.85) 0%, rgba(35, 20, 85, 0.45) 55%, transparent 75%)',
+        }}
+      />
+
+      {/* Bottom-right cobalt royal-blue radial glow */}
+      <div
+        className="absolute w-[100vw] h-[100vw] max-w-[700px] max-h-[700px] rounded-full blur-[130px] opacity-80"
+        style={{
+          bottom: '-12%',
+          right: '-15%',
+          background: 'radial-gradient(circle, rgba(22, 60, 140, 0.9) 0%, rgba(12, 35, 95, 0.5) 60%, transparent 80%)',
+        }}
+      />
+
+      {/* Subtle center ambient filler */}
+      <div
+        className="absolute inset-0 opacity-40 mix-blend-screen pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle at 45% 50%, rgba(38, 30, 95, 0.5) 0%, transparent 70%)',
+        }}
+      />
     </div>
   );
 }

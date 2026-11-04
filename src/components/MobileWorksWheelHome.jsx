@@ -46,10 +46,15 @@ export default function MobileWorksWheelHome({
     }
   };
 
+  const isDark = theme === "dark";
+
   return (
-    <div className="w-full h-dvh overflow-hidden select-none flex flex-col justify-center items-center relative">
-      {/* Dynamic Animated Living Origami Background */}
-      <LivingOrigamiBg className="z-0" />
+    <div
+      className="w-full h-dvh overflow-hidden select-none flex flex-col justify-center items-center relative"
+      style={{ background: isDark ? "#060713" : "#ffffff" }}
+    >
+      {/* Dark Ambient Gradient Mesh matching user design */}
+      {isDark && <LivingOrigamiBg className="z-0" />}
 
       {/* 3D Liquid Glass Carousel on top with transparent canvas */}
       <div className="relative z-10 w-full h-full">
