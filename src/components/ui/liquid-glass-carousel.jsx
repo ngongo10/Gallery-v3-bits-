@@ -1215,10 +1215,8 @@ function createCarousel(mount, cursorElement, options) {
       lensUniforms[key].value = lensFxFull[key] * fx;
     }
 
-    renderer.setRenderTarget(rt);
-    renderer.render(scene, camera);
     renderer.setRenderTarget(null);
-    renderer.render(lensScene, lensCam);
+    renderer.render(scene, camera);
     raf = requestAnimationFrame(tick);
   }
 
