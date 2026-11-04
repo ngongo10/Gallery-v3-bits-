@@ -1,5 +1,125 @@
-import { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
-import "./ImageLightbox.css";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
+import { Renderer, Triangle, Program, Mesh, Texture } from 'ogl';
+import { gsap } from 'gsap';
+import './ImageLightbox.css';
+
+const vertexShader = `
+attribute vec2 position;
+attribute vec2 uv;
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position, 0.0, 1.0);
+}
+`;
+
+const fragmentShader = `
+precision highp float;
+
+uniform sampler2D tCurrent;
+uniform sampler2D tNext;
+uniform vec2 uResolution;
+uniform vec2 uCurrentSize;
+uniform vec2 uNextSize;
+uniform float uProgress;
+uniform float uDir;
+uniform float uIntensity;
+uniform float uScale;
+uniform float uAberration;
+uniform float uDrift;
+uniform float uTime;
+uniform vec2 uPointer;
+
+varying vec2 vUv;
+
+const float PI = 3.14159265359;
+
+float hash21(vec2 p) {
+  vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+  p3 += dot(p3, p3.yzx + 33.33);
+  return fract((p3.x + p3.y) * p3.z);
+}
+
+float noise(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
+  float a = hash21(i);
+  float b = hash21(i + vec2(1.0, 0.0));
+  float c = hash21(i + vec2(0.0, 1.0));
+  float d = hash21(i + vec2(1.0, 1.0));
+  return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+}
+
+float fbm(vec2 p) {
+  float v = 0.0;
+  float a = 0.5;
+  for (int i = 0; i < 4; i++) {
+    v += a * noise(p);
+    p *= 2.0;
+    a *= 0.5;
+  }
+  return v;
+}
+
+// Contain UV mapping: Fits entire image without cropping
+vec3 sampleContain(sampler2D tex, vec2 uv, vec2 res, vec2 img, float ca, out float alpha) {
+  float rA = res.x / max(res.y, 1.0);
+  float iA = img.x / max(img.y, 1.0);
+  vec2 s = vec2(1.0);
+  if (rA > iA) {
+    s.x = rA / iA;
+  } else {
+    s.y = iA / rA;
+  }
+  vec2 coords = (uv - 0.5) * s + 0.5;
+  if (coords.x < 0.0 || coords.x > 1.0 || coords.y < 0.0 || coords.y > 1.0) {
+    alpha = 0.0;
+    return vec3(0.0);
+  }
+  alpha = 1.0;
+  vec4 r = texture2D(tex, coords + vec2(ca, 0.0));
+  vec4 g = texture2D(tex, coords);
+  vec4 b = texture2D(tex, coords - vec2(ca, 0.0));
+  return vec3(r.r, g.g, b.b);
+}
+
+void main() {
+  float p = clamp(uProgress, 0.0, 1.0);
+  float env = sin(p * PI);
+  vec2 uv = vUv;
+
+  // Gentle subtle breathing drift
+  uv += vec2(sin(uTime * 0.25 + uv.y * 3.0), cos(uTime * 0.22 + uv.x * 3.0)) * uDrift * 0.005;
+
+  // Fluid Melt Morph Distortion
+  float nn = fbm(uv * uScale + uTime * 0.03);
+  float warp = fbm(uv * uScale * 1.5 - uTime * 0.02);
+  vec2 g = vec2(nn, warp) - 0.5;
+
+  vec2 uvC = uv + g * uIntensity * 0.45 * p;
+  vec2 uvN = uv - g * uIntensity * 0.45 * (1.0 - p);
+
+  float m = smoothstep(nn - 0.15, nn + 0.15, p);
+  float ca = uAberration * env * 0.025;
+
+  float aC = 0.0;
+  float aN = 0.0;
+  vec3 colC = sampleContain(tCurrent, uvC, uResolution, uCurrentSize, ca, aC);
+  vec3 colN = sampleContain(tNext, uvN, uResolution, uNextSize, ca, aN);
+
+  vec3 col = mix(colC, colN, m);
+  float alpha = mix(aC, aN, m);
+
+  gl_FragColor = vec4(col * alpha, alpha);
+}
+`;
+
+function makeFallbackTexture(gl) {
+  const size = 2;
+  const data = new Uint8Array(size * size * 4);
+  return new Texture(gl, { image: data, width: size, height: size, generateMipmaps: false });
+}
 
 export default function ImageLightbox({
   items = [],
@@ -9,169 +129,196 @@ export default function ImageLightbox({
   onClose,
   onChangeIndex,
   actionButton,
-  originRect = null,
 }) {
-  const galleryItems = items.length > 0
-    ? items
-    : src ? [{ image: src, caption: alt || "" }] : [];
+  const galleryItems = useMemo(() => {
+    return items.length > 0
+      ? items
+      : src ? [{ image: src, caption: alt || "" }] : [];
+  }, [items, src, alt]);
 
   const [currentIndex, setCurrentIndex] = useState(() =>
     initialIndex >= 0 && initialIndex < galleryItems.length ? initialIndex : 0
   );
 
-  // "opening" | "open" | "closing"
-  const [phase, setPhase] = useState("opening");
-  const overlayRef = useRef(null);
-  const imgRef = useRef(null);
-  const touchStartRef = useRef({ x: 0, y: 0 });
+  const containerRef = useRef(null);
+  const rendererRef = useRef(null);
+  const programRef = useRef(null);
+  const texturesRef = useRef([]);
+  const sizesRef = useRef([]);
+  const tweenRef = useRef(null);
+  const isAnimatingRef = useRef(false);
+  const total = galleryItems.length;
+
+  // Touch swipe refs
+  const touchStartRef = useRef({ x: 0, y: 0, time: 0 });
   const touchDeltaRef = useRef({ x: 0, y: 0 });
   const doubleTapRef = useRef(null);
   const isSwiping = useRef(false);
-  const isClosingRef = useRef(false);
 
-  const total = galleryItems.length;
-  const currentItem = galleryItems[currentIndex] || {};
-  const currentSrc = currentItem.image || currentItem.src || src;
-  const currentAlt = currentItem.caption || currentItem.alt || alt || `Photo ${currentIndex + 1}`;
+  // Initialize WebGL Morph Engine
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || galleryItems.length === 0) return;
 
-  // ── Animation MỞ: Tính toán từ kích thước tự nhiên của ảnh đã load ────────
-  useLayoutEffect(() => {
-    const img = imgRef.current;
-    if (!originRect || !img) {
-      setPhase("open");
-      return;
-    }
+    const renderer = new Renderer({
+      alpha: true,
+      premultipliedAlpha: true,
+      antialias: true,
+      dpr: Math.min(window.devicePixelRatio || 1, 2)
+    });
+    rendererRef.current = renderer;
+    const gl = renderer.gl;
+    gl.clearColor(0, 0, 0, 0);
 
-    const runEntrance = () => {
-      // Tính toán kích thước hiển thị mục tiêu của ảnh giữa màn hình
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const maxW = vw - (vw <= 768 ? 20 : 160);
-      const maxH = vh * (vw <= 768 ? 0.80 : 0.84);
+    const canvas = gl.canvas;
+    canvas.className = 'morph-lightbox-canvas';
+    container.innerHTML = '';
+    container.appendChild(canvas);
 
-      let targetW = img.naturalWidth || originRect.width;
-      let targetH = img.naturalHeight || originRect.height;
+    const geometry = new Triangle(gl);
+    texturesRef.current = galleryItems.map(() => makeFallbackTexture(gl));
+    sizesRef.current = galleryItems.map(() => [1, 1]);
 
-      // Giữ đúng tỉ lệ aspect-ratio của bức ảnh
-      const scaleDown = Math.min(maxW / targetW, maxH / targetH, 1);
-      const finalW = targetW * scaleDown;
-      const finalH = targetH * scaleDown;
+    const program = new Program(gl, {
+      vertex: vertexShader,
+      fragment: fragmentShader,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+      uniforms: {
+        tCurrent: { value: texturesRef.current[currentIndex] },
+        tNext: { value: texturesRef.current[currentIndex] },
+        uResolution: { value: [1, 1] },
+        uCurrentSize: { value: sizesRef.current[currentIndex] },
+        uNextSize: { value: sizesRef.current[currentIndex] },
+        uProgress: { value: 0 },
+        uDir: { value: 1 },
+        uIntensity: { value: 0.38 },
+        uScale: { value: 2.2 },
+        uAberration: { value: 0.35 },
+        uDrift: { value: 0.25 },
+        uTime: { value: 0 },
+        uPointer: { value: [0.5, 0.5] }
+      }
+    });
+    programRef.current = program;
 
-      // Tâm giữa màn hình
-      const finalLeft = (vw - finalW) / 2;
-      const finalTop = (vh - finalH) / 2;
+    const mesh = new Mesh(gl, { geometry, program });
 
-      // Độ lệch tuyệt đối từ thumbnail đến tâm
-      const dx = (originRect.left + originRect.width / 2) - (finalLeft + finalW / 2);
-      const dy = (originRect.top + originRect.height / 2) - (finalTop + finalH / 2);
-      const sx = originRect.width / finalW;
-      const sy = originRect.height / finalH;
-
-      const anim = img.animate(
-        [
-          {
-            transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
-            borderRadius: originRect.borderRadius || '2px',
-          },
-          {
-            transform: 'translate3d(0, 0, 0) scale(1, 1)',
-            borderRadius: '3px',
-          }
-        ],
-        {
-          duration: 400,
-          easing: 'cubic-bezier(0.2, 0, 0, 1)',
-          fill: 'both'
+    // Load Image Textures
+    galleryItems.forEach((item, idx) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = item.image || item.src;
+      img.onload = () => {
+        const tex = new Texture(gl, { generateMipmaps: false });
+        tex.image = img;
+        texturesRef.current[idx] = tex;
+        sizesRef.current[idx] = [img.naturalWidth || 1, img.naturalHeight || 1];
+        if (idx === currentIndex) {
+          program.uniforms.tCurrent.value = tex;
+          program.uniforms.uCurrentSize.value = sizesRef.current[idx];
         }
-      );
-
-      anim.onfinish = () => {
-        setPhase("open");
-        img.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
-        img.style.borderRadius = '3px';
       };
+    });
+
+    const resize = () => {
+      const rect = container.getBoundingClientRect();
+      const w = Math.max(rect.width, 1);
+      const h = Math.max(rect.height, 1);
+      renderer.setSize(w, h);
+      program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height];
     };
 
-    if (img.complete && img.naturalWidth > 0) {
-      runEntrance();
-    } else {
-      img.onload = runEntrance;
-    }
-  }, [originRect]);
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(container);
+    resize();
 
-  // ── Animation ĐÓNG: Giống hệt công thức lúc mở nhưng chạy ngược chiều ─────
-  const handleClose = useCallback(() => {
-    if (isClosingRef.current) return;
-    isClosingRef.current = true;
-    setPhase("closing");
+    let rafId;
+    const loop = (t) => {
+      program.uniforms.uTime.value = t * 0.001;
+      renderer.render({ scene: mesh });
+      rafId = requestAnimationFrame(loop);
+    };
+    rafId = requestAnimationFrame(loop);
 
-    const img = imgRef.current;
-    if (img && originRect) {
-      const finalRect = img.getBoundingClientRect();
-      const dx = (originRect.left + originRect.width / 2) - (finalRect.left + finalRect.width / 2);
-      const dy = (originRect.top + originRect.height / 2) - (finalRect.top + finalRect.height / 2);
-      const sx = originRect.width / finalRect.width;
-      const sy = originRect.height / finalRect.height;
+    return () => {
+      cancelAnimationFrame(rafId);
+      if (tweenRef.current) tweenRef.current.kill();
+      resizeObserver.disconnect();
+      texturesRef.current.forEach(tex => {
+        if (tex && tex.texture) gl.deleteTexture(tex.texture);
+      });
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+    };
+  }, [galleryItems]);
 
-      const anim = img.animate(
-        [
-          {
-            transform: 'translate3d(0, 0, 0) scale(1, 1)',
-            borderRadius: '3px',
-          },
-          {
-            transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
-            borderRadius: originRect.borderRadius || '2px',
-          }
-        ],
-        {
-          duration: 400,
-          easing: 'cubic-bezier(0.2, 0, 0, 1)',
-          fill: 'forwards'
+  // Morph to Target Index
+  const morphTo = useCallback((nextIndex, dir = 1) => {
+    if (isAnimatingRef.current || nextIndex === currentIndex || total < 2) return;
+    const program = programRef.current;
+    if (!program) return;
+
+    isAnimatingRef.current = true;
+    const curTex = texturesRef.current[currentIndex];
+    const nxtTex = texturesRef.current[nextIndex];
+    const curSize = sizesRef.current[currentIndex];
+    const nxtSize = sizesRef.current[nextIndex];
+
+    program.uniforms.tCurrent.value = curTex;
+    program.uniforms.uCurrentSize.value = curSize;
+    program.uniforms.tNext.value = nxtTex;
+    program.uniforms.uNextSize.value = nxtSize;
+    program.uniforms.uDir.value = dir;
+
+    if (tweenRef.current) tweenRef.current.kill();
+
+    tweenRef.current = gsap.fromTo(
+      program.uniforms.uProgress,
+      { value: 0 },
+      {
+        value: 1,
+        duration: 1.1,
+        ease: 'power3.out',
+        onComplete: () => {
+          program.uniforms.tCurrent.value = nxtTex;
+          program.uniforms.uCurrentSize.value = nxtSize;
+          program.uniforms.uProgress.value = 0;
+          setCurrentIndex(nextIndex);
+          onChangeIndex?.(nextIndex);
+          isAnimatingRef.current = false;
         }
-      );
+      }
+    );
+  }, [currentIndex, total, onChangeIndex]);
 
-      anim.onfinish = () => {
-        onClose();
-      };
-    } else {
-      onClose();
-    }
-  }, [originRect, onClose]);
-
-  // ── Navigation ─────────────────────────────────────────────────────────────
   const handleNext = useCallback((e) => {
     if (e) e.stopPropagation();
     if (total <= 1) return;
-    setCurrentIndex(prev => {
-      const next = (prev + 1) % total;
-      onChangeIndex?.(next);
-      return next;
-    });
-  }, [total, onChangeIndex]);
+    const next = (currentIndex + 1) % total;
+    morphTo(next, 1);
+  }, [currentIndex, total, morphTo]);
 
   const handlePrev = useCallback((e) => {
     if (e) e.stopPropagation();
     if (total <= 1) return;
-    setCurrentIndex(prev => {
-      const next = (prev - 1 + total) % total;
-      onChangeIndex?.(next);
-      return next;
-    });
-  }, [total, onChangeIndex]);
+    const prev = (currentIndex - 1 + total) % total;
+    morphTo(prev, -1);
+  }, [currentIndex, total, morphTo]);
 
-  // ── Keyboard ───────────────────────────────────────────────────────────────
+  // Keyboard navigation
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") handleClose();
+      if (e.key === "Escape") onClose();
       else if (e.key === "ArrowRight") handleNext();
       else if (e.key === "ArrowLeft") handlePrev();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [handleClose, handleNext, handlePrev]);
+  }, [onClose, handleNext, handlePrev]);
 
-  // ── Lock scroll ────────────────────────────────────────────────────────────
+  // Lock scroll
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -180,11 +327,11 @@ export default function ImageLightbox({
     };
   }, []);
 
-  // ── Touch Gesture Support ──────────────────────────────────────────────────
+  // Touch Gesture Handlers
   const onTouchStart = (e) => {
     if (e.touches.length !== 1) return;
     const t = e.touches[0];
-    touchStartRef.current = { x: t.clientX, y: t.clientY };
+    touchStartRef.current = { x: t.clientX, y: t.clientY, time: Date.now() };
     touchDeltaRef.current = { x: 0, y: 0 };
     isSwiping.current = true;
   };
@@ -215,7 +362,7 @@ export default function ImageLightbox({
       if (doubleTapRef.current) {
         clearTimeout(doubleTapRef.current);
         doubleTapRef.current = null;
-        handleClose();
+        onClose();
       } else {
         doubleTapRef.current = setTimeout(() => {
           doubleTapRef.current = null;
@@ -224,21 +371,18 @@ export default function ImageLightbox({
     }
   };
 
-  if (!currentSrc) return null;
+  const currentItem = galleryItems[currentIndex] || {};
 
   return (
     <div
-      ref={overlayRef}
-      className={`lb-overlay lb-overlay--${phase}`}
-      onClick={(e) => {
-        if (e.target === overlayRef.current) handleClose();
-      }}
+      className="lb-overlay lb-overlay--morph"
+      onClick={onClose}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
       role="dialog"
       aria-modal="true"
-      aria-label="Image gallery zoom"
+      aria-label="Image morph gallery"
     >
       {/* Top Header */}
       <div className="lb-header">
@@ -252,7 +396,7 @@ export default function ImageLightbox({
         <button
           type="button"
           className="lb-close"
-          onClick={handleClose}
+          onClick={onClose}
           aria-label="Đóng"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -287,21 +431,13 @@ export default function ImageLightbox({
         </>
       )}
 
-      {/* Main Image Stage */}
-      <div className="lb-stage">
-        <img
-          ref={imgRef}
-          key={currentSrc}
-          className="lb-img"
-          src={currentSrc}
-          alt={currentAlt}
-          draggable={false}
-          onDoubleClick={(e) => {
-            e.stopPropagation();
-            handleClose();
-          }}
-        />
-      </div>
+      {/* MorphSlider WebGL Canvas Stage */}
+      <div
+        className="lb-stage lb-stage--morph"
+        ref={containerRef}
+        onClick={(e) => e.stopPropagation()}
+        onDoubleClick={onClose}
+      />
 
       {/* Footer */}
       <div className="lb-footer">
@@ -311,7 +447,7 @@ export default function ImageLightbox({
         ) : currentItem.caption ? (
           <p className="lb-caption">{currentItem.caption}</p>
         ) : null}
-        <p className="lb-hint">Vuốt hoặc dùng mũi tên để chuyển ảnh • Nhấn đúp để đóng</p>
+        <p className="lb-hint">Vuốt hoặc dùng mũi tên để chuyển ảnh (Melt Morph) • Nhấn đúp để đóng</p>
       </div>
     </div>
   );
