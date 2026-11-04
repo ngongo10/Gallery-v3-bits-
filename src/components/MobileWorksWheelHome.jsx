@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { WorksWheel } from "./ui/works-wheel";
+import FlexCarousel from "./FlexCarousel";
 import { buildSrc } from "../utils/cloudinary";
 
 export default function MobileWorksWheelHome({
@@ -7,8 +7,8 @@ export default function MobileWorksWheelHome({
   allItems = [],
   onCategorySelect,
 }) {
-  // Lấy các album ART (hoặc toàn bộ categories)
-  const wheelItems = useMemo(() => {
+  // Lấy danh sách items cho FlexCarousel từ categories portfolio
+  const carouselItems = useMemo(() => {
     const artCats = categories.filter((c) => c.mode === "art");
     const sourceCats = artCats.length > 0 ? artCats : categories;
 
@@ -20,33 +20,40 @@ export default function MobileWorksWheelHome({
         "";
 
       const optimizedImage = coverSrc
-        ? buildSrc(coverSrc, { w: 600, dprAuto: true })
+        ? buildSrc(coverSrc, { w: 900, dprAuto: true })
         : "";
 
       return {
+        src: optimizedImage,
+        alt: cat.label || "Portfolio item",
         title: cat.label,
-        image: optimizedImage,
+        subtitle: cat.description ? cat.description.slice(0, 32) + "..." : "JUBI SATAKA",
         categoryObj: cat,
       };
     });
   }, [categories, allItems]);
 
-  const handleItemClick = (item) => {
-    // Điều hướng vào album/gallery trực tiếp như bình thường
-    if (item.categoryObj) {
+  const handleSelect = (index, item) => {
+    if (item?.categoryObj) {
       onCategorySelect?.(item.categoryObj);
     }
   };
 
   return (
-    <div className="w-full h-dvh overflow-hidden select-none bg-[#0a0a0c] text-white">
-      <WorksWheel
-        items={wheelItems}
-        label="JUBI '26"
-        action=""
-        onItemClick={handleItemClick}
-        className="w-full h-full bg-[#0a0a0c]"
-      />
+    <div className="w-full h-dvh overflow-hidden select-none bg-[#0a0a0c] text-white flex flex-col justify-center items-center relative">
+      <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+        <FlexCarousel
+          items={carouselItems}
+          preset="liquid"
+          intro="rise"
+          cardHeight={0.52}
+          gap={12}
+          squeeze={0.2}
+          focusOnClick
+          captions
+          onSelect={handleSelect}
+        />
+      </div>
     </div>
   );
 }
