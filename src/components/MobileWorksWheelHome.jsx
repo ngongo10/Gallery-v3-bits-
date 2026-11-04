@@ -63,8 +63,7 @@ export default function MobileWorksWheelHome({
           panelHeight={380}
           gap={12}
           background="transparent"
-          theme={theme}
-          entry={true}
+                    entry={true}
           onActiveChange={handleActiveChange}
           onFocusChange={handleFocusChange}
           className="w-full h-full"
