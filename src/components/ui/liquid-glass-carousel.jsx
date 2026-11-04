@@ -368,9 +368,9 @@ function createCarousel(mount, cursorElement, options) {
   const SHRINK_ATTACK = 0.25;
   const SHRINK_DECAY = 0.06;
 
+  const isTransparent = options.background === 'transparent';
   let renderer;
   try {
-    const isTransparent = options.background === 'transparent';
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: isTransparent });
   } catch {
     return null;
