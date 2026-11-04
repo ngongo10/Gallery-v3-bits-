@@ -272,29 +272,3 @@
     max-width: 90vw;
   }
 }
-
-/* MorphSlider Canvas Stage in Lightbox */
-.lb-stage--morph {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 100vw;
-  max-height: 86vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  pointer-events: auto;
-  cursor: grab;
-}
-
-.lb-stage--morph:active {
-  cursor: grabbing;
-}
-
-.morph-lightbox-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.9));
-}
