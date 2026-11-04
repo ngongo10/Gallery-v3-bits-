@@ -115,6 +115,7 @@ const GalleryPage = ({ category, onBack }) => {
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [lightboxOriginRect, setLightboxOriginRect] = useState(null);
+  const [liftedPhotoIndex, setLiftedPhotoIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
 
   const handleOpenLightbox = useCallback((index, e) => {
@@ -134,7 +135,15 @@ const GalleryPage = ({ category, onBack }) => {
     }
     setLightboxOriginRect(originRect);
     setLightboxIndex(index);
+    setLiftedPhotoIndex(index);
     setActivePhotoIndex(index);
+  }, []);
+
+  const handleCloseLightbox = useCallback(() => {
+    setLightboxIndex(null);
+    setLightboxOriginRect(null);
+    // Restore lifted photo after close animation finishes
+    setLiftedPhotoIndex(null);
   }, []);
 
   useEffect(() => {
@@ -316,7 +325,7 @@ const GalleryPage = ({ category, onBack }) => {
                     <img
                       src={getOptimizedUrl(photo.image, true)}
                       alt={`${category.label} ${i + 1}`}
-                      className="chry-gallery-image chry-zoomable"
+                      className={`chry-gallery-image chry-zoomable${liftedPhotoIndex === i ? ' is-lifted-away' : ''}`}
                       loading="lazy"
                       decoding="async"
                     />
@@ -350,7 +359,7 @@ const GalleryPage = ({ category, onBack }) => {
                     <img
                       src={photo.image}
                       alt={`${category.label} ${i + 1}`}
-                      className="chry-gallery-image chry-zoomable"
+                      className={`chry-gallery-image chry-zoomable${liftedPhotoIndex === i ? ' is-lifted-away' : ''}`}
                       loading="eager"
                       decoding="async"
                     />
@@ -409,8 +418,11 @@ const GalleryPage = ({ category, onBack }) => {
           items={items}
           initialIndex={lightboxIndex}
           originRect={lightboxOriginRect}
-          onClose={() => { setLightboxIndex(null); setLightboxOriginRect(null); }}
-          onChangeIndex={(idx) => setActivePhotoIndex(idx)}
+          onClose={handleCloseLightbox}
+          onChangeIndex={(idx) => {
+            setActivePhotoIndex(idx);
+            setLiftedPhotoIndex(idx);
+          }}
         />
       )}
     </div>

@@ -717,3 +717,10 @@
   color: rgba(255, 255, 255, 0.4);
 }
 
+
+/* Lifted away state: the source image is picked up into the lightbox */
+.chry-gallery-image.is-lifted-away {
+  opacity: 0 !important;
+  transform: scale(0.96);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
