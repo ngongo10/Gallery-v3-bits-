@@ -20,7 +20,7 @@ export default function ImageLightbox({
   );
 
   // "opening" | "open" | "closing"
-  const [phase, setPhase] = useState(originRect ? "opening" : "open");
+  const [phase, setPhase] = useState("opening");
   const overlayRef = useRef(null);
   const imgRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0 });
@@ -34,19 +34,18 @@ export default function ImageLightbox({
   const currentSrc = currentItem.image || currentItem.src || src;
   const currentAlt = currentItem.caption || currentItem.alt || alt || `Photo ${currentIndex + 1}`;
 
-  // ── Pure Fluid Motion Entrance: Direct travel from origin thumbnail to center ──
+  // ── Pure Fluid Motion Entrance (Guaranteed CSS Transition) ────────────────
   useLayoutEffect(() => {
-    if (!originRect || !imgRef.current) {
+    const img = imgRef.current;
+    if (!originRect || !img) {
       setPhase("open");
       return;
     }
 
-    const img = imgRef.current;
-    
-    const runMotionEntrance = () => {
+    const startAnimation = () => {
       const finalRect = img.getBoundingClientRect();
       if (!finalRect.width || !finalRect.height) {
-        setPhase("open");
+        requestAnimationFrame(startAnimation);
         return;
       }
 
@@ -55,36 +54,30 @@ export default function ImageLightbox({
       const sx = originRect.width / finalRect.width;
       const sy = originRect.height / finalRect.height;
 
-      // Pure geometric travel (No wobbly, no jelly filters, just smooth momentum)
-      const keyframes = [
-        {
-          transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
-          borderRadius: originRect.borderRadius || '2px',
-        },
-        {
-          transform: 'translate3d(0, 0, 0) scale(1, 1)',
-          borderRadius: '3px',
-        }
-      ];
+      // 1. Invert: instantly pin image over thumbnail
+      img.style.transition = 'none';
+      img.style.transformOrigin = 'center center';
+      img.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`;
+      img.style.borderRadius = originRect.borderRadius || '2px';
+      img.style.opacity = '1';
 
-      img.style.transformOrigin = "center center";
-      
-      const anim = img.animate(keyframes, {
-        duration: 420,
-        easing: 'cubic-bezier(0.16, 1, 0.3, 1)', // Apple-style fluid deceleration
-        fill: 'forwards'
-      });
+      // 2. Force browser reflow to commit initial frame
+      void img.offsetWidth;
 
-      anim.onfinish = () => {
+      // 3. Play: transition smoothly to center full size
+      requestAnimationFrame(() => {
         setPhase("open");
+        img.style.transition = 'transform 0.48s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.48s ease';
         img.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
-      };
+        img.style.borderRadius = '3px';
+      });
     };
 
-    if (img.complete) {
-      runMotionEntrance();
+    // Make sure image has layout dimensions before calculating
+    if (img.complete && img.naturalWidth > 0) {
+      startAnimation();
     } else {
-      img.onload = runMotionEntrance;
+      img.onload = startAnimation;
     }
   }, [originRect]);
 
@@ -102,26 +95,13 @@ export default function ImageLightbox({
       const sx = originRect.width / finalRect.width;
       const sy = originRect.height / finalRect.height;
 
-      const closeKeyframes = [
-        {
-          transform: 'translate3d(0, 0, 0) scale(1, 1)',
-          borderRadius: '3px',
-        },
-        {
-          transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
-          borderRadius: originRect.borderRadius || '2px',
-        }
-      ];
+      img.style.transition = 'transform 0.38s cubic-bezier(0.2, 0, 0, 1), border-radius 0.38s ease';
+      img.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`;
+      img.style.borderRadius = originRect.borderRadius || '2px';
 
-      const anim = img.animate(closeKeyframes, {
-        duration: 340,
-        easing: 'cubic-bezier(0.2, 0, 0, 1)', // Smooth acceleration back into place
-        fill: 'forwards'
-      });
-
-      anim.onfinish = () => {
+      setTimeout(() => {
         onClose();
-      };
+      }, 380);
     } else {
       onClose();
     }
@@ -284,6 +264,7 @@ export default function ImageLightbox({
           src={currentSrc}
           alt={currentAlt}
           draggable={false}
+          style={originRect ? { opacity: 0 } : undefined}
           onDoubleClick={(e) => {
             e.stopPropagation();
             handleClose();
