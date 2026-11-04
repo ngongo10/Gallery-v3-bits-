@@ -14,6 +14,8 @@ export function cloudinaryBaseUrl() {
  * @param {string} url - Image URL (Cloudinary or regular)
  * @param {Object} options - URL parameters
  * @param {number} options.w - Width in pixels
+ * @param {number} options.h - Height in pixels
+ * @param {string} options.crop - Crop mode (e.g. 'fill', 'fit', 'limit')
  * @param {boolean} options.dprAuto - Enable automatic DPR (device pixel ratio)
  * @returns {string} Optimized image URL
  */
@@ -22,7 +24,9 @@ export function buildSrc(url, options = {}) {
 
   if (url.includes('res.cloudinary.com')) {
     const params = [];
+    if (options.crop) params.push(`c_${options.crop}`);
     if (options.w) params.push(`w_${Math.round(options.w)}`);
+    if (options.h) params.push(`h_${Math.round(options.h)}`);
     if (options.dprAuto) params.push('dpr_auto');
 
     if (params.length === 0) return url;

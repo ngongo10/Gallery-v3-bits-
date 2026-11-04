@@ -247,7 +247,7 @@ vec3 discLens(vec2 center, float aspectCorrect, out float outA) {
     col = mix(bcol / btw, col, rimMask);
   }
 
-  col *= mix(0.91, 1.0, smoothstep(0.0, 0.38, shapeND));
+  col *= mix(1.0, 1.0, smoothstep(0.0, 0.38, shapeND));
 
   float r2 = shapeND * shapeND * 0.25;
   float gs = max(uNovaSize * uGlow * 0.003, 0.004);
@@ -474,7 +474,7 @@ function createCarousel(mount, cursorElement, options) {
   for (let r = 0; r < REPEATS; r++) {
     for (let i = 0; i < sources.length; i++) {
       const mat = new THREE.MeshBasicMaterial({
-        color: 0xdddddd,
+        color: 0xffffff,
         transparent: true,
       });
       const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 1, 1), mat);

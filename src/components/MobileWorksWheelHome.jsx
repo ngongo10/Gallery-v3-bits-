@@ -19,8 +19,9 @@ export default function MobileWorksWheelHome({
         allItems.find((i) => i.category === cat.id)?.image ||
         "";
 
+      // Crop ảnh theo tỉ lệ 3:4 (portrait) thay vì nén
       const optimizedImage = coverSrc
-        ? buildSrc(coverSrc, { w: 900, dprAuto: true })
+        ? buildSrc(coverSrc, { w: 900, h: 1200, crop: "fill", dprAuto: true })
         : "";
 
       return {
