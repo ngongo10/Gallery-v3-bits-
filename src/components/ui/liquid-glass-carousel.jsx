@@ -210,26 +210,33 @@ vec3 discLens(vec2 center, float aspectCorrect, out float outA) {
   vec2 baseUV = center + offset * (1.0 - pull) + rimOff + rimPull;
 
   float rimMask = smoothstep(0.55, 1.0, nd);
-  vec2 dispDir = offset * uDispersion * 0.004 * rimMask;
-  int N = uSamples;
-  if (N < 2) N = 2;
-  if (N > MAX_SAMPLES) N = MAX_SAMPLES;
-  vec3 col = vec3(0.0);
-  vec3 caW = vec3(0.0);
-  for (int i = 0; i < MAX_SAMPLES; i++) {
-    if (i >= N) break;
-    float t = float(i) / float(N - 1);
-    vec2 sUV = baseUV + dispDir * (t - 0.5);
-    vec3 s = texture2D(uTex, sUV).rgb;
-    vec3 w = vec3(
-      exp(-pow((t - 0.00) / 0.38, 2.0)),
-      exp(-pow((t - 0.50) / 0.38, 2.0)),
-      exp(-pow((t - 1.00) / 0.38, 2.0))
-    );
-    col += s * w;
-    caW += w;
+  vec3 col;
+  if (rimMask < 0.001) {
+    // Vùng trung tâm kính: giữ 100% màu gốc trung thực, sắc nét tuyệt đối, không lấy mẫu phân tán làm tối/mờ
+    col = texture2D(uTex, baseUV).rgb;
+  } else {
+    vec2 dispDir = offset * uDispersion * 0.004 * rimMask;
+    int N = uSamples;
+    if (N < 2) N = 2;
+    if (N > MAX_SAMPLES) N = MAX_SAMPLES;
+    vec3 cCol = vec3(0.0);
+    vec3 caW = vec3(0.0);
+    for (int i = 0; i < MAX_SAMPLES; i++) {
+      if (i >= N) break;
+      float t = float(i) / float(N - 1);
+      vec2 sUV = baseUV + dispDir * (t - 0.5);
+      vec3 s = texture2D(uTex, sUV).rgb;
+      vec3 w = vec3(
+        exp(-pow((t - 0.00) / 0.38, 2.0)),
+        exp(-pow((t - 0.50) / 0.38, 2.0)),
+        exp(-pow((t - 1.00) / 0.38, 2.0))
+      );
+      cCol += s * w;
+      caW += w;
+    }
+    cCol /= max(caW, vec3(0.001));
+    col = mix(texture2D(uTex, baseUV).rgb, cCol, rimMask);
   }
-  col /= max(caW, vec3(0.001));
 
   float blurFade = 1.0 - smoothstep(0.72, 0.98, nd);
   if (uBlur > 0.01 && blurFade > 0.01) {
