@@ -70,12 +70,12 @@ const LENS = {
   rotation: 65,
   spin: 0,
   zoom: 0,
-  dispersion: 4,
+  dispersion: 11,
   blur: 0,
-  glow: 1.0,
-  whiteGlow: 0.05,
+  glow: 4.2,
+  whiteGlow: 0.24,
   novaSize: 12,
-  blueRing: 1.5,
+  blueRing: 6,
   ringRadius: 0.49,
   ringWidth: 0.014,
   shimmer: true,
@@ -1215,8 +1215,10 @@ function createCarousel(mount, cursorElement, options) {
       lensUniforms[key].value = lensFxFull[key] * fx;
     }
 
-    renderer.setRenderTarget(null);
+    renderer.setRenderTarget(rt);
     renderer.render(scene, camera);
+    renderer.setRenderTarget(null);
+    renderer.render(lensScene, lensCam);
     raf = requestAnimationFrame(tick);
   }
 
