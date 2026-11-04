@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { LiquidGlassCarousel } from "./ui/liquid-glass-carousel";
-import { Particles } from "./ui/Particles";
 import { buildSrc } from "../utils/cloudinary";
 
 export default function MobileWorksWheelHome({
@@ -9,7 +8,6 @@ export default function MobileWorksWheelHome({
   onCategorySelect,
   theme = "light",
 }) {
-  // Build carousel items from portfolio categories
   const carouselItems = useMemo(() => {
     const artCats = categories.filter((c) => c.mode === "art");
     const sourceCats = artCats.length > 0 ? artCats : categories;
@@ -21,7 +19,6 @@ export default function MobileWorksWheelHome({
         allItems.find((i) => i.category === cat.id)?.image ||
         "";
 
-      // Crop anh theo ty le 3:4 (portrait)
       const optimizedImage = coverSrc
         ? buildSrc(coverSrc, { w: 900, h: 1200, crop: "fill", dprAuto: true })
         : "";
@@ -36,15 +33,8 @@ export default function MobileWorksWheelHome({
     });
   }, [categories, allItems]);
 
-  const handleActiveChange = (index) => {
-    // Optional: handle active slide change
-  };
-
-  const handleFocusChange = (focused) => {
-    if (focused) {
-      // Navigate on focus
-    }
-  };
+  const handleActiveChange = (index) => {};
+  const handleFocusChange = (focused) => {};
 
   const isDark = theme === "dark";
 
@@ -53,26 +43,29 @@ export default function MobileWorksWheelHome({
       className="w-full h-dvh overflow-hidden select-none flex flex-col justify-center items-center relative"
       style={{ background: isDark ? "#060713" : "#ffffff" }}
     >
-      {/* Dynamic Animated Particles Background from React Bits */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        <Particles
-          particleColors={isDark ? ["#ffffff", "#eefffb", "#70b5ff"] : ["#1a202c", "#2d3748", "#4a5568"]}
-          particleCount={290}
-          particleSpread={9}
-          speed={0.1}
-          particleBaseSize={90}
-          glow={isDark ? 0.65 : 0.2}
-          twinkle={0.3}
-          moveParticlesOnHover={false}
-          hoverEffect="parallax"
-          depthOfField={0.15}
-          clickBurst={false}
-          lightMode={!isDark}
-          className="w-full h-full"
-        />
-      </div>
+      {/* Fallback ambient glow background */}
+      {isDark && (
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div
+            className="absolute w-[95vw] h-[95vw] max-w-[650px] max-h-[650px] rounded-full blur-[110px] opacity-75"
+            style={{
+              top: '-10%',
+              left: '-15%',
+              background: 'radial-gradient(circle, rgba(62, 42, 138, 0.85) 0%, rgba(35, 20, 85, 0.45) 55%, transparent 75%)',
+            }}
+          />
+          <div
+            className="absolute w-[100vw] h-[100vw] max-w-[700px] max-h-[700px] rounded-full blur-[130px] opacity-80"
+            style={{
+              bottom: '-12%',
+              right: '-15%',
+              background: 'radial-gradient(circle, rgba(22, 60, 140, 0.9) 0%, rgba(12, 35, 95, 0.5) 60%, transparent 80%)',
+            }}
+          />
+        </div>
+      )}
 
-      {/* 3D Liquid Glass Carousel on top with transparent canvas */}
+      {/* 3D Liquid Glass Carousel */}
       <div className="relative z-10 w-full h-full">
         <LiquidGlassCarousel
           items={carouselItems}
