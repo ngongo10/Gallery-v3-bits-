@@ -272,7 +272,9 @@ vec3 discLens(vec2 center, float aspectCorrect, out float outA) {
   col += uBlueColor * (ring + ringAura);
   col += vec3(exp(-pow((dC - uRimLinePos) / max(uRimLineWidth, 0.0001), 2.0)) * uRimLine);
 
-  outA = smoothstep(1.0, 0.93, maskND);
+  // Vùng tâm kính (dist < 0.58): hoàn toàn trong suốt (outA = 0.0) -> ảnh chính giữa giữ 100% gốc không bị màng kính che
+  // Vùng viền kính (dist >= 0.58): hiển thị trọn vẹn dải khúc xạ uốn lượn 3D và tán sắc
+  outA = smoothstep(0.55, 0.65, maskND) * smoothstep(1.0, 0.93, maskND);
   return col;
 }
 
