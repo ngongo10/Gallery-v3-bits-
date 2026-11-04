@@ -1205,7 +1205,16 @@ function createCarousel(mount, cursorElement, options) {
     }
 
     lensUniforms.uCenter.value.set(LENS.posX, LENS.posY);
-    lensUniforms.uAspect.value = W / H;
+    const aspect = W / H;
+    lensUniforms.uAspect.value = aspect;
+    if (aspect < 1.0) {
+      // Màn hình dọc (Mobile): căn chỉnh kích thước thấu kính hình cầu ở trung tâm
+      lensUniforms.uSizeX.value = LENS.sizeX * aspect * 1.5;
+      lensUniforms.uSizeY.value = LENS.sizeY * 0.55;
+    } else {
+      lensUniforms.uSizeX.value = LENS.sizeX;
+      lensUniforms.uSizeY.value = LENS.sizeY;
+    }
     lensUniforms.uTime.value = performance.now() * 0.001;
     const rad = (a) => (a * Math.PI) / 180;
     lensUniforms.uRotation.value =
