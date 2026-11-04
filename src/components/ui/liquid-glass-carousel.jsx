@@ -297,7 +297,7 @@ void main(){
     outc * 12.92,
     vec3(lessThanEqual(outc, vec3(0.0031308)))
   );
-  gl_FragColor = vec4(sRGB, 1.0);
+  gl_FragColor = vec4(sRGB, texture2D(uTex, vUv).a);
 }
 `;
 
@@ -559,6 +559,7 @@ function createCarousel(mount, cursorElement, options) {
     uniforms: lensUniforms,
     vertexShader: LENS_VERTEX,
     fragmentShader: LENS_FRAGMENT,
+    transparent: true,
   });
   const lensQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), lensMat);
   lensScene.add(lensQuad);
