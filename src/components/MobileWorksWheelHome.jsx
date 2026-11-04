@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { LiquidGlassCarousel } from "./ui/liquid-glass-carousel";
+import { Particles } from "./ui/Particles";
 import { buildSrc } from "../utils/cloudinary";
 
 export default function MobileWorksWheelHome({
@@ -27,14 +27,10 @@ export default function MobileWorksWheelHome({
         src: optimizedImage,
         alt: cat.label || "Portfolio item",
         title: cat.label,
-        aspect: 3 / 4,
-        _categoryObj: cat,
+        category: cat,
       };
     });
   }, [categories, allItems]);
-
-  const handleActiveChange = (index) => {};
-  const handleFocusChange = (focused) => {};
 
   const isDark = theme === "dark";
 
@@ -43,40 +39,53 @@ export default function MobileWorksWheelHome({
       className="w-full h-dvh overflow-hidden select-none flex flex-col justify-center items-center relative"
       style={{ background: isDark ? "#060713" : "#ffffff" }}
     >
-      {/* Fallback ambient glow background */}
-      {isDark && (
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <div
-            className="absolute w-[95vw] h-[95vw] max-w-[650px] max-h-[650px] rounded-full blur-[110px] opacity-75"
-            style={{
-              top: '-10%',
-              left: '-15%',
-              background: 'radial-gradient(circle, rgba(62, 42, 138, 0.85) 0%, rgba(35, 20, 85, 0.45) 55%, transparent 75%)',
-            }}
-          />
-          <div
-            className="absolute w-[100vw] h-[100vw] max-w-[700px] max-h-[700px] rounded-full blur-[130px] opacity-80"
-            style={{
-              bottom: '-12%',
-              right: '-15%',
-              background: 'radial-gradient(circle, rgba(22, 60, 140, 0.9) 0%, rgba(12, 35, 95, 0.5) 60%, transparent 80%)',
-            }}
-          />
-        </div>
-      )}
-
-      {/* 3D Liquid Glass Carousel */}
-      <div className="relative z-10 w-full h-full">
-        <LiquidGlassCarousel
-          items={carouselItems}
-          panelHeight={380}
-          gap={12}
-          background="transparent"
-          entry={true}
-          onActiveChange={handleActiveChange}
-          onFocusChange={handleFocusChange}
+      {/* Background Particles moi ban vua them tu React Bits */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+        <Particles
+          particleColors={isDark ? ["#ffffff", "#eefffb", "#ffffff"] : ["#1a202c", "#2d3748", "#4a5568"]}
+          particleCount={290}
+          particleSpread={9}
+          speed={0.1}
+          particleBaseSize={90}
+          glow={0.65}
+          twinkle={0.3}
+          moveParticlesOnHover={false}
+          hoverEffect="parallax"
+          depthOfField={0.15}
+          clickBurst={false}
+          lightMode={!isDark}
           className="w-full h-full"
         />
+      </div>
+
+      {/* Hang anh scroll muot ma, trong suot 100%, khong can lop kinh liquid glass */}
+      <div className="relative z-10 w-full flex items-center overflow-x-auto no-scrollbar py-6 snap-x snap-mandatory px-[15vw] gap-4">
+        {carouselItems.map((item, idx) => (
+          <div
+            key={idx}
+            onClick={() => onCategorySelect?.(item.category)}
+            className="flex-shrink-0 snap-center flex flex-col items-center cursor-pointer transition-transform duration-300 active:scale-95"
+            style={{ width: "70vw", maxWidth: "320px" }}
+          >
+            <p
+              className="mb-3 text-[15px] font-medium tracking-tight text-center truncate w-full"
+              style={{ color: "var(--text-primary, #ffffff)", fontFamily: "'Inter', sans-serif" }}
+            >
+              {item.title}
+            </p>
+            <div
+              className="w-full rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+              style={{ aspectRatio: "3 / 4" }}
+            >
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
