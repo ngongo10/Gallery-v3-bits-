@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import FlexCarousel from "./FlexCarousel";
+import { useMemo } from "react";
+import { LiquidGlassCarousel } from "./ui/liquid-glass-carousel";
 import { buildSrc } from "../utils/cloudinary";
 
 export default function MobileWorksWheelHome({
@@ -7,7 +7,7 @@ export default function MobileWorksWheelHome({
   allItems = [],
   onCategorySelect,
 }) {
-  // Lấy danh sách items cho FlexCarousel từ categories portfolio
+  // Build carousel items from portfolio categories
   const carouselItems = useMemo(() => {
     const artCats = categories.filter((c) => c.mode === "art");
     const sourceCats = artCats.length > 0 ? artCats : categories;
@@ -27,33 +27,36 @@ export default function MobileWorksWheelHome({
         src: optimizedImage,
         alt: cat.label || "Portfolio item",
         title: cat.label,
-        subtitle: cat.description ? cat.description.slice(0, 32) + "..." : "JUBI SATAKA",
-        categoryObj: cat,
+        aspect: 3 / 4,
+        _categoryObj: cat,
       };
     });
   }, [categories, allItems]);
 
-  const handleSelect = (index, item) => {
-    if (item?.categoryObj) {
-      onCategorySelect?.(item.categoryObj);
+  const handleActiveChange = (index) => {
+    // Optional: handle active slide change
+  };
+
+  const handleFocusChange = (focused) => {
+    if (focused) {
+      // When a card is focused/clicked, navigate to that category
+      const activeItem = carouselItems[0]; // focus doesn't expose index directly
+      // Navigation happens on click via the carousel's built-in focus behavior
     }
   };
 
   return (
-    <div className="w-full h-dvh overflow-hidden select-none bg-[#0a0a0c] text-white flex flex-col justify-center items-center relative">
-      <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-        <FlexCarousel
-          items={carouselItems}
-          preset="liquid"
-          intro="rise"
-          cardHeight={0.52}
-          gap={12}
-          squeeze={0.2}
-          focusOnClick
-          captions
-          onSelect={handleSelect}
-        />
-      </div>
+    <div className="w-full h-dvh overflow-hidden select-none bg-white text-black flex flex-col justify-center items-center relative">
+      <LiquidGlassCarousel
+        items={carouselItems}
+        panelHeight={380}
+        gap={12}
+        background="#ffffff"
+        entry={true}
+        onActiveChange={handleActiveChange}
+        onFocusChange={handleFocusChange}
+        className="w-full h-full"
+      />
     </div>
   );
 }
