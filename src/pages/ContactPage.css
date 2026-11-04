@@ -1092,3 +1092,106 @@
 [data-theme="dark"] .contact-album-footer-actions {
   border-top-color: rgba(255, 255, 255, 0.1);
 }
+
+.contact-terms {
+  width: 100%;
+  max-width: 880px;
+  margin: 24px auto 0;
+  padding: 28px 0 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+[data-theme="dark"] .contact-terms {
+  border-top-color: rgba(255, 255, 255, 0.28);
+}
+
+.contact-terms-title {
+  margin: 0 0 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+  color: #111111;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  text-align: center;
+}
+
+[data-theme="dark"] .contact-terms-title {
+  color: #ffffff;
+  border-bottom-color: rgba(255, 255, 255, 0.28);
+}
+
+.contact-terms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: service-term;
+}
+
+.contact-terms-section {
+  counter-increment: service-term;
+}
+
+.contact-terms-section h3 {
+  margin: 0 0 6px;
+  color: #171717;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.contact-terms-section h3::before {
+  content: counter(service-term) '. ';
+}
+
+[data-theme="dark"] .contact-terms-section h3 {
+  color: #ffffff;
+}
+
+.contact-terms-section ul {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(0, 0, 0, 0.67);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+[data-theme="dark"] .contact-terms-section ul {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+@media (max-width: 600px) {
+  .contact-terms {
+    margin-top: 8px;
+    padding-top: 22px;
+  }
+
+  .contact-terms-title {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    letter-spacing: -0.04em;
+  }
+
+  .contact-terms-list {
+    gap: 20px;
+  }
+
+  .contact-terms-section h3 {
+    font-size: 13px;
+  }
+
+  .contact-terms-section ul {
+    padding-left: 16px;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+}

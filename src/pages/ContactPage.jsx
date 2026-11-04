@@ -17,14 +17,14 @@ const shopProducts = [
     defaultAlbumId: 'chan-dung',
     pricingDetail: {
       title: 'Bảng Giá & Chi Tiết Dịch Vụ — Chụp Ảnh Cá Nhân / Lifestyle',
-      tag: 'Gói chụp buổi: 399.000 🐟 · Hoặc tính theo giờ: 149.000 🐟/h',
+      tag: 'Gói chụp buổi: 399.000🐟/Buổi(Xấp xỉ vòng 4 tiếng) · Hoặc tính theo giờ: 149.000🐟/h',
       items: [
         'Thời gian chụp: 01 buổi chụp thoải mái (hoặc book linh hoạt theo giờ).',
-        'Địa điểm: Quán cafe, công viên, đường phố Sài Gòn, bối cảnh studio hoặc nhà riêng.',
-        'Hỗ trợ bắt khoảnh khắc: Hướng dẫn tạo dáng tự nhiên, không gượng gạo, tôn nét đẹp riêng của bạn.',
-        'Bàn giao: Toàn bộ file gốc độ phân giải cao + 15 đến 20 ảnh blend màu chỉnh sửa cẩn thận.',
+        'Địa điểm: Quán cafe, công viên, đường phố Sài Gòn.',
+        'Hỗ trợ bắt khoảnh khắc: Chỉ dẫn tạo dáng theo tính cách Từng Mẫu, Hướng dẫn tạo dáng theo phong cách nhân vật(Cos), tôn nét đẹp riêng của bạn.',
+        'Bàn giao: Toàn bộ file gốc độ phân giải cao + 15 đến 20 ảnh blend màu chỉnh sửa theo yêu cầu',
       ],
-      note: 'Phù hợp: Chân dung nghệ thuật, Kỷ niệm ngày lễ, Sinh nhật, Couple tình cảm, Ảnh đời thường aesthetic.',
+      note: 'Phù hợp: Tả thực, Chân dung nghệ thuật, Kỷ niệm ngày lễ, Sinh nhật, Couple tình cảm, Ảnh đời thường aesthetic.',
     },
     masterText: {
       headline: 'Chân Dung & Đời Sống — Lưu Giữ Những Khoảnh Khắc Nguyên Bản',
@@ -134,13 +134,13 @@ const shopProducts = [
     id: 'pkg-cinematic',
     title: 'Gói Cinematic',
     subtitle: 'Dành cho các sản phẩm video cần lên ý tưởng, quay và hậu kỳ theo yêu cầu.',
-    priceLine: 'Từ 1.799.000 🐟',
+    priceLine: 'Từ 1.899.000 🐟',
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790936046/DSC01094.avif',
     art: 'dusk',
     defaultAlbumId: 'vincom-mall-cos',
     pricingDetail: {
       title: 'Bảng Giá & Quy Trình — Cinematic Project',
-      tag: 'Dự án sản xuất · Từ 1.799.000 🐟',
+      tag: 'Dự án sản xuất · Từ 1.899.000 🐟',
       items: [
         'Họp ý tưởng & Moodboard: Thảo luận concept, xây dựng kịch bản phân cảnh (storyboard chi tiết).',
         'Thiết bị điện ảnh: Ống kính prime/cinema, hệ thống gimbal ổn định, đèn studio setup ánh sáng chuyên sâu.',
@@ -170,6 +170,47 @@ const shopProducts = [
         },
       ],
     },
+  },
+];
+
+const serviceTerms = [
+  {
+    title: 'ĐẶT CỌC VÀ THANH TOÁN',
+    items: [
+      'Khách hàng vui lòng đặt cọc 50% tổng chi phí để giữ lịch. Tiền cọc không hoàn lại nếu bên phía khách hàng tự ý huỷ lịch mà không có lý do bất khả kháng.',
+      'Toàn bộ phần còn lại sẽ được hoàn thiện thanh toán sau khi bàn giao ảnh.',
+    ],
+  },
+  {
+    title: 'DỜI LỊCH VÀ HUỶ LỊCH',
+    items: [
+      'Khách hàng có quyền thay đổi lịch miễn phí 1 lần nếu thông báo trước tối thiểu 7 ngày trước buổi chụp. Lịch mới sẽ phụ thuộc vào thời gian trống của photographer.',
+      'Trong trường hợp lý do bất khả kháng (thời tiết xấu, sự cố thiên tai/sức khoẻ...), hai bên hỗ trợ dời lịch miễn phí.',
+    ],
+  },
+  {
+    title: 'TRẢ SẢN PHẨM VÀ CHỈNH SỬA',
+    items: [
+      'Ảnh gốc sẽ được trả trong vòng 48 giờ kể từ khi kết thúc buổi chụp.',
+      'Ảnh hoàn thiện sẽ được trả theo lịch hẹn trên gói chụp. Thời gian tính từ lúc khách hàng hoàn thành việc chọn ảnh.',
+      'Photographer hỗ trợ chỉnh sửa tối đa 3 lần theo Concept/Style ban đầu. Mọi yêu cầu chỉnh sửa quá số lần hoặc thay đổi Concept/Style khác sẽ tính thêm phí.',
+    ],
+  },
+  {
+    title: 'BẢN QUYỀN VÀ QUYỀN SỬ DỤNG',
+    items: [
+      'Toàn bộ bản quyền hình ảnh thuộc về photographer.',
+      'Khách hàng có quyền sử dụng hình ảnh cho mục đích cá nhân và thương mại cá nhân.',
+      'Khách hàng không được cung cấp hình ảnh cho bên thứ 3 nào sử dụng cho mục đích thương mại mà chưa có sự đồng ý bằng văn bản của photographer.',
+      'Photographer có quyền dùng ảnh cho portfolio, social để quảng bá dịch vụ (trừ khi khách hàng có yêu cầu bảo mật từ trước).',
+    ],
+  },
+  {
+    title: 'TÁC PHONG & LƯU TRỮ',
+    items: [
+      'Thời gian chụp tính từ giờ đã hẹn. Nếu khách hàng đến muộn quá 60 phút kể từ thời gian hẹn, photographer có quyền đơn phương huỷ buổi chụp mà không hoàn lại cọc.',
+      'Toàn bộ file ảnh sẽ được lưu trữ trong 60 ngày kể từ ngày bàn giao sản phẩm hoàn thiện cuối cùng. Sau thời gian này, photographer không chịu trách nhiệm nếu file bị thất lạc.',
+    ],
   },
 ];
 
@@ -361,6 +402,24 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
             );
           })}
         </div>
+
+        <section className="contact-terms" aria-labelledby="contact-terms-title">
+          <h2 className="contact-terms-title" id="contact-terms-title">
+            TERMS OF SERVICE
+          </h2>
+          <ol className="contact-terms-list">
+            {serviceTerms.map((section) => (
+              <li className="contact-terms-section" key={section.title}>
+                <h3>{section.title}</h3>
+                <ul>
+                  {section.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ol>
+        </section>
       </div>
     </div>
   );

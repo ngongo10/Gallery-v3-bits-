@@ -34,7 +34,7 @@ export default function ImageLightbox({
   const currentSrc = currentItem.image || currentItem.src || src;
   const currentAlt = currentItem.caption || currentItem.alt || alt || `Photo ${currentIndex + 1}`;
 
-  // ── Compiz Wobbly Jelly Entrance (WAAPI Spring Mesh Simulation) ───────────
+  // ── Pure Fluid Motion Entrance: Direct travel from origin thumbnail to center ──
   useLayoutEffect(() => {
     if (!originRect || !imgRef.current) {
       setPhase("open");
@@ -43,7 +43,7 @@ export default function ImageLightbox({
 
     const img = imgRef.current;
     
-    const runCompizWobbly = () => {
+    const runMotionEntrance = () => {
       const finalRect = img.getBoundingClientRect();
       if (!finalRect.width || !finalRect.height) {
         setPhase("open");
@@ -55,71 +55,40 @@ export default function ImageLightbox({
       const sx = originRect.width / finalRect.width;
       const sy = originRect.height / finalRect.height;
 
-      // Determine wobble direction based on flight path
-      const dirX = dx > 0 ? -1 : 1;
-      const dirY = dy > 0 ? -1 : 1;
-
-      // Compiz physics: Stretch -> Trailing Lag -> Overshoot -> Jelly Oscillations -> Settle
+      // Pure geometric travel (No wobbly, no jelly filters, just smooth momentum)
       const keyframes = [
-        // Frame 0: Exact match with source thumbnail position
         {
-          transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy}) skew(0deg, 0deg)`,
+          transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
           borderRadius: originRect.borderRadius || '2px',
-          filter: 'url(#compiz-wobble-filter) brightness(0.98)',
         },
-        // Frame 1: Initial lift-off stretch (inertia pulls the trailing edge backward)
         {
-          transform: `translate3d(${dx * 0.65}px, ${dy * 0.65}px, 0) scale(${sx * 1.08}, ${sy * 0.94}) skew(${dirX * 6.5}deg, ${dirY * 4.2}deg)`,
-          borderRadius: '4px',
-          filter: 'url(#compiz-wobble-filter) brightness(1.02)',
-        },
-        // Frame 2: Mid-air flight acceleration (jelly flex)
-        {
-          transform: `translate3d(${dx * 0.28}px, ${dy * 0.28}px, 0) scale(${1.04}, ${0.97}) skew(${dirX * -3.8}deg, ${dirY * -2.4}deg)`,
+          transform: 'translate3d(0, 0, 0) scale(1, 1)',
           borderRadius: '3px',
-          filter: 'url(#compiz-wobble-filter)',
-        },
-        // Frame 3: Impact destination with overshoot (bouncing past the target)
-        {
-          transform: `translate3d(${dx * -0.05}px, ${dy * -0.05}px, 0) scale(${1.025}, ${1.02}) skew(${dirX * 1.8}deg, ${dirY * 1.2}deg)`,
-          filter: 'url(#compiz-wobble-filter)',
-        },
-        // Frame 4: Elastic rebound
-        {
-          transform: `translate3d(${dx * 0.015}px, ${dy * 0.015}px, 0) scale(${0.992}, ${0.995}) skew(${dirX * -0.8}deg, ${dirY * -0.5}deg)`,
-          filter: 'url(#compiz-wobble-filter)',
-        },
-        // Frame 5: Perfectly settled window
-        {
-          transform: 'translate3d(0, 0, 0) scale(1, 1) skew(0deg, 0deg)',
-          borderRadius: '3px',
-          filter: 'none',
         }
       ];
 
       img.style.transformOrigin = "center center";
       
       const anim = img.animate(keyframes, {
-        duration: 580,
-        easing: 'cubic-bezier(0.25, 1, 0.4, 1)',
+        duration: 420,
+        easing: 'cubic-bezier(0.16, 1, 0.3, 1)', // Apple-style fluid deceleration
         fill: 'forwards'
       });
 
       anim.onfinish = () => {
         setPhase("open");
         img.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
-        img.style.filter = 'none';
       };
     };
 
     if (img.complete) {
-      runCompizWobbly();
+      runMotionEntrance();
     } else {
-      img.onload = runCompizWobbly;
+      img.onload = runMotionEntrance;
     }
   }, [originRect]);
 
-  // ── Compiz Wobbly Close: elastic snap back to origin ──────────────────────
+  // ── Pure Fluid Motion Close: Travel back to thumbnail position ──────────
   const handleClose = useCallback(() => {
     if (isClosingRef.current) return;
     isClosingRef.current = true;
@@ -133,29 +102,20 @@ export default function ImageLightbox({
       const sx = originRect.width / finalRect.width;
       const sy = originRect.height / finalRect.height;
 
-      const dirX = dx > 0 ? 1 : -1;
-      const dirY = dy > 0 ? 1 : -1;
-
       const closeKeyframes = [
         {
-          transform: 'translate3d(0, 0, 0) scale(1, 1) skew(0deg, 0deg)',
+          transform: 'translate3d(0, 0, 0) scale(1, 1)',
           borderRadius: '3px',
-          filter: 'none',
         },
         {
-          transform: `translate3d(${dx * 0.25}px, ${dy * 0.25}px, 0) scale(${0.92}, ${1.05}) skew(${dirX * 5.5}deg, ${dirY * 3.5}deg)`,
-          filter: 'url(#compiz-wobble-filter)',
-        },
-        {
-          transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy}) skew(0deg, 0deg)`,
+          transform: `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`,
           borderRadius: originRect.borderRadius || '2px',
-          filter: 'url(#compiz-wobble-filter)',
         }
       ];
 
       const anim = img.animate(closeKeyframes, {
-        duration: 420,
-        easing: 'cubic-bezier(0.35, 0, 0.2, 1)',
+        duration: 340,
+        easing: 'cubic-bezier(0.2, 0, 0, 1)', // Smooth acceleration back into place
         fill: 'forwards'
       });
 
@@ -268,27 +228,6 @@ export default function ImageLightbox({
       aria-modal="true"
       aria-label="Image gallery zoom"
     >
-      {/* SVG Physics Wave Filter for Jelly Mesh Deformation */}
-      <svg width="0" height="0" style={{ position: 'absolute', pointerEvents: 'none' }}>
-        <defs>
-          <filter id="compiz-wobble-filter" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.015 0.02"
-              numOctaves="1"
-              result="wobbleNoise"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="wobbleNoise"
-              scale="14"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </defs>
-      </svg>
-
       {/* Top Header */}
       <div className="lb-header">
         {total > 1 && (
