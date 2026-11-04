@@ -20,7 +20,7 @@ export default function ImageLightbox({
   );
 
   // "opening" | "open" | "closing"
-  const [phase, setPhase] = useState("opening");
+  const [phase, setPhase] = useState(originRect ? "opening" : "open");
   const overlayRef = useRef(null);
   const imgRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0 });
@@ -34,7 +34,7 @@ export default function ImageLightbox({
   const currentSrc = currentItem.image || currentItem.src || src;
   const currentAlt = currentItem.caption || currentItem.alt || alt || `Photo ${currentIndex + 1}`;
 
-  // ── Pure Fluid Motion Entrance (Guaranteed CSS Transition) ────────────────
+  // ── True Double-rAF FLIP Animation on Mount ──────────────────────────────
   useLayoutEffect(() => {
     const img = imgRef.current;
     if (!originRect || !img) {
@@ -54,26 +54,27 @@ export default function ImageLightbox({
       const sx = originRect.width / finalRect.width;
       const sy = originRect.height / finalRect.height;
 
-      // 1. Invert: instantly pin image over thumbnail
+      // 1. Instantly set starting transform (over the thumbnail)
       img.style.transition = 'none';
       img.style.transformOrigin = 'center center';
       img.style.transform = `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`;
       img.style.borderRadius = originRect.borderRadius || '2px';
-      img.style.opacity = '1';
+      img.style.visibility = 'visible';
 
-      // 2. Force browser reflow to commit initial frame
+      // 2. Force reflow
       void img.offsetWidth;
 
-      // 3. Play: transition smoothly to center full size
+      // 3. Double requestAnimationFrame ensures browser paints the start position to screen
       requestAnimationFrame(() => {
-        setPhase("open");
-        img.style.transition = 'transform 0.48s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.48s ease';
-        img.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
-        img.style.borderRadius = '3px';
+        requestAnimationFrame(() => {
+          setPhase("open");
+          img.style.transition = 'transform 0.46s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.46s ease';
+          img.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
+          img.style.borderRadius = '3px';
+        });
       });
     };
 
-    // Make sure image has layout dimensions before calculating
     if (img.complete && img.naturalWidth > 0) {
       startAnimation();
     } else {
@@ -264,7 +265,7 @@ export default function ImageLightbox({
           src={currentSrc}
           alt={currentAlt}
           draggable={false}
-          style={originRect ? { opacity: 0 } : undefined}
+          style={originRect && phase === 'opening' ? { visibility: 'hidden' } : undefined}
           onDoubleClick={(e) => {
             e.stopPropagation();
             handleClose();
