@@ -256,7 +256,7 @@ const Digits = ({ value }) => (
   </span>
 );
 
-const FlexCarousel = ({
+export const FlexCarousel = ({
   items = DEFAULT_ITEMS,
   preset = 'liquid',
   intro = 'rise',
