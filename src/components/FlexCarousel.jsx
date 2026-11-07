@@ -206,7 +206,7 @@ void main() {
   float slope = 16.0 * t * t * (1.0 - t) * (1.0 - t);
   float reachX = rel.x / (uResolution.x * 0.5);
   // Vung giua man hinh (abs(reachX) < 0.28, khoang card trung tam): dung hoan toan be cong va khuc xa
-  float side = smoothstep(0.28, 0.45, abs(reachX)) * (uCurl == 0.0 ? sign(reachX) : uCurl);
+  float side = smoothstep(0.42, 0.65, abs(reachX)) * (uCurl == 0.0 ? sign(reachX) : uCurl);
   float lift = ramp * side * uFlow * uStrength;
   vec2 swirl = along * along.y * side * slope * uFlow * uStrength * 0.35;
   vec2 drift = vec2(0.0, -lift) - swirl;
