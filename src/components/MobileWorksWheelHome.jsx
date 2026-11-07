@@ -75,11 +75,11 @@ export default function MobileWorksWheelHome({
           gap={14}
           radius={16}
           fit="portrait"
-          onSelect={(index, item, canvasRect) => {
+          onSelect={(index, item, cardRect) => {
             if (item?.category) {
               const heroInfo = {
                 src: item.src,
-                rect: canvasRect || null,
+                fromRect: cardRect || null,
               };
               onCategorySelect?.(item.category, heroInfo);
             }

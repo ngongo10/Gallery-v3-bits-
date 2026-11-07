@@ -106,7 +106,7 @@ const CATEGORY_DESC = {
   'run-away': 'Một chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.',
 };
 
-const GalleryPage = ({ category, onBack, theme, heroTransition, onHeroDone }) => {
+const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand }) => {
   const pageRef = useRef(null);
   const imageRefs = useRef([]);
   const leftColRef = useRef(null);
@@ -117,8 +117,15 @@ const GalleryPage = ({ category, onBack, theme, heroTransition, onHeroDone }) =>
   const [lightboxOriginRect, setLightboxOriginRect] = useState(null);
   const [liftedPhotoIndex, setLiftedPhotoIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
-  const [heroStyle, setHeroStyle] = useState(null);
-  const [heroActive, setHeroActive] = useState(false);
+  const [heroSlotHidden, setHeroSlotHidden] = useState(Boolean(heroSrc));
+  const heroSlotRef = useRef(null);
+  const slotReportedRef = useRef(false);
+
+  const heroSlotIdx = useMemo(() => {
+    if (!heroSrc || !category?.items?.length) return 0;
+    const idx = category.items.findIndex(item => item.image === heroSrc);
+    return idx >= 0 ? idx : 0;
+  }, [heroSrc, category]);
 
   const handleOpenLightbox = useCallback((index, e) => {
     // Capture exact <img> element bounding rect for true FLIP animation
@@ -185,62 +192,40 @@ const GalleryPage = ({ category, onBack, theme, heroTransition, onHeroDone }) =>
     });
   }, [category]);
 
-  // Hero shared-element transition effect
+  // Locate target slot, scroll to it immediately, hide slot & report bounding rect for FLIP
   useEffect(() => {
-    if (!heroTransition?.rect || !heroTransition?.src) {
-      setHeroStyle(null);
-      setHeroActive(false);
-      return;
-    }
+    if (!heroSrc || !category?.items?.length || slotReportedRef.current) return;
 
-    const r = heroTransition.rect;
+    setHeroSlotHidden(true);
 
-    // Start: position at carousel location
-    setHeroStyle({
-      position: 'fixed',
-      left: r.left + 'px',
-      top: r.top + 'px',
-      width: r.width + 'px',
-      height: r.height + 'px',
-      zIndex: 9999,
-      objectFit: 'cover',
-      borderRadius: '12px',
-      transition: 'none',
-      opacity: 1,
-      pointerEvents: 'none',
-    });
-    setHeroActive(false);
-
-    // After 2 frames, animate to destination (top of gallery, full viewport width)
     requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setHeroStyle({
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          width: '100vw',
-          height: '55vh',
-          zIndex: 9999,
-          objectFit: 'cover',
-          borderRadius: '0px',
-          transition: 'all 700ms cubic-bezier(0.16, 1, 0.3, 1)',
-          opacity: 0.85,
-          pointerEvents: 'none',
-        });
-        setHeroActive(true);
+      const slotEl = heroSlotRef.current;
+      if (!slotEl) return;
 
-        // After animation finishes, fade out hero
+      // Scroll immediately without animated jump
+      slotEl.scrollIntoView({ behavior: 'instant', block: 'center' });
+
+      requestAnimationFrame(() => {
+        const imgEl = slotEl.querySelector('img') || slotEl;
+        const rect = imgEl.getBoundingClientRect();
+        slotReportedRef.current = true;
+        onSlotReady?.({
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+        });
+
+        // Flight duration + peel = ~650ms. Trigger land glow then un-hide gallery image
         setTimeout(() => {
-          setHeroStyle(prev => prev ? { ...prev, opacity: 0, transition: 'opacity 300ms ease' } : null);
+          onHeroLand?.();
           setTimeout(() => {
-            setHeroStyle(null);
-            setHeroActive(false);
-            onHeroDone?.();
-          }, 350);
-        }, 750);
+            setHeroSlotHidden(false);
+          }, 320);
+        }, 620);
       });
     });
-  }, [heroTransition]);
+  }, [heroSrc, category, onSlotReady, onHeroLand]);
 
   // Scroll spy (update active index by IntersectionObserver on left column)
   useEffect(() => {
@@ -373,8 +358,12 @@ const GalleryPage = ({ category, onBack, theme, heroTransition, onHeroDone }) =>
               {items.map((photo, i) => (
                 <div
                   key={photo.id || i}
-                  ref={(el) => (imageRefs.current[i] = el)}
+                  ref={(el) => {
+                    imageRefs.current[i] = el;
+                    if (i === heroSlotIdx) heroSlotRef.current = el;
+                  }}
                   className="chry-mobile-item"
+                  style={i === heroSlotIdx && heroSlotHidden ? { opacity: 0 } : undefined}
                 >
                   <div
                     className="chry-image-wrapper medium-size"
@@ -485,15 +474,7 @@ const GalleryPage = ({ category, onBack, theme, heroTransition, onHeroDone }) =>
         />
       )}
 
-      {/* Hero shared-element transition overlay */}
-      {heroStyle && heroTransition?.src && (
-        <img
-          src={heroTransition.src}
-          alt="hero transition"
-          style={heroStyle}
-          aria-hidden="true"
-        />
-      )}
+
     </div>
   );
 };

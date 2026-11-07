@@ -1095,7 +1095,13 @@ export const FlexCarousel = ({
       if (!hit) return;
       if (hit.index === activeIndex && Math.abs(goal - pos) < 2) {
         const containerRect = containerRef.current?.getBoundingClientRect();
-        callbacksRef.current.onSelect?.(hit.index, itemsRef.current[hit.index], containerRect);
+        const cardRect = containerRect ? {
+          left: containerRect.left + hit.x0,
+          top: containerRect.top + hit.y0,
+          width: hit.x1 - hit.x0,
+          height: hit.y1 - hit.y0,
+        } : null;
+        callbacksRef.current.onSelect?.(hit.index, itemsRef.current[hit.index], cardRect);
         if (s.focusOnClick) openFocus(hit.index);
       } else {
         const rel = (hit.x0 + hit.x1) / 2 - width / 2;

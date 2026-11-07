@@ -5,6 +5,7 @@ import SimpleMobileNav from './components/SimpleMobileNav';
 import AnimatedThemeToggler from './components/AnimatedThemeToggler';
 import FlickeringText from './components/ui/flickering-text';
 import ErrorBoundary from './components/ErrorBoundary';
+import HeroOverlay from './components/HeroOverlay';
 
 import './App.css';
 
@@ -42,7 +43,9 @@ function App() {
   const [navActiveIndex, setNavActiveIndex] = useState(0);
 
   const [isExitingHome, setIsExitingHome] = useState(false);
-  const [heroTransition, setHeroTransition] = useState(null); // { src, rect }
+  const [heroTransition, setHeroTransition] = useState(null); // { src, fromRect }
+  const [heroPhase, setHeroPhase] = useState(null); // 'peel' | 'fly' | 'land' | null
+  const [heroToRect, setHeroToRect] = useState(null);
   const exitTimerRef = useRef(null);
   const loaderDoneRef = useRef(false);
 
@@ -166,14 +169,44 @@ function App() {
     setIsTransitioning(true);
     setSelectedCategory(category);
     setIsExitingHome(true);
-    setHeroTransition(heroInfo || null);
 
-    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-    exitTimerRef.current = setTimeout(() => {
-      setCurrentPage('gallery');
-      setIsTransitioning(false);
-    }, 650); // Reduced from 1200ms for snappier feel with hero transition
+    if (heroInfo?.src && heroInfo?.fromRect) {
+      setHeroTransition(heroInfo);
+      setHeroToRect(null);
+      setHeroPhase('peel');
+
+      if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+      // Wait for peel animation (~320ms), then mount gallery & start fly
+      exitTimerRef.current = setTimeout(() => {
+        setHeroPhase('fly');
+        setCurrentPage('gallery');
+        setIsTransitioning(false);
+      }, 320);
+    } else {
+      setHeroTransition(null);
+      setHeroPhase(null);
+      if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+      exitTimerRef.current = setTimeout(() => {
+        setCurrentPage('gallery');
+        setIsTransitioning(false);
+      }, 650);
+    }
   }, [isTransitioning]);
+
+  const handleSlotReady = useCallback((rect) => {
+    setHeroToRect(rect);
+    setHeroPhase('fly');
+  }, []);
+
+  const handleHeroLand = useCallback(() => {
+    setHeroPhase('land');
+  }, []);
+
+  const handleHeroDone = useCallback(() => {
+    setHeroTransition(null);
+    setHeroPhase(null);
+    setHeroToRect(null);
+  }, []);
 
   const handleBack = useCallback(() => {
     if (isTransitioning) return;
@@ -318,13 +351,22 @@ function App() {
                 theme={theme}
                 category={selectedCategory}
                 onBack={handleBack}
-                heroTransition={heroTransition}
-                onHeroDone={() => setHeroTransition(null)}
+                heroSrc={heroTransition?.src || null}
+                onSlotReady={handleSlotReady}
+                onHeroLand={handleHeroLand}
               />
             </Suspense>
           )}
         </ErrorBoundary>
       )}
+
+      {/* Hero shared-element transition overlay (Peel -> Fly -> Glow Land) */}
+      <HeroOverlay
+        heroTransition={heroTransition}
+        toRect={heroToRect}
+        phase={heroPhase}
+        onLandDone={handleHeroDone}
+      />
     </div>
   );
 }
