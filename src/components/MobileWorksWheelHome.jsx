@@ -57,8 +57,11 @@ export default function MobileWorksWheelHome({
         />
       </div>
 
-      {/* OGL FlexCarousel voi hieu ung thau kinh uon luon long lay */}
-      <div className="relative z-10 w-full h-full">
+      {/* OGL FlexCarousel - bang anh ha xuong 1 xiu bang translateY */}
+      <div
+        className="relative z-10 w-full h-full"
+        style={{ transform: "translateY(5%)" }}
+      >
         <FlexCarousel
           items={carouselItems}
           preset="arch"

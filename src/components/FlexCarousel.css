@@ -33,7 +33,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  bottom: calc(50% + var(--flex-carousel-half) * var(--flex-carousel-lift, 1) + 14px);
+  bottom: calc(50% + var(--flex-carousel-half) * var(--flex-carousel-lift, 1) + 20px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,12 +49,17 @@
   flex-direction: column;
   align-items: center;
   max-width: 100%;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 1.35;
-  color: var(--text-primary, #ffffff);
-  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: normal;
+  line-height: 1.25;
+  color: var(--text-primary, #111111);
+  font-family: 'GrapeNuts', 'MJ Kedanty', serif;
+  letter-spacing: 0.01em;
   animation: flex-carousel-title 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-theme="dark"] .flex-carousel__title {
+  color: #ffffff;
 }
 
 .flex-carousel__subtitle {
@@ -62,23 +67,32 @@
   opacity: 0.6;
 }
 
+/* Count: bottom-left corner, bold GrapeNuts */
 .flex-carousel__count {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(50% + var(--flex-carousel-half) * var(--flex-carousel-lift, 1) + 16px);
+  left: 24px;
+  right: auto;
+  bottom: 32px;
+  top: auto;
   display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3px;
-  font-size: 13px;
+  justify-content: flex-start;
+  align-items: baseline;
+  gap: 2px;
+  font-size: 36px;
+  font-weight: 700;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  opacity: 0.65;
-  color: var(--text-primary, #ffffff);
-  font-family: 'Inter', sans-serif;
+  font-family: 'GrapeNuts', 'MJ Kedanty', serif;
+  color: var(--text-primary, #111111);
+  opacity: 0.18;
   transition: opacity 400ms ease;
   pointer-events: none;
+  letter-spacing: -0.02em;
+}
+
+[data-theme="dark"] .flex-carousel__count {
+  color: #ffffff;
+  opacity: 0.15;
 }
 
 .flex-carousel__count[data-hidden] {
