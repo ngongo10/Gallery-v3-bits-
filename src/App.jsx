@@ -177,15 +177,15 @@ function App() {
     if (isTransitioning) return;
     setIsTransitioning(true);
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-    const targetPage = mobile ? 'contact' : 'home';
-    setCurrentPage(targetPage);
+    // Luon quay ve trang Home (index 0) cho ca mobile va desktop
+    setCurrentPage('home');
     setNavActiveIndex(0);
     setTimeout(() => {
       setIsExitingHome(false);
       setSelectedCategory(null);
       setIsTransitioning(false);
     }, 100);
-  }, [isTransitioning, mobile]);
+  }, [isTransitioning]);
 
   const handleLogoClick = useCallback(() => {
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
@@ -193,8 +193,9 @@ function App() {
     setIsExitingHome(false);
     setSelectedCategory(null);
     setIsTransitioning(false);
-    setCurrentPage(mobile ? 'contact' : 'home');
-  }, [mobile]);
+    // Luon quay ve trang Home khi click Logo
+    setCurrentPage('home');
+  }, []);
 
   return (
     <div className="app" data-theme={theme}>
