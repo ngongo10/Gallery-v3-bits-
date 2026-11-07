@@ -13,7 +13,7 @@ export const categories = [
     "id": "chan-dung",
     "label": "Chân Dung",
     "mode": "art",
-    "cover": cloudinaryUrl("/20210505-DSC00820") ,
+    "cover": cloudinaryUrl("/Still_2026-09-05_010136_1.4.1") ,
     "items": [
       {
         "id": "chan-dung-0",

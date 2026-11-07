@@ -176,12 +176,11 @@ function App() {
       setHeroPhase('peel');
 
       if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-      // Wait for peel animation (~320ms), then mount gallery & start fly
+      // Giữ ảnh lơ lửng, đồng thời mount ngay Gallery để bắt đầu trượt vào từ bên phải
+      setCurrentPage('gallery');
       exitTimerRef.current = setTimeout(() => {
-        setHeroPhase('fly');
-        setCurrentPage('gallery');
         setIsTransitioning(false);
-      }, 320);
+      }, 700);
     } else {
       setHeroTransition(null);
       setHeroPhase(null);
@@ -206,6 +205,7 @@ function App() {
     setHeroTransition(null);
     setHeroPhase(null);
     setHeroToRect(null);
+    setIsExitingHome(false);
   }, []);
 
   const handleBack = useCallback(() => {
@@ -315,7 +315,7 @@ function App() {
             </div>
           )}
 
-          {currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
+          {currentPage !== 'about' && currentPage !== 'contact' && (currentPage !== 'gallery' || isExitingHome) && (
             <div className={`page-wrapper ${isExitingHome ? 'is-gallery-active' : ''}`}>
               <HomePage
                 theme={theme}
@@ -352,6 +352,7 @@ function App() {
                 category={selectedCategory}
                 onBack={handleBack}
                 heroSrc={heroTransition?.src || null}
+                rawCover={heroTransition?.rawCover || null}
                 onSlotReady={handleSlotReady}
                 onHeroLand={handleHeroLand}
               />

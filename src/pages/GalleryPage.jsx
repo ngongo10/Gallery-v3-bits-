@@ -106,7 +106,7 @@ const CATEGORY_DESC = {
   'run-away': 'Một chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.',
 };
 
-const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand }) => {
+const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, onHeroLand }) => {
   const pageRef = useRef(null);
   const imageRefs = useRef([]);
   const leftColRef = useRef(null);
@@ -122,10 +122,17 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
   const slotReportedRef = useRef(false);
 
   const heroSlotIdx = useMemo(() => {
-    if (!heroSrc || !category?.items?.length) return 0;
-    const idx = category.items.findIndex(item => item.image === heroSrc);
-    return idx >= 0 ? idx : 0;
-  }, [heroSrc, category]);
+    if (!category?.items?.length) return 0;
+    if (rawCover) {
+      const idx = category.items.findIndex(item => item.image === rawCover);
+      if (idx >= 0) return idx;
+    }
+    if (heroSrc) {
+      const idx = category.items.findIndex(item => item.image === heroSrc);
+      if (idx >= 0) return idx;
+    }
+    return 0;
+  }, [heroSrc, rawCover, category]);
 
   const handleOpenLightbox = useCallback((index, e) => {
     // Capture exact <img> element bounding rect for true FLIP animation
@@ -198,22 +205,25 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
 
     setHeroSlotHidden(true);
 
-    // Give CSS layout time to settle (50ms) after Suspense lazy mount
+    // Chờ 400ms để trang Gallery trượt từ phải vào màn hình ổn định
+    // Trong thời gian này tấm ảnh vẫn đang ghim lơ lửng phía trên
     setTimeout(() => {
       const slotEl = heroSlotRef.current;
       if (!slotEl) return;
 
-      // Scroll to slot only if it's not the first item (first item is already at top)
       if (heroSlotIdx > 0) {
         slotEl.scrollIntoView({ behavior: 'instant', block: 'center' });
       }
 
-      // One more frame after scroll to get settled rect
       requestAnimationFrame(() => {
-        const wrapperEl = slotEl.querySelector('.chry-image-wrapper') || slotEl.querySelector('img') || slotEl;
-        const rect = wrapperEl.getBoundingClientRect();
+        // Đo chính xác phần tử <img> thực tế của ảnh (thay vì khung wrapper)
+        const imgEl = slotEl.querySelector('img');
+        const targetEl = (imgEl && imgEl.naturalWidth > 0 && imgEl.getBoundingClientRect().height > 20) 
+          ? imgEl 
+          : (slotEl.querySelector('.chry-image-wrapper') || slotEl);
+        const rect = targetEl.getBoundingClientRect();
         slotReportedRef.current = true;
-        console.log('[GalleryPage] toRect:', JSON.stringify({left: rect.left, top: rect.top, width: rect.width, height: rect.height}));
+        console.log('[GalleryPage] toRect (exact img):', JSON.stringify({left: rect.left, top: rect.top, width: rect.width, height: rect.height}));
         onSlotReady?.({
           left: rect.left,
           top: rect.top,
@@ -221,18 +231,17 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
           height: rect.height,
         });
 
-        // Flight duration ~650ms. Trigger land glow then un-hide gallery image
+        // Tấm ảnh hạ cánh vào slot (550ms), sau đó kích hoạt glow và hiển thị ảnh gallery
         setTimeout(() => {
           onHeroLand?.();
           setTimeout(() => {
             setHeroSlotHidden(false);
-            // Ensure slot element is marked visible (IntersectionObserver may not have fired yet)
             const slotItemEl = heroSlotRef.current;
             if (slotItemEl) slotItemEl.classList.add('is-in-view');
           }, 320);
-        }, 620);
+        }, 550);
       });
-    }, 50);
+    }, 400);
   }, [heroSrc, category, onSlotReady, onHeroLand]);
 
   // Scroll spy (update active index by IntersectionObserver on left column)
@@ -382,7 +391,7 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
                       src={getOptimizedUrl(photo.image, true)}
                       alt={`${category.label} ${i + 1}`}
                       className={`chry-gallery-image chry-zoomable${liftedPhotoIndex === i ? ' is-lifted-away' : ''}`}
-                      loading="lazy"
+                      loading={i === heroSlotIdx ? "eager" : "lazy"}
                       decoding="async"
                     />
                   </div>

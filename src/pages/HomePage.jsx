@@ -96,7 +96,7 @@ const HomePage = ({
   const effectiveMode = transitioning ? mode : mode; // current visible mode
 
   return (
-    <div className={`home-page home-page--${effectiveMode}`}>
+    <div className={`home-page home-page--${effectiveMode}${isExiting ? " is-exiting-to-gallery" : ""}`}>
 
 
       {/* ── ART / WORK mode ── */}

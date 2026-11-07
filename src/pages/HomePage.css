@@ -3,7 +3,13 @@
   inset: 0;
   background: #ffffff;
   overflow: hidden;
-  transition: background-color 0.4s ease;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, background-color 0.4s ease;
+}
+
+.home-page.is-exiting-to-gallery {
+  transform: translateX(-35%);
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 [data-theme="dark"] .home-page {

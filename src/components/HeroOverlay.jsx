@@ -48,22 +48,21 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
         willChange: 'left, top, width, height, box-shadow, opacity',
       });
 
-      // Peel lift
+      // Gỡ ảnh lên: nhấc bổng 3D nhẹ, bóng đổ tách nền, GIỮ NGUYÊN trên màn hình
       requestAnimationFrame(() => {
         setStyle(prev => prev ? {
           ...prev,
-          top: `${fr.top - 14}px`,
-          transform: 'scale(1.05)',
+          transform: 'perspective(1000px) rotateX(-5deg) rotateY(2deg) scale(1.04) translateY(-10px)',
           transformOrigin: 'center center',
-          boxShadow: '0 24px 50px rgba(0,0,0,0.55), 0 0 20px rgba(255,255,255,0.2)',
-          transition: 'top 320ms cubic-bezier(0.16,1,0.3,1), transform 320ms cubic-bezier(0.16,1,0.3,1), box-shadow 320ms ease',
+          boxShadow: '0 28px 60px rgba(0,0,0,0.55), 0 0 25px rgba(255,255,255,0.2)',
+          transition: 'transform 360ms cubic-bezier(0.16,1,0.3,1), box-shadow 360ms ease',
         } : null);
       });
     }
 
     if (phase === 'fly' && toRect) {
       console.log('[HeroOverlay] fly toRect:', toRect.left.toFixed(0), toRect.top.toFixed(0), toRect.width.toFixed(0), toRect.height.toFixed(0));
-      // Fly: animate left/top/width/height — no scale, preserves object-fit:cover
+      // Sau khi trang Gallery đã trượt vào, ảnh hạ cánh đáp vào khung slot đích
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setStyle(prev => prev ? {
@@ -72,17 +71,17 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
             top: `${toRect.top}px`,
             width: `${toRect.width}px`,
             height: `${toRect.height}px`,
-            transform: 'scale(1)',
+            transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateY(0px)',
             borderRadius: '10px',
             boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
             transition: [
-              'left 650ms cubic-bezier(0.16,1,0.3,1)',
-              'top 650ms cubic-bezier(0.16,1,0.3,1)',
-              'width 650ms cubic-bezier(0.16,1,0.3,1)',
-              'height 650ms cubic-bezier(0.16,1,0.3,1)',
-              'transform 300ms ease',
-              'box-shadow 650ms ease',
-              'border-radius 650ms ease',
+              'left 550ms cubic-bezier(0.16,1,0.3,1)',
+              'top 550ms cubic-bezier(0.16,1,0.3,1)',
+              'width 550ms cubic-bezier(0.16,1,0.3,1)',
+              'height 550ms cubic-bezier(0.16,1,0.3,1)',
+              'transform 550ms cubic-bezier(0.16,1,0.3,1)',
+              'box-shadow 550ms ease',
+              'border-radius 550ms ease',
             ].join(', '),
           } : null);
         });
