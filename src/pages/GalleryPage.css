@@ -329,8 +329,10 @@
 .gallery-page--entered .chry-image-column > div:nth-child(1),
 .gallery-page--entered .chry-image-column > div:nth-child(2),
 .gallery-page--entered .chry-image-column > div:nth-child(3),
+.gallery-page--entered .chry-mobile-stream > div:nth-child(1) .chry-image-wrapper,
 .gallery-page--entered .chry-mobile-stream > div:nth-child(2) .chry-image-wrapper,
-.gallery-page--entered .chry-mobile-stream > div:nth-child(3) .chry-image-wrapper {
+.gallery-page--entered .chry-mobile-stream > div:nth-child(3) .chry-image-wrapper,
+.gallery-page--entered .chry-mobile-stream .chry-mobile-item.is-in-view .chry-image-wrapper {
   opacity: 1;
   transform: translateY(0) scale(1);
   filter: blur(0);

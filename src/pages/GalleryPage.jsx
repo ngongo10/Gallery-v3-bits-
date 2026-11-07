@@ -202,8 +202,10 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
       const slotEl = heroSlotRef.current;
       if (!slotEl) return;
 
-      // Scroll immediately without animated jump
-      slotEl.scrollIntoView({ behavior: 'instant', block: 'center' });
+      // Scroll to slot only if it's not the first item (first item is already at top)
+      if (heroSlotIdx > 0) {
+        slotEl.scrollIntoView({ behavior: 'instant', block: 'center' });
+      }
 
       requestAnimationFrame(() => {
         const imgEl = slotEl.querySelector('img') || slotEl;
@@ -221,6 +223,9 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
           onHeroLand?.();
           setTimeout(() => {
             setHeroSlotHidden(false);
+            // Ensure slot element is marked visible (IntersectionObserver may not have fired yet)
+            const slotItemEl = heroSlotRef.current;
+            if (slotItemEl) slotItemEl.classList.add('is-in-view');
           }, 320);
         }, 620);
       });
