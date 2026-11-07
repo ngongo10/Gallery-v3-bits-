@@ -11,7 +11,7 @@ const shopProducts = [
     id: 'pkg-chup',
     title: 'Gói chụp',
     subtitle: 'Phù hợp với các nhu cầu chụp ảnh cá nhân, đời sống, kỷ niệm và concept đơn giản.',
-    priceLine: '399.000 🐟 / buổi · Ưu đãi chỉ từ 149.000🐟/h',
+    priceLine: '399.000 🐟 / buổi\nƯu đãi chỉ từ 149.000🐟/h',
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790935995/DSC00990.avif',
     art: 'glacier',
     defaultAlbumId: 'chan-dung',
@@ -282,7 +282,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                 <strong>Ghi chú:</strong> {activeModal.product.pricingDetail.note}
               </div>
               <div className="contact-modal-purchase" style={{ marginTop: 24 }}>
-                <span className="contact-modal-price">{activeModal.product.priceLine}</span>
+                <span className="contact-modal-price" style={{ whiteSpace: "pre-line", lineHeight: 1.4 }}>{activeModal.product.priceLine}</span>
                 <button className="contact-modal-btn" onClick={() => handleContact(activeModal.product)}>
                   TƯ VẤN & BÁO GIÁ ZALO
                 </button>
@@ -399,7 +399,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                   onClick={() => setActiveModal({ type: 'pricing', product })}
                 >
                   <span className="contact-folder-quick-title">Bảng giá</span>
-                  <span className="contact-folder-price-tag">{product.priceLine}</span>
+                  <span className="contact-folder-price-tag" style={{ whiteSpace: "pre-line", textAlign: "right", lineHeight: 1.35 }}>{product.priceLine}</span>
                 </button>
               </div>
             );
