@@ -67,13 +67,13 @@
   opacity: 0.6;
 }
 
-/* Count: bottom-left corner of screen, small Inter */
+/* Count: just below the carousel image, left-aligned */
 .flex-carousel__count {
   position: absolute;
   left: 24px;
   right: auto;
-  bottom: 28px;
-  top: auto;
+  top: calc(50% + var(--flex-carousel-half) * var(--flex-carousel-lift, 1) + 14px);
+  bottom: auto;
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
