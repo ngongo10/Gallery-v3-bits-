@@ -1,99 +1,114 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 /**
- * HeroOverlay — Handles 3-phase transition:
- * 1. PEEL OFF: lifts off carousel with shadow
- * 2. FLY: glides to exact slot rect measured in GalleryPage
- * 3. LAND: emits glow pulse on slot, then fades out as gallery image takes over
+ * HeroOverlay — 3-phase hero shared-element transition:
+ * 1. PEEL: lifts off carousel card position (object-fit:cover)
+ * 2. FLY: animates position + size to gallery slot
+ * 3. LAND: glow pulse, then fade out revealing gallery image
  *
- * Uses transform-only positioning throughout — no left/top changes after mount.
- * This prevents any position "snap" between phases.
+ * Uses left/top/width/height CSS transitions so object-fit:cover
+ * is preserved throughout — no non-uniform scale stretch.
  */
 export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone }) {
   const [style, setStyle] = useState(null);
   const landTimerRef = useRef(null);
+  const fromRectRef = useRef(null);
 
   useEffect(() => {
     if (landTimerRef.current) clearTimeout(landTimerRef.current);
 
     if (!heroTransition?.src || !heroTransition?.fromRect) {
       setStyle(null);
+      fromRectRef.current = null;
       return;
     }
 
     const r = heroTransition.fromRect;
+    if (phase === 'peel') {
+      fromRectRef.current = r;
+      console.log('[HeroOverlay] peel fromRect:', r.left.toFixed(0), r.top.toFixed(0), r.width.toFixed(0), r.height.toFixed(0));
+    }
+    const fr = fromRectRef.current || r;
 
     if (phase === 'peel') {
-      // Mount at exact card position using translate — left/top stay 0
+      // Snap to card position instantly
       setStyle({
         position: 'fixed',
-        left: 0,
-        top: 0,
-        width: `${r.width}px`,
-        height: `${r.height}px`,
+        left: `${fr.left}px`,
+        top: `${fr.top}px`,
+        width: `${fr.width}px`,
+        height: `${fr.height}px`,
         objectFit: 'cover',
         borderRadius: '16px',
         zIndex: 9999,
         pointerEvents: 'none',
-        transform: `translate(${r.left}px, ${r.top}px) scale(1)`,
-        transformOrigin: 'top left',
         boxShadow: '0 4px 15px rgba(0,0,0,0.25)',
         opacity: 1,
         transition: 'none',
-        willChange: 'transform, box-shadow, opacity',
+        willChange: 'left, top, width, height, box-shadow, opacity',
       });
 
-      // Next frame: animate peel upward
+      // Peel lift
       requestAnimationFrame(() => {
         setStyle(prev => prev ? {
           ...prev,
-          transform: `translate(${r.left}px, ${r.top - 14}px) scale(1.05)`,
+          top: `${fr.top - 14}px`,
+          transform: 'scale(1.05)',
+          transformOrigin: 'center center',
           boxShadow: '0 24px 50px rgba(0,0,0,0.55), 0 0 20px rgba(255,255,255,0.2)',
-          transition: 'transform 320ms cubic-bezier(0.16,1,0.3,1), box-shadow 320ms ease',
+          transition: 'top 320ms cubic-bezier(0.16,1,0.3,1), transform 320ms cubic-bezier(0.16,1,0.3,1), box-shadow 320ms ease',
         } : null);
       });
     }
 
     if (phase === 'fly' && toRect) {
-      // Calculate target transform values
-      const sx = toRect.width / r.width;
-      const sy = toRect.height / r.height;
-
-      // Fly directly from wherever peel left off — NO position reset
+      console.log('[HeroOverlay] fly toRect:', toRect.left.toFixed(0), toRect.top.toFixed(0), toRect.width.toFixed(0), toRect.height.toFixed(0));
+      // Fly: animate left/top/width/height — no scale, preserves object-fit:cover
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setStyle(prev => prev ? {
             ...prev,
-            transform: `translate(${toRect.left}px, ${toRect.top}px) scale(${sx}, ${sy})`,
+            left: `${toRect.left}px`,
+            top: `${toRect.top}px`,
+            width: `${toRect.width}px`,
+            height: `${toRect.height}px`,
+            transform: 'scale(1)',
             borderRadius: '10px',
             boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
-            transition: 'transform 650ms cubic-bezier(0.16,1,0.3,1), box-shadow 650ms ease, border-radius 650ms ease',
+            transition: [
+              'left 650ms cubic-bezier(0.16,1,0.3,1)',
+              'top 650ms cubic-bezier(0.16,1,0.3,1)',
+              'width 650ms cubic-bezier(0.16,1,0.3,1)',
+              'height 650ms cubic-bezier(0.16,1,0.3,1)',
+              'transform 300ms ease',
+              'box-shadow 650ms ease',
+              'border-radius 650ms ease',
+            ].join(', '),
           } : null);
         });
       });
     }
 
     if (phase === 'land' && toRect) {
-      const sx = toRect.width / r.width;
-      const sy = toRect.height / r.height;
-
-      // Glow pulse on landing
+      // Glow on landing
       setStyle(prev => prev ? {
         ...prev,
-        transform: `translate(${toRect.left}px, ${toRect.top}px) scale(${sx}, ${sy})`,
+        left: `${toRect.left}px`,
+        top: `${toRect.top}px`,
+        width: `${toRect.width}px`,
+        height: `${toRect.height}px`,
+        transform: 'scale(1)',
         borderRadius: '8px',
         boxShadow: '0 0 35px rgba(255,255,255,0.95), 0 0 70px rgba(180,210,255,0.5)',
         transition: 'box-shadow 300ms ease',
       } : null);
 
-      // Fade out into gallery image
       landTimerRef.current = setTimeout(() => {
         setStyle(prev => prev ? {
           ...prev,
           opacity: 0,
           transition: 'opacity 250ms ease',
         } : null);
-
         setTimeout(() => {
           setStyle(null);
           onLandDone?.();

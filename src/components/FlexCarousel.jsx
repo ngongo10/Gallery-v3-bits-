@@ -1094,10 +1094,13 @@ export const FlexCarousel = ({
       const hit = instances.find(inst => x >= inst.x0 && x <= inst.x1 && y >= inst.y0 && y <= inst.y1);
       if (!hit) return;
       if (hit.index === activeIndex && Math.abs(goal - pos) < 2) {
-        const containerRect = containerRef.current?.getBoundingClientRect();
-        const cardRect = containerRect ? {
-          left: containerRect.left + hit.x0,
-          top: containerRect.top + hit.y0,
+        // Use canvas element rect for precise absolute position
+        // (canvas is prepended to container and fills it exactly)
+        const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
+        const baseRect = canvasEl?.getBoundingClientRect();
+        const cardRect = baseRect ? {
+          left: baseRect.left + hit.x0,
+          top: baseRect.top + hit.y0,
           width: hit.x1 - hit.x0,
           height: hit.y1 - hit.y0,
         } : null;

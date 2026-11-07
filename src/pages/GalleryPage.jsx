@@ -192,13 +192,14 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
     });
   }, [category]);
 
-  // Locate target slot, scroll to it immediately, hide slot & report bounding rect for FLIP
+  // Locate target slot, hide slot & report bounding rect for FLIP
   useEffect(() => {
     if (!heroSrc || !category?.items?.length || slotReportedRef.current) return;
 
     setHeroSlotHidden(true);
 
-    requestAnimationFrame(() => {
+    // Give CSS layout time to settle (50ms) after Suspense lazy mount
+    setTimeout(() => {
       const slotEl = heroSlotRef.current;
       if (!slotEl) return;
 
@@ -207,10 +208,12 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
         slotEl.scrollIntoView({ behavior: 'instant', block: 'center' });
       }
 
+      // One more frame after scroll to get settled rect
       requestAnimationFrame(() => {
-        const imgEl = slotEl.querySelector('img') || slotEl;
-        const rect = imgEl.getBoundingClientRect();
+        const wrapperEl = slotEl.querySelector('.chry-image-wrapper') || slotEl.querySelector('img') || slotEl;
+        const rect = wrapperEl.getBoundingClientRect();
         slotReportedRef.current = true;
+        console.log('[GalleryPage] toRect:', JSON.stringify({left: rect.left, top: rect.top, width: rect.width, height: rect.height}));
         onSlotReady?.({
           left: rect.left,
           top: rect.top,
@@ -218,7 +221,7 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
           height: rect.height,
         });
 
-        // Flight duration + peel = ~650ms. Trigger land glow then un-hide gallery image
+        // Flight duration ~650ms. Trigger land glow then un-hide gallery image
         setTimeout(() => {
           onHeroLand?.();
           setTimeout(() => {
@@ -229,7 +232,7 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, onSlotReady, onHeroLand
           }, 320);
         }, 620);
       });
-    });
+    }, 50);
   }, [heroSrc, category, onSlotReady, onHeroLand]);
 
   // Scroll spy (update active index by IntersectionObserver on left column)
