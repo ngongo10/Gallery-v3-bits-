@@ -80,15 +80,15 @@ const BEND_PRESETS = {
     followCursor: false
   },
   arch: {
-    lensWidth: 0.8,
-    lensHeight: 0.8,
+    lensWidth: 0.85,
+    lensHeight: 0.85,
     tilt: 0,
     roundness: 1,
-    bend: 0.3,
-    reach: 0.36,
+    bend: 0.42,
+    reach: 0.42,
     curl: 'rise',
-    dispersion: 0.4,
-    liquid: 0,
+    dispersion: 1.15,
+    liquid: 0.25,
     followCursor: false
   }
 };
