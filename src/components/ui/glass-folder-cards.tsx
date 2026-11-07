@@ -1171,29 +1171,30 @@ canvas.gf-sheet-art[data-ready] { opacity: 1; filter: none; }
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  max-width: 200px;
+  gap: 6px;
+  max-width: 240px;
   pointer-events: none;
   color: var(--gf-ink);
 }
-.gf-root[data-place="bottom-left"] .gf-label { left: 28px; bottom: 32px; }
-.gf-root[data-place="top-left"] .gf-label { left: 28px; top: 34px; }
-.gf-root[data-place="top-right"] .gf-label { right: 32px; top: 52px; align-items: flex-start; }
+.gf-root[data-place="bottom-left"] .gf-label { left: 24px; bottom: 26px; }
+.gf-root[data-place="top-left"] .gf-label { left: 24px; top: 28px; }
+.gf-root[data-place="top-right"] .gf-label { right: 28px; top: 48px; align-items: flex-start; }
 .gf-title {
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -.012em;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.015em;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .gf-meta {
   font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 12px;
-  letter-spacing: .03em;
+  font-size: 13.5px;
+  line-height: 1.35;
+  letter-spacing: .02em;
   color: var(--gf-ink-soft);
-  white-space: nowrap;
+  white-space: pre-line;
   animation: gf-roll .5s var(--gf-ease) both;
 }
 @keyframes gf-roll {
