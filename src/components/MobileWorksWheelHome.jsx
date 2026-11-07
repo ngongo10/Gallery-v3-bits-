@@ -62,8 +62,11 @@ export default function MobileWorksWheelHome({
         <FlexCarousel
           items={carouselItems}
           preset="arch"
-          dispersion={1.2}
-          bend={0.38}
+          dispersion={2.5}
+          bend={0.65}
+          reach={0.55}
+          lensHeight={1.45}
+          lensWidth={0.95}
           intro="rise"
           cardHeight={0.48}
           gap={14}

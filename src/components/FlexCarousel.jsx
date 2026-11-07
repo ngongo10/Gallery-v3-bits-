@@ -80,15 +80,15 @@ const BEND_PRESETS = {
     followCursor: false
   },
   arch: {
-    lensWidth: 0.85,
-    lensHeight: 0.85,
+    lensWidth: 0.95,
+    lensHeight: 1.45,
     tilt: 0,
     roundness: 1,
-    bend: 0.42,
-    reach: 0.42,
+    bend: 0.65,
+    reach: 0.55,
     curl: 'rise',
-    dispersion: 1.15,
-    liquid: 0.25,
+    dispersion: 2.2,
+    liquid: 0.4,
     followCursor: false
   }
 };
@@ -219,7 +219,8 @@ void main() {
   gy *= min(1.0, 3.0 / max(length(gy * texels), 1e-4));
 
   vec4 color = textureGrad(tScene, shifted, gx, gy);
-  vec2 spread = vec2(0.0, side * slope * uFlow * uStrength) / uResolution * uDispersion;
+  // Tan sac quang hoc da chieu (ca doc va ngang theo do cong)
+  vec2 spread = vec2(along.x * side * 0.5, -lift * 0.8 - along.y * side) / uResolution * (uDispersion * 3.5);
   float spreadPx = length(spread * texels);
   if (color.a > 0.002 && spreadPx > 0.25) {
     vec3 base = color.rgb / color.a;
@@ -960,7 +961,7 @@ export const FlexCarousel = ({
         lensUniforms.uOuter.value = inner * 1.6;
         lensUniforms.uFlow.value = s.bend * (spanW + spanH) * 0.45;
         lensUniforms.uCurl.value = s.curl === 'rise' ? 1 : s.curl === 'fall' ? -1 : 0;
-        lensUniforms.uDispersion.value = s.dispersion * 0.12 * (1 + Math.abs(deform) * liquidAmount * 1.2);
+        lensUniforms.uDispersion.value = s.dispersion * 0.45 * (1 + Math.abs(deform) * liquidAmount * 1.2);
         lensUniforms.uStrength.value = effects.strength * (1 - focusEase);
         lensUniforms.uSceneAlpha.value = effects.sceneAlpha;
         renderer.render({ scene: lensMesh });
