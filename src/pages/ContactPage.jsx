@@ -11,7 +11,7 @@ const shopProducts = [
     id: 'pkg-chup',
     title: 'Gói chụp',
     subtitle: 'Phù hợp với các nhu cầu chụp ảnh cá nhân, đời sống, kỷ niệm và concept đơn giản.',
-    priceLine: '399.000 🐟 / buổi · Ưu đãi chỉ từ 149k/h',
+    priceLine: '399.000 🐟 / buổi · Ưu đãi chỉ từ 149.000🐟/h',
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790935995/DSC00990.avif',
     art: 'glacier',
     defaultAlbumId: 'chan-dung',
