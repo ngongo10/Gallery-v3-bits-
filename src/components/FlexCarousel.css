@@ -67,32 +67,30 @@
   opacity: 0.6;
 }
 
-/* Count: bottom-left corner, bold GrapeNuts */
+/* Count: below carousel, small, centered */
 .flex-carousel__count {
   position: absolute;
-  left: 24px;
-  right: auto;
-  bottom: 32px;
-  top: auto;
+  left: 0;
+  right: 0;
+  top: calc(50% + var(--flex-carousel-half) * var(--flex-carousel-lift, 1) + 16px);
   display: inline-flex;
-  justify-content: flex-start;
-  align-items: baseline;
-  gap: 2px;
-  font-size: 36px;
-  font-weight: 700;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  font-family: 'GrapeNuts', 'MJ Kedanty', serif;
+  letter-spacing: 0.1em;
+  opacity: 0.4;
   color: var(--text-primary, #111111);
-  opacity: 0.18;
+  font-family: 'Inter', sans-serif;
   transition: opacity 400ms ease;
   pointer-events: none;
-  letter-spacing: -0.02em;
 }
 
 [data-theme="dark"] .flex-carousel__count {
   color: #ffffff;
-  opacity: 0.15;
+  opacity: 0.35;
 }
 
 .flex-carousel__count[data-hidden] {
