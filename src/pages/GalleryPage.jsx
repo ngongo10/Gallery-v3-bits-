@@ -231,7 +231,8 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
           height: rect.height,
         });
 
-        // Tấm ảnh hạ cánh vào slot (550ms), sau đó kích hoạt glow và hiển thị ảnh gallery
+        // Chờ 1100ms: Để bước căn chỉnh co giãn (Crop Grippers) hoàn thành,
+        // sau đó mới kích hoạt phát sáng (glow) và dán ảnh gallery
         setTimeout(() => {
           onHeroLand?.();
           setTimeout(() => {
@@ -239,7 +240,7 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
             const slotItemEl = heroSlotRef.current;
             if (slotItemEl) slotItemEl.classList.add('is-in-view');
           }, 320);
-        }, 550);
+        }, 1100);
       });
     }, 400);
   }, [heroSrc, category, onSlotReady, onHeroLand]);
