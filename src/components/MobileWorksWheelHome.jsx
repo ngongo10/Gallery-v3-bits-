@@ -3,6 +3,9 @@ import { FlexCarousel } from "./FlexCarousel";
 import { Particles } from "./ui/Particles";
 import { buildSrc } from "../utils/cloudinary";
 
+// Ảnh nền trang home — Chân Dung #8
+const HOME_BG_SRC = "https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,w_900/Still_2026-09-05_010136_1.4.1";
+
 export default function MobileWorksWheelHome({
   categories = [],
   allItems = [],
@@ -42,6 +45,42 @@ export default function MobileWorksWheelHome({
         backgroundColor: "var(--bg-primary, #ffffff)",
       }}
     >
+      {/* ── Ảnh nền Chân Dung #8 ── */}
+      <div
+        className="absolute inset-0 w-full h-full pointer-events-none z-0"
+        style={{ overflow: "hidden" }}
+      >
+        <img
+          src={HOME_BG_SRC}
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center top",
+            opacity: isDark ? 0.18 : 0.12,
+            filter: isDark
+              ? "blur(28px) brightness(0.6) saturate(0.7)"
+              : "blur(22px) brightness(1.0) saturate(0.75)",
+            transform: "scale(1.08)",
+            transition: "opacity 0.6s ease, filter 0.6s ease",
+          }}
+        />
+        {/* Gradient overlay để blend đẹp hơn */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: isDark
+              ? "linear-gradient(to bottom, rgba(5,5,7,0.55) 0%, rgba(5,5,7,0.2) 50%, rgba(5,5,7,0.65) 100%)"
+              : "linear-gradient(to bottom, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.65) 100%)",
+          }}
+        />
+      </div>
+
       {/* Background Particles sieu nhe mượt mà */}
       <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
         <Particles
