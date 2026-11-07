@@ -106,7 +106,7 @@ const CATEGORY_DESC = {
   'run-away': 'Một chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.',
 };
 
-const GalleryPage = ({ category, onBack }) => {
+const GalleryPage = ({ category, onBack, theme, heroTransition, onHeroDone }) => {
   const pageRef = useRef(null);
   const imageRefs = useRef([]);
   const leftColRef = useRef(null);
@@ -117,6 +117,8 @@ const GalleryPage = ({ category, onBack }) => {
   const [lightboxOriginRect, setLightboxOriginRect] = useState(null);
   const [liftedPhotoIndex, setLiftedPhotoIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
+  const [heroStyle, setHeroStyle] = useState(null);
+  const [heroActive, setHeroActive] = useState(false);
 
   const handleOpenLightbox = useCallback((index, e) => {
     // Capture exact <img> element bounding rect for true FLIP animation
@@ -182,6 +184,63 @@ const GalleryPage = ({ category, onBack }) => {
       });
     });
   }, [category]);
+
+  // Hero shared-element transition effect
+  useEffect(() => {
+    if (!heroTransition?.rect || !heroTransition?.src) {
+      setHeroStyle(null);
+      setHeroActive(false);
+      return;
+    }
+
+    const r = heroTransition.rect;
+
+    // Start: position at carousel location
+    setHeroStyle({
+      position: 'fixed',
+      left: r.left + 'px',
+      top: r.top + 'px',
+      width: r.width + 'px',
+      height: r.height + 'px',
+      zIndex: 9999,
+      objectFit: 'cover',
+      borderRadius: '12px',
+      transition: 'none',
+      opacity: 1,
+      pointerEvents: 'none',
+    });
+    setHeroActive(false);
+
+    // After 2 frames, animate to destination (top of gallery, full viewport width)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setHeroStyle({
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          width: '100vw',
+          height: '55vh',
+          zIndex: 9999,
+          objectFit: 'cover',
+          borderRadius: '0px',
+          transition: 'all 700ms cubic-bezier(0.16, 1, 0.3, 1)',
+          opacity: 0.85,
+          pointerEvents: 'none',
+        });
+        setHeroActive(true);
+
+        // After animation finishes, fade out hero
+        setTimeout(() => {
+          setHeroStyle(prev => prev ? { ...prev, opacity: 0, transition: 'opacity 300ms ease' } : null);
+          setTimeout(() => {
+            setHeroStyle(null);
+            setHeroActive(false);
+            onHeroDone?.();
+          }, 350);
+        }, 750);
+      });
+    });
+  }, [heroTransition]);
 
   // Scroll spy (update active index by IntersectionObserver on left column)
   useEffect(() => {
@@ -423,6 +482,16 @@ const GalleryPage = ({ category, onBack }) => {
             setActivePhotoIndex(idx);
             setLiftedPhotoIndex(idx);
           }}
+        />
+      )}
+
+      {/* Hero shared-element transition overlay */}
+      {heroStyle && heroTransition?.src && (
+        <img
+          src={heroTransition.src}
+          alt="hero transition"
+          style={heroStyle}
+          aria-hidden="true"
         />
       )}
     </div>

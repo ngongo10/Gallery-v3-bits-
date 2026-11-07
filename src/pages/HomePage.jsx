@@ -63,7 +63,7 @@ const HomePage = ({
   }, []);
 
   // ── Art mode category select ──────────────────────────────────────────
-  const handleCategorySelect = useCallback((itemOrCat) => {
+  const handleCategorySelect = useCallback((itemOrCat, heroInfo) => {
     let target = selectedCategory;
     if (itemOrCat) {
       if (itemOrCat.category) {
@@ -73,7 +73,7 @@ const HomePage = ({
         target = itemOrCat;
       }
     }
-    if (onCategorySelect) onCategorySelect(target);
+    if (onCategorySelect) onCategorySelect(target, heroInfo);
   }, [selectedCategory, onCategorySelect]);
 
   // ── Memories mode item click → find category and open gallery ──────────
@@ -81,7 +81,7 @@ const HomePage = ({
     // item has: id, image, title, category (cat id), categoryLabel, mode
     const cat = memoriesCategories.find((c) => c.id === item.category);
     if (cat && onCategorySelect) {
-      onCategorySelect(cat);
+      onCategorySelect(cat, null);
     }
   };
 

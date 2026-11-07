@@ -75,9 +75,13 @@ export default function MobileWorksWheelHome({
           gap={14}
           radius={16}
           fit="portrait"
-          onSelect={(index, item) => {
+          onSelect={(index, item, canvasRect) => {
             if (item?.category) {
-              onCategorySelect?.(item.category);
+              const heroInfo = {
+                src: item.src,
+                rect: canvasRect || null,
+              };
+              onCategorySelect?.(item.category, heroInfo);
             }
           }}
           className="w-full h-full"

@@ -42,6 +42,7 @@ function App() {
   const [navActiveIndex, setNavActiveIndex] = useState(0);
 
   const [isExitingHome, setIsExitingHome] = useState(false);
+  const [heroTransition, setHeroTransition] = useState(null); // { src, rect }
   const exitTimerRef = useRef(null);
   const loaderDoneRef = useRef(false);
 
@@ -160,17 +161,18 @@ function App() {
     ];
   }, [mobile]);
 
-  const handleCategorySelect = useCallback((category) => {
+  const handleCategorySelect = useCallback((category, heroInfo) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setSelectedCategory(category);
     setIsExitingHome(true);
+    setHeroTransition(heroInfo || null);
 
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
     exitTimerRef.current = setTimeout(() => {
       setCurrentPage('gallery');
       setIsTransitioning(false);
-    }, HOME_EXIT_MS);
+    }, 650); // Reduced from 1200ms for snappier feel with hero transition
   }, [isTransitioning]);
 
   const handleBack = useCallback(() => {
@@ -312,7 +314,13 @@ function App() {
           )}
           {currentPage === 'gallery' && selectedCategory && (
             <Suspense fallback={null}>
-              <GalleryPage theme={theme} category={selectedCategory} onBack={handleBack} />
+              <GalleryPage
+                theme={theme}
+                category={selectedCategory}
+                onBack={handleBack}
+                heroTransition={heroTransition}
+                onHeroDone={() => setHeroTransition(null)}
+              />
             </Suspense>
           )}
         </ErrorBoundary>

@@ -1094,7 +1094,8 @@ export const FlexCarousel = ({
       const hit = instances.find(inst => x >= inst.x0 && x <= inst.x1 && y >= inst.y0 && y <= inst.y1);
       if (!hit) return;
       if (hit.index === activeIndex && Math.abs(goal - pos) < 2) {
-        callbacksRef.current.onSelect?.(hit.index, itemsRef.current[hit.index]);
+        const containerRect = containerRef.current?.getBoundingClientRect();
+        callbacksRef.current.onSelect?.(hit.index, itemsRef.current[hit.index], containerRect);
         if (s.focusOnClick) openFocus(hit.index);
       } else {
         const rel = (hit.x0 + hit.x1) / 2 - width / 2;
@@ -1174,7 +1175,7 @@ export const FlexCarousel = ({
       } else if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         if (closeFocus() || activeIndex < 0) return;
-        callbacksRef.current.onSelect?.(activeIndex, itemsRef.current[activeIndex]);
+        callbacksRef.current.onSelect?.(activeIndex, itemsRef.current[activeIndex], containerRef.current?.getBoundingClientRect());
         if (s.focusOnClick) openFocus(activeIndex);
       }
     };
@@ -1262,12 +1263,14 @@ export const FlexCarousel = ({
             {current.title || current.alt}
             {current.subtitle && <span className="flex-carousel__subtitle">{current.subtitle}</span>}
           </span>
-          <span className="flex-carousel__count" data-hidden={focusOpen ? '' : undefined}>
-            <Digits value={active + 1} />
-            <span className="flex-carousel__slash">/</span>
-            <span>{String(list.length).padStart(2, '0')}</span>
-          </span>
         </div>
+      )}
+      {captions && current && revealed && (
+        <span className="flex-carousel__count" aria-hidden="true" data-hidden={focusOpen ? '' : undefined}>
+          <Digits value={active + 1} />
+          <span className="flex-carousel__slash">/</span>
+          <span>{String(list.length).padStart(2, '00')}</span>
+        </span>
       )}
       <div className="flex-carousel__live" aria-live="polite" aria-atomic="true">
         {`${label}, ${active + 1} of ${list.length}`}
