@@ -796,8 +796,26 @@ export const FlexCarousel = ({
       }
 
       if (focus.pending >= 0 && mode === 'spring' && Math.abs(goal - pos) < 1.5 && Math.abs(vel) < 30) {
-        if (current === focus.pending) openFocus(current);
-        else focus.pending = -1;
+        if (current === focus.pending) {
+          const targetIndex = focus.pending;
+          focus.pending = -1;
+          openFocus(targetIndex);
+
+          // Nối từ Trường hợp A (xoay về giữa) sang Trường hợp B (chọn & chuyển trang)
+          const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
+          const baseRect = canvasEl?.getBoundingClientRect();
+          const hit = instances.find(inst => inst.index === targetIndex);
+          const cardRect = (baseRect && hit) ? {
+            left: baseRect.left + hit.x0,
+            top: baseRect.top + hit.y0,
+            width: hit.x1 - hit.x0,
+            height: hit.y1 - hit.y0,
+          } : null;
+
+          callbacksRef.current.onSelect?.(targetIndex, itemsRef.current[targetIndex], cardRect);
+        } else {
+          focus.pending = -1;
+        }
       }
 
       if (
