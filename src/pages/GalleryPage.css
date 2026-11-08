@@ -668,11 +668,11 @@
     transform: none;
   }
 
-  .gallery-back-btn,
-  .gallery-info-btn {
-    top: 20px;
-    left: 20px;
-    bottom: auto;
+  .gallery-back-btn {
+    top: auto;
+    bottom: 24px;
+    right: 20px;
+    left: auto;
     transform: none !important;
     transition: none;
     padding: 8px 14px;
@@ -681,9 +681,15 @@
   }
 
   .gallery-info-btn {
-    top: auto;
-    bottom: 24px;
+    top: 20px;
     left: 20px;
+    bottom: auto;
+    right: auto;
+    transform: none !important;
+    transition: none;
+    padding: 8px 14px;
+    font-size: 11px;
+    z-index: 300;
   }
 
   .chry-image-wrapper.medium-size {

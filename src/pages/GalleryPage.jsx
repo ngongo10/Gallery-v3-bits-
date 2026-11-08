@@ -216,31 +216,49 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
       }
 
       requestAnimationFrame(() => {
-        // Đo chính xác phần tử <img> thực tế của ảnh (thay vì khung wrapper)
-        const imgEl = slotEl.querySelector('img');
-        const targetEl = (imgEl && imgEl.naturalWidth > 0 && imgEl.getBoundingClientRect().height > 20) 
-          ? imgEl 
-          : (slotEl.querySelector('.chry-image-wrapper') || slotEl);
-        const rect = targetEl.getBoundingClientRect();
-        slotReportedRef.current = true;
-        console.log('[GalleryPage] toRect (exact img):', JSON.stringify({left: rect.left, top: rect.top, width: rect.width, height: rect.height}));
-        onSlotReady?.({
-          left: rect.left,
-          top: rect.top,
-          width: rect.width,
-          height: rect.height,
-        });
+        const doMeasure = () => {
+          if (slotReportedRef.current) return;
+          // Đo chính xác phần tử <img> thực tế của ảnh (thay vì khung wrapper)
+          const imgEl = slotEl.querySelector('img');
+          let rect = null;
+          if (imgEl) {
+            const r = imgEl.getBoundingClientRect();
+            if (r.width > 20 && r.height > 20) {
+              rect = r;
+            }
+          }
+          if (!rect) {
+            const targetEl = slotEl.querySelector('.chry-image-wrapper') || slotEl;
+            rect = targetEl.getBoundingClientRect();
+          }
 
-        // Chờ 1100ms: Để bước căn chỉnh co giãn (Crop Grippers) hoàn thành,
-        // sau đó mới kích hoạt phát sáng (glow) và dán ảnh gallery
-        setTimeout(() => {
-          onHeroLand?.();
+          slotReportedRef.current = true;
+          onSlotReady?.({
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height,
+          });
+
+          // Chờ 1100ms: Để bước căn chỉnh co giãn (Crop Grippers) hoàn thành,
+          // sau đó mới kích hoạt phát sáng (glow) và dán ảnh gallery
           setTimeout(() => {
-            setHeroSlotHidden(false);
-            const slotItemEl = heroSlotRef.current;
-            if (slotItemEl) slotItemEl.classList.add('is-in-view');
-          }, 320);
-        }, 1100);
+            onHeroLand?.();
+            setTimeout(() => {
+              setHeroSlotHidden(false);
+              const slotItemEl = heroSlotRef.current;
+              if (slotItemEl) slotItemEl.classList.add('is-in-view');
+            }, 320);
+          }, 1100);
+        };
+
+        const imgEl = slotEl.querySelector('img');
+        if (imgEl && (!imgEl.complete || imgEl.naturalWidth === 0)) {
+          imgEl.addEventListener('load', () => requestAnimationFrame(doMeasure), { once: true });
+          imgEl.addEventListener('error', () => requestAnimationFrame(doMeasure), { once: true });
+        } else {
+          doMeasure();
+        }
       });
     }, 400);
   }, [heroSrc, category, onSlotReady, onHeroLand]);

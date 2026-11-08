@@ -53,11 +53,11 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
         willChange: 'left, top, width, height, box-shadow, opacity, transform',
       });
 
-      // Nhấc bổng lơ lửng 3D nhẹ, ghim cố định trên không gian
+      // Nhấc bổng lơ lửng, ghim cố định trên không gian (loại bỏ rotateX/rotateY để không bị đường chéo aliasing trên mobile)
       requestAnimationFrame(() => {
         setStyle(prev => prev ? {
           ...prev,
-          transform: 'perspective(1000px) rotateX(-5deg) rotateY(2deg) scale(1.04) translateY(-8px)',
+          transform: 'scale(1.04) translateY(-8px)',
           transformOrigin: 'center center',
           boxShadow: '0 28px 60px rgba(0,0,0,0.55), 0 0 25px rgba(255,255,255,0.2)',
           transition: 'transform 360ms cubic-bezier(0.16,1,0.3,1), box-shadow 360ms ease',
@@ -82,7 +82,7 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
         top: `${preTop}px`,
         width: `${fr.width}px`,
         height: `${fr.height}px`,
-        transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateY(0px)',
+        transform: 'scale(1) translateY(0px)',
         borderRadius: '8px',
         boxShadow: '0 20px 45px rgba(0,0,0,0.45)',
         transition: [
@@ -183,13 +183,13 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
     >
       {/* Ảnh đang được bóc gỡ & co dãn */}
       <img
-        src={heroTransition.src}
+        src={heroTransition.rawCover || heroTransition.src}
         alt="Hero transition"
         aria-hidden="true"
         style={{
           width: '100%',
           height: '100%',
-          objectFit: 'cover',
+          objectFit: cropState.adjusting ? 'contain' : 'cover',
           borderRadius: style.borderRadius || '8px',
           boxShadow: style.boxShadow,
           opacity: style.opacity ?? 1,
