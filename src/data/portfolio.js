@@ -1,5 +1,5 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-10-26T15:38:28.131357Z
+// Generated: 2026-11-12T07:00:13.264873Z
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
@@ -13,7 +13,7 @@ export const categories = [
     "id": "chan-dung",
     "label": "Chân Dung",
     "mode": "art",
-    "cover": cloudinaryUrl("/Still_2026-09-05_010136_1.4.1") ,
+    "cover": cloudinaryUrl("/20210505-DSC00820") ,
     "items": [
       {
         "id": "chan-dung-0",

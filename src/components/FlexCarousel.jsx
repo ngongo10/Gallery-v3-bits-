@@ -802,17 +802,20 @@ export const FlexCarousel = ({
           openFocus(targetIndex);
 
           // Nối từ Trường hợp A (xoay về giữa) sang Trường hợp B (chọn & chuyển trang)
-          const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
-          const baseRect = canvasEl?.getBoundingClientRect();
-          const hit = instances.find(inst => inst.index === targetIndex);
-          const cardRect = (baseRect && hit) ? {
-            left: baseRect.left + hit.x0,
-            top: baseRect.top + hit.y0,
-            width: hit.x1 - hit.x0,
-            height: hit.y1 - hit.y0,
-          } : null;
+          // Đợi 2 ảnh bên dạt ra và ảnh chính phóng to hoàn tất (~850ms), sau đó mới kích hoạt chuyển trang
+          setTimeout(() => {
+            const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
+            const baseRect = canvasEl?.getBoundingClientRect();
+            const hit = instances.find(inst => inst.index === targetIndex);
+            const cardRect = (baseRect && hit) ? {
+              left: baseRect.left + hit.x0,
+              top: baseRect.top + hit.y0,
+              width: hit.x1 - hit.x0,
+              height: hit.y1 - hit.y0,
+            } : null;
 
-          callbacksRef.current.onSelect?.(targetIndex, itemsRef.current[targetIndex], cardRect);
+            callbacksRef.current.onSelect?.(targetIndex, itemsRef.current[targetIndex], cardRect);
+          }, 850);
         } else {
           focus.pending = -1;
         }
@@ -1112,18 +1115,21 @@ export const FlexCarousel = ({
       const hit = instances.find(inst => x >= inst.x0 && x <= inst.x1 && y >= inst.y0 && y <= inst.y1);
       if (!hit) return;
       if (hit.index === activeIndex && Math.abs(goal - pos) < 2) {
-        // Use canvas element rect for precise absolute position
-        // (canvas is prepended to container and fills it exactly)
-        const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
-        const baseRect = canvasEl?.getBoundingClientRect();
-        const cardRect = baseRect ? {
-          left: baseRect.left + hit.x0,
-          top: baseRect.top + hit.y0,
-          width: hit.x1 - hit.x0,
-          height: hit.y1 - hit.y0,
-        } : null;
-        callbacksRef.current.onSelect?.(hit.index, itemsRef.current[hit.index], cardRect);
+        // Mở focus để đẩy 2 ảnh 2 bên dạt ra xa và ảnh chính phóng to lên
         if (s.focusOnClick) openFocus(hit.index);
+
+        // Đợi 2 ảnh bên dạt ra hoàn tất (~850ms), sau đó mới kích hoạt onSelect chuyển trang
+        setTimeout(() => {
+          const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
+          const baseRect = canvasEl?.getBoundingClientRect();
+          const cardRect = baseRect ? {
+            left: baseRect.left + hit.x0,
+            top: baseRect.top + hit.y0,
+            width: hit.x1 - hit.x0,
+            height: hit.y1 - hit.y0,
+          } : null;
+          callbacksRef.current.onSelect?.(hit.index, itemsRef.current[hit.index], cardRect);
+        }, 850);
       } else {
         const rel = (hit.x0 + hit.x1) / 2 - width / 2;
         goal = snapPoint(m, pos + rel);

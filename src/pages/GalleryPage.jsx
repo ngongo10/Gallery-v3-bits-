@@ -118,6 +118,7 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
   const [liftedPhotoIndex, setLiftedPhotoIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
   const [heroSlotHidden, setHeroSlotHidden] = useState(Boolean(heroSrc));
+  const [heroRevealed, setHeroRevealed] = useState(Boolean(heroSrc));
   const heroSlotRef = useRef(null);
   const slotReportedRef = useRef(false);
 
@@ -205,8 +206,8 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
 
     setHeroSlotHidden(true);
 
-    // Chờ 400ms để trang Gallery trượt từ phải vào màn hình ổn định
-    // Trong thời gian này tấm ảnh vẫn đang ghim lơ lửng phía trên
+    // Chờ 680ms để trang Gallery hoàn tất trượt translateX(100% -> 0) ổn định
+    // (CSS transition là 650ms, đợi 680ms đảm bảo trang đứng im hoàn toàn trước khi đo)
     setTimeout(() => {
       const slotEl = heroSlotRef.current;
       if (!slotEl) return;
@@ -240,15 +241,12 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
             height: rect.height,
           });
 
-          // Chờ 1100ms: Để bước căn chỉnh co giãn (Crop Grippers) hoàn thành,
-          // sau đó mới kích hoạt phát sáng (glow) và dán ảnh gallery
+          // Sau khi hoàn thành bay & căn chỉnh, kích hoạt land
           setTimeout(() => {
             onHeroLand?.();
-            setTimeout(() => {
-              setHeroSlotHidden(false);
-              const slotItemEl = heroSlotRef.current;
-              if (slotItemEl) slotItemEl.classList.add('is-in-view');
-            }, 320);
+            setHeroSlotHidden(false);
+            const slotItemEl = heroSlotRef.current;
+            if (slotItemEl) slotItemEl.classList.add('is-in-view');
           }, 1100);
         };
 
@@ -260,7 +258,7 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
           doMeasure();
         }
       });
-    }, 400);
+    }, 680);
   }, [heroSrc, category, onSlotReady, onHeroLand]);
 
   // Scroll spy (update active index by IntersectionObserver on left column)
@@ -398,8 +396,8 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
                     imageRefs.current[i] = el;
                     if (i === heroSlotIdx) heroSlotRef.current = el;
                   }}
-                  className="chry-mobile-item"
-                  style={i === heroSlotIdx && heroSlotHidden ? { opacity: 0 } : undefined}
+                  className={`chry-mobile-item${i === heroSlotIdx ? ' is-in-view' : ''}${i === heroSlotIdx && heroRevealed ? ' hero-revealed' : ''}`}
+                  style={i === heroSlotIdx && heroSlotHidden ? { visibility: 'hidden' } : undefined}
                 >
                   <div
                     className="chry-image-wrapper medium-size"
