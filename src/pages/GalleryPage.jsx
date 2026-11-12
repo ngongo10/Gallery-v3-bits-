@@ -106,7 +106,7 @@ const CATEGORY_DESC = {
   'run-away': 'Một chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.',
 };
 
-const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, onHeroLand }) => {
+const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, isLandscape = true, onSlotReady, onHeroLand }) => {
   const pageRef = useRef(null);
   const imageRefs = useRef([]);
   const leftColRef = useRef(null);
@@ -199,9 +199,15 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
     });
   }, [category]);
 
-  // Locate target slot, hide slot & report bounding rect for FLIP
+  // Locate target slot, hide slot & report bounding rect for FLIP (chỉ dùng cho ảnh ngang)
   useEffect(() => {
     if (!heroSrc || !category?.items?.length || slotReportedRef.current) return;
+
+    // Nếu là ảnh dọc: Không ẩn ô slot, để ô ảnh hưởng chung hiệu ứng fade-up đồng nhất cùng trang gallery
+    if (!isLandscape) {
+      setHeroSlotHidden(false);
+      return;
+    }
 
     setHeroSlotHidden(true);
 
@@ -335,7 +341,7 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
   if (!category) return null;
 
   return (
-    <div className={`gallery-page${isMobile ? ' gallery-page--mobile' : ''}`} ref={pageRef}>
+    <div className={`gallery-page${isMobile ? ' gallery-page--mobile' : ''}${isMobile && !isLandscape ? ' gallery-page--portrait-mode' : ''}`} ref={pageRef}>
       {/* Back button */}
       <button
         className="gallery-back-btn"

@@ -43,13 +43,42 @@
 }
 
 .loader-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.02em;
   font-family: 'Inter', sans-serif;
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   margin: 0;
   line-height: 1.1;
+  color: #0a0a0c;
+}
+
+.loader-letter {
+  display: inline-block;
+}
+
+.loader-letter--plain {
+  color: #0a0a0c;
+}
+
+[data-theme="dark"] .loader-letter--plain {
+  color: #ffffff;
+}
+
+.loader-letter--cyan {
+  color: #38BDF8;
+}
+
+.loader-letter--silver {
+  color: #94A3B8;
+}
+
+.loader-letter--rose {
+  color: #F43F5E;
 }
 
 .loader-subtitle {

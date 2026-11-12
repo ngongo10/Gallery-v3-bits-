@@ -250,6 +250,8 @@ export default function HomeMosaic({ items = [], onItemClick }) {
     // Camera 3D Fly-In
     const targetZ = currentChapterRef.current * CHAPTER_Z_SPACING;
     cameraZRef.current.z = targetZ - 2200;
+    isLeavingPageRef.current = false;
+    transitionStateRef.current = { tx: 0, ty: 0, scale: 1, opacity: 1 };
     gsap.to(cameraZRef.current, {
       z: targetZ,
       duration: 1.6,

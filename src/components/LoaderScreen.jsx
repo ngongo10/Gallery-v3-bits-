@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import Strands from '../components/Strands';
-import GradientText from '../components/GradientText';
 import { categories } from '../data/portfolio';
 import { buildSrc } from '../utils/cloudinary';
 import './LoaderScreen.css';
@@ -155,13 +154,18 @@ export default function LoaderScreen({ onComplete }) {
 
       <div className="loader-content">
         <div className="loader-brand">
-          <GradientText
-            colors={['#25dfff', '#ff004a', '#a855f7', '#25dfff']}
-            animationSpeed={5}
-            showBorder={false}
-          >
-            <h1 className="loader-title">JUBISATAKA</h1>
-          </GradientText>
+          <h1 className="loader-title" aria-label="JUBISATAKA">
+            <span className="loader-letter loader-letter--plain">J</span>
+            <span className="loader-letter loader-letter--plain">U</span>
+            <span className="loader-letter loader-letter--plain">B</span>
+            <span className="loader-letter loader-letter--plain">I</span>
+            <span className="loader-letter loader-letter--plain">S</span>
+            <span className="loader-letter loader-letter--cyan">A</span>
+            <span className="loader-letter loader-letter--plain">T</span>
+            <span className="loader-letter loader-letter--silver">A</span>
+            <span className="loader-letter loader-letter--plain">K</span>
+            <span className="loader-letter loader-letter--rose">A</span>
+          </h1>
         </div>
 
         <p className="loader-subtitle">Visual Artist Portfolio</p>

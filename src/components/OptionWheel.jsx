@@ -243,6 +243,9 @@ const OptionWheel = ({
     audio.play()?.catch(() => {});
   }, []);
 
+  // Ref lưu trạng thái spring bounce khi vượt biên
+  const springRef = useRef(null);
+
   const applyTarget = useCallback(
     (value, snap) => {
       const cfg = cfgRef.current;
@@ -317,11 +320,27 @@ const OptionWheel = ({
 
         // Step sensitivity: in horizontal watch dial, 70px drag moves 1 index
         const stepPx = isHoriz ? 70 : cfgRef.current.rowH;
-        const newPos = drag.start + delta / stepPx;
+        const cfg = cfgRef.current;
+        const rawPos = drag.start + delta / stepPx;
+
+        // Rubber-band resistance khi kéo vượt biên — không phải loop
+        let newPos = rawPos;
+        if (!cfg.loop) {
+          const minBound = 0;
+          const maxBound = Math.max(cfg.count - 1, 0);
+          const OVERSCROLL = 1.0; // tối đa 1 slot overshoot
+          if (rawPos < minBound) {
+            const excess = minBound - rawPos;
+            newPos = minBound - Math.min(excess * 0.35, OVERSCROLL);
+          } else if (rawPos > maxBound) {
+            const excess = rawPos - maxBound;
+            newPos = maxBound + Math.min(excess * 0.35, OVERSCROLL);
+          }
+        }
+
         posRef.current = newPos;
         targetRef.current = newPos;
 
-        const cfg = cfgRef.current;
         const idx = ((Math.round(newPos) % cfg.count) + cfg.count) % cfg.count;
         if (idx !== selectedRef.current) {
           selectedRef.current = idx;
@@ -354,7 +373,16 @@ const OptionWheel = ({
       }
       velocity = Math.max(-25, Math.min(25, velocity));
       const momentumDistance = velocity * 0.12;
-      const projected = posRef.current + momentumDistance;
+      let projected = posRef.current + momentumDistance;
+
+      const cfg = cfgRef.current;
+      // Clamp projected về biên trước khi snap
+      if (!cfg.loop) {
+        const minBound = 0;
+        const maxBound = Math.max(cfg.count - 1, 0);
+        projected = Math.min(Math.max(projected, minBound), maxBound);
+      }
+
       const snapped = Math.round(projected);
       applyTarget(snapped, true);
     }

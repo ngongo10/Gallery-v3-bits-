@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useEffect, useRef, useMemo, useCallback } from "react";
-import MobileWorksWheelHome from "../components/MobileWorksWheelHome";
+import MobileCategoryHome from "../components/MobileCategoryHome";
 
 import ModeLoadingOverlay from "../components/ModeLoadingOverlay";
 import { categories, allItems } from "../data/portfolio";
@@ -63,7 +63,7 @@ const HomePage = ({
   }, []);
 
   // ── Art mode category select ──────────────────────────────────────────
-  const handleCategorySelect = useCallback((itemOrCat, heroInfo) => {
+  const handleCategorySelect = useCallback((itemOrCat) => {
     let target = selectedCategory;
     if (itemOrCat) {
       if (itemOrCat.category) {
@@ -73,7 +73,7 @@ const HomePage = ({
         target = itemOrCat;
       }
     }
-    if (onCategorySelect) onCategorySelect(target, heroInfo);
+    if (onCategorySelect) onCategorySelect(target);
   }, [selectedCategory, onCategorySelect]);
 
   // ── Memories mode item click → find category and open gallery ──────────
@@ -81,7 +81,7 @@ const HomePage = ({
     // item has: id, image, title, category (cat id), categoryLabel, mode
     const cat = memoriesCategories.find((c) => c.id === item.category);
     if (cat && onCategorySelect) {
-      onCategorySelect(cat, null);
+      onCategorySelect(cat);
     }
   };
 
@@ -96,17 +96,16 @@ const HomePage = ({
   const effectiveMode = transitioning ? mode : mode; // current visible mode
 
   return (
-    <div className={`home-page home-page--${effectiveMode}${isExiting ? " is-exiting-to-gallery" : ""}`}>
+    <div className={`home-page home-page--${effectiveMode}`}>
 
 
       {/* ── ART / WORK mode ── */}
       {effectiveMode === "art" && (
         <>
           {isMobile ? (
-            /* ── Mobile: Works Wheel Portfolio Index (Ring to Drum 3D Wheel) ── */
-            <MobileWorksWheelHome
+            /* ── Mobile: editorial vertical album list ── */
+            <MobileCategoryHome
               categories={artCategories}
-              allItems={allItems}
               onCategorySelect={handleCategorySelect}
               theme={theme}
             />

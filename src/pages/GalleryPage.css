@@ -631,6 +631,18 @@
     transform: translateX(0);
   }
 
+  /* Khi tấm ảnh là ảnh dọc: Gallery fade in từ dưới màn hình lên */
+  .gallery-page.gallery-page--portrait-mode {
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.65s ease;
+  }
+
+  .gallery-page.gallery-page--portrait-mode.gallery-page--entered {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
   .gallery-blurred-bg {
     display: none;
   }

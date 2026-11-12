@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { FlexCarousel } from "./FlexCarousel";
 import { Particles } from "./ui/Particles";
 import { buildSrc } from "../utils/cloudinary";
@@ -7,8 +7,18 @@ export default function MobileWorksWheelHome({
   categories = [],
   allItems = [],
   onCategorySelect,
+  isExiting = false,
   theme = "light",
 }) {
+  const carouselRef = useRef(null);
+
+  useEffect(() => {
+    // Khi người dùng bấm BACK từ Gallery về Home, reset lại trạng thái focus
+    // để 2 ảnh hai bên khép lại và toàn bộ carousel trở lại bình thường
+    if (!isExiting && carouselRef.current?.resetFocus) {
+      carouselRef.current.resetFocus();
+    }
+  }, [isExiting]);
   const carouselItems = useMemo(() => {
     const artCats = categories.filter((c) => c.mode === "art");
     const sourceCats = artCats.length > 0 ? artCats : categories;
@@ -63,6 +73,7 @@ export default function MobileWorksWheelHome({
         style={{ transform: "translateY(5%)" }}
       >
         <FlexCarousel
+          ref={carouselRef}
           items={carouselItems}
           preset="arch"
           dispersion={2.5}
@@ -77,12 +88,32 @@ export default function MobileWorksWheelHome({
           fit="portrait"
           onSelect={(index, item, cardRect) => {
             if (item?.category) {
-              const heroInfo = {
-                src: item.src,
-                rawCover: item.category.cover || item.category.items?.[0]?.image || "",
-                fromRect: cardRect || null,
+              const rawCover = item.category.cover || item.category.items?.[0]?.image || "";
+              
+              // Kiểm tra tỉ lệ ảnh thực tế của tấm ảnh (ảnh ngang vs ảnh dọc)
+              const img = new Image();
+              img.src = rawCover || item.src;
+              const handleWithOrientation = (isLandscape) => {
+                const heroInfo = {
+                  src: item.src,
+                  rawCover,
+                  fromRect: cardRect || null,
+                  isLandscape, // true: ảnh ngang, false: ảnh dọc
+                };
+                onCategorySelect?.(item.category, heroInfo);
               };
-              onCategorySelect?.(item.category, heroInfo);
+
+              if (img.complete && img.naturalWidth > 0) {
+                handleWithOrientation(img.naturalWidth >= img.naturalHeight);
+              } else {
+                img.onload = () => {
+                  handleWithOrientation(img.naturalWidth >= img.naturalHeight);
+                };
+                img.onerror = () => {
+                  // Mặc định fallback là ảnh dọc nếu không load được
+                  handleWithOrientation(false);
+                };
+              }
             }
           }}
           className="w-full h-full"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import { Renderer, Program, Mesh, Triangle, Plane, Texture, RenderTarget } from 'ogl';
 
 import './FlexCarousel.css';
@@ -264,7 +264,7 @@ const Digits = ({ value }) => (
   </span>
 );
 
-export const FlexCarousel = ({
+export const FlexCarousel = forwardRef(({
   items = DEFAULT_ITEMS,
   preset = 'liquid',
   intro = 'rise',
@@ -292,7 +292,7 @@ export const FlexCarousel = ({
   onSelect,
   className = '',
   style
-}) => {
+}, ref) => {
   const containerRef = useRef(null);
   const settingsRef = useRef(null);
   const itemsRef = useRef(items);
@@ -301,6 +301,12 @@ export const FlexCarousel = ({
   const [active, setActive] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [focusOpen, setFocusOpen] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    resetFocus: (targetIdx) => {
+      engineRef.current?.resetFocus(targetIdx);
+    }
+  }));
 
   const base = BEND_PRESETS[preset] || BEND_PRESETS.liquid;
   const pick = (value, key) => (value === undefined || value === null ? base[key] : value);
@@ -624,8 +630,21 @@ export const FlexCarousel = ({
       start();
     };
 
-    const closeFocus = () => {
+    const closeFocus = (targetIdx) => {
       focus.pending = -1;
+      const s = settingsRef.current;
+      if (s) {
+        const m = metrics(s);
+        const idxToCenter = typeof targetIdx === 'number' && targetIdx >= 0 ? targetIdx : (focus.index >= 0 ? focus.index : activeIndex);
+        if (idxToCenter >= 0 && m.centers[idxToCenter] !== undefined) {
+          const targetPos = m.centers[idxToCenter];
+          pos = targetPos;
+          goal = targetPos;
+          vel = 0;
+          activeIndex = idxToCenter;
+          setActive(idxToCenter);
+        }
+      }
       if (focus.target === 0) return false;
       focus.target = 0;
       setFocusOpen(false);
@@ -802,17 +821,20 @@ export const FlexCarousel = ({
           openFocus(targetIndex);
 
           // Nối từ Trường hợp A (xoay về giữa) sang Trường hợp B (chọn & chuyển trang)
-          const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
-          const baseRect = canvasEl?.getBoundingClientRect();
-          const hit = instances.find(inst => inst.index === targetIndex);
-          const cardRect = (baseRect && hit) ? {
-            left: baseRect.left + hit.x0,
-            top: baseRect.top + hit.y0,
-            width: hit.x1 - hit.x0,
-            height: hit.y1 - hit.y0,
-          } : null;
+          // Đợi 2 ảnh bên dạt ra xong và giữ ảnh chính hiện lên 1 lúc (1.2s), sau đó mới kích hoạt chuyển trang
+          setTimeout(() => {
+            const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
+            const baseRect = canvasEl?.getBoundingClientRect();
+            const hit = instances.find(inst => inst.index === targetIndex);
+            const cardRect = (baseRect && hit) ? {
+              left: baseRect.left + hit.x0,
+              top: baseRect.top + hit.y0,
+              width: hit.x1 - hit.x0,
+              height: hit.y1 - hit.y0,
+            } : null;
 
-          callbacksRef.current.onSelect?.(targetIndex, itemsRef.current[targetIndex], cardRect);
+            callbacksRef.current.onSelect?.(targetIndex, itemsRef.current[targetIndex], cardRect);
+          }, 1200);
         } else {
           focus.pending = -1;
         }
@@ -1112,18 +1134,21 @@ export const FlexCarousel = ({
       const hit = instances.find(inst => x >= inst.x0 && x <= inst.x1 && y >= inst.y0 && y <= inst.y1);
       if (!hit) return;
       if (hit.index === activeIndex && Math.abs(goal - pos) < 2) {
-        // Use canvas element rect for precise absolute position
-        // (canvas is prepended to container and fills it exactly)
-        const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
-        const baseRect = canvasEl?.getBoundingClientRect();
-        const cardRect = baseRect ? {
-          left: baseRect.left + hit.x0,
-          top: baseRect.top + hit.y0,
-          width: hit.x1 - hit.x0,
-          height: hit.y1 - hit.y0,
-        } : null;
-        callbacksRef.current.onSelect?.(hit.index, itemsRef.current[hit.index], cardRect);
+        // Mở focus để đẩy 2 ảnh bên dạt ra ngay lập tức
         if (s.focusOnClick) openFocus(hit.index);
+
+        // Giữ ảnh chính hiện lên ở giữa trong 1 lúc (1.2s), sau đó mới phát tín hiệu onSelect để dạt lên
+        setTimeout(() => {
+          const canvasEl = containerRef.current?.querySelector('canvas') || containerRef.current;
+          const baseRect = canvasEl?.getBoundingClientRect();
+          const cardRect = baseRect ? {
+            left: baseRect.left + hit.x0,
+            top: baseRect.top + hit.y0,
+            width: hit.x1 - hit.x0,
+            height: hit.y1 - hit.y0,
+          } : null;
+          callbacksRef.current.onSelect?.(hit.index, itemsRef.current[hit.index], cardRect);
+        }, 1200);
       } else {
         const rel = (hit.x0 + hit.x1) / 2 - width / 2;
         goal = snapPoint(m, pos + rel);
@@ -1241,6 +1266,9 @@ export const FlexCarousel = ({
         dirty = true;
         start();
       },
+      resetFocus: (targetIdx) => {
+        closeFocus(targetIdx);
+      },
       setItems
     };
 
@@ -1304,6 +1332,6 @@ export const FlexCarousel = ({
       </div>
     </div>
   );
-};
+});
 
 export default FlexCarousel;

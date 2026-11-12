@@ -5,7 +5,6 @@ import SimpleMobileNav from './components/SimpleMobileNav';
 import AnimatedThemeToggler from './components/AnimatedThemeToggler';
 import FlickeringText from './components/ui/flickering-text';
 import ErrorBoundary from './components/ErrorBoundary';
-import HeroOverlay from './components/HeroOverlay';
 
 import './App.css';
 
@@ -43,9 +42,6 @@ function App() {
   const [navActiveIndex, setNavActiveIndex] = useState(0);
 
   const [isExitingHome, setIsExitingHome] = useState(false);
-  const [heroTransition, setHeroTransition] = useState(null); // { src, fromRect }
-  const [heroPhase, setHeroPhase] = useState(null); // 'peel' | 'fly' | 'land' | null
-  const [heroToRect, setHeroToRect] = useState(null);
   const exitTimerRef = useRef(null);
   const loaderDoneRef = useRef(false);
 
@@ -164,63 +160,32 @@ function App() {
     ];
   }, [mobile]);
 
-  const handleCategorySelect = useCallback((category, heroInfo) => {
+  const handleCategorySelect = useCallback((category) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setSelectedCategory(category);
     setIsExitingHome(true);
 
-    if (heroInfo?.src && heroInfo?.fromRect) {
-      setHeroTransition(heroInfo);
-      setHeroToRect(null);
-      setHeroPhase('peel');
-
-      if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-      // Giữ ảnh lơ lửng, đồng thời mount ngay Gallery để bắt đầu trượt vào từ bên phải
+    if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
+    exitTimerRef.current = setTimeout(() => {
       setCurrentPage('gallery');
-      exitTimerRef.current = setTimeout(() => {
-        setIsTransitioning(false);
-      }, 700);
-    } else {
-      setHeroTransition(null);
-      setHeroPhase(null);
-      if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-      exitTimerRef.current = setTimeout(() => {
-        setCurrentPage('gallery');
-        setIsTransitioning(false);
-      }, 650);
-    }
+      setIsTransitioning(false);
+    }, HOME_EXIT_MS);
   }, [isTransitioning]);
-
-  const handleSlotReady = useCallback((rect) => {
-    setHeroToRect(rect);
-    setHeroPhase('fly');
-  }, []);
-
-  const handleHeroLand = useCallback(() => {
-    setHeroPhase('land');
-  }, []);
-
-  const handleHeroDone = useCallback(() => {
-    setHeroTransition(null);
-    setHeroPhase(null);
-    setHeroToRect(null);
-    setIsExitingHome(false);
-  }, []);
 
   const handleBack = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
-    // Luon quay ve trang Home (index 0) cho ca mobile va desktop
-    setCurrentPage('home');
+    const targetPage = mobile ? 'contact' : 'home';
+    setCurrentPage(targetPage);
     setNavActiveIndex(0);
     setTimeout(() => {
       setIsExitingHome(false);
       setSelectedCategory(null);
       setIsTransitioning(false);
     }, 100);
-  }, [isTransitioning]);
+  }, [isTransitioning, mobile]);
 
   const handleLogoClick = useCallback(() => {
     if (exitTimerRef.current) clearTimeout(exitTimerRef.current);
@@ -228,9 +193,8 @@ function App() {
     setIsExitingHome(false);
     setSelectedCategory(null);
     setIsTransitioning(false);
-    // Luon quay ve trang Home khi click Logo
-    setCurrentPage('home');
-  }, []);
+    setCurrentPage(mobile ? 'contact' : 'home');
+  }, [mobile]);
 
   return (
     <div className="app" data-theme={theme}>
@@ -315,7 +279,7 @@ function App() {
             </div>
           )}
 
-          {currentPage !== 'about' && currentPage !== 'contact' && (currentPage !== 'gallery' || isExitingHome) && (
+          {currentPage !== 'about' && currentPage !== 'contact' && currentPage !== 'gallery' && (
             <div className={`page-wrapper ${isExitingHome ? 'is-gallery-active' : ''}`}>
               <HomePage
                 theme={theme}
@@ -347,27 +311,11 @@ function App() {
           )}
           {currentPage === 'gallery' && selectedCategory && (
             <Suspense fallback={null}>
-              <GalleryPage
-                theme={theme}
-                category={selectedCategory}
-                onBack={handleBack}
-                heroSrc={heroTransition?.src || null}
-                rawCover={heroTransition?.rawCover || null}
-                onSlotReady={handleSlotReady}
-                onHeroLand={handleHeroLand}
-              />
+              <GalleryPage theme={theme} category={selectedCategory} onBack={handleBack} />
             </Suspense>
           )}
         </ErrorBoundary>
       )}
-
-      {/* Hero shared-element transition overlay (Peel -> Fly -> Glow Land) */}
-      <HeroOverlay
-        heroTransition={heroTransition}
-        toRect={heroToRect}
-        phase={heroPhase}
-        onLandDone={handleHeroDone}
-      />
     </div>
   );
 }

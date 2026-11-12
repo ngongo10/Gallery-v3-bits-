@@ -26,6 +26,12 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
       return;
     }
 
+    // Nếu là ảnh dọc: Không dùng HeroOverlay (để trang Gallery tự fade in từ dưới lên và giữ ảnh hiển thị ở trên)
+    if (heroTransition.isLandscape === false) {
+      setStyle(null);
+      return;
+    }
+
     const r = heroTransition.fromRect;
     if (phase === 'peel') {
       fromRectRef.current = r;
