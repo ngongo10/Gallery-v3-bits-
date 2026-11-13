@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GlassFolder from '../components/ui/glass-folder-cards';
 import ReflectBackground from '../components/lightswind/reflect-background';
 import ImageLightbox from '../components/ImageLightbox';
@@ -9,9 +9,10 @@ import './ContactPage.css';
 const shopProducts = [
   {
     id: 'pkg-chup',
-    title: 'Gói chụp',
+    title: 'Gói chụp cơ bản',
     subtitle: 'Phù hợp với các nhu cầu chụp ảnh cá nhân, đời sống, kỷ niệm và concept đơn giản.',
     priceLine: '399.000 🐟 / buổi\nƯu đãi chỉ từ 149.000🐟/h',
+    originalPrice: '189.000🐟/h',
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790935995/DSC00990.avif',
     art: 'glacier',
     defaultAlbumId: 'chan-dung',
@@ -192,7 +193,7 @@ const serviceTerms = [
   {
     title: 'TRẢ SẢN PHẨM VÀ CHỈNH SỬA',
     items: [
-      'Ảnh gốc sẽ được trả trong vòng 48 giờ kể từ khi kết thúc buổi chụp.',
+      'Ảnh gốc sẽ được trả trong vòng 72h kể từ khi kết thúc buổi chụp.',
       'Ảnh hoàn thiện sẽ được trả theo lịch hẹn trên gói chụp. Thời gian tính từ lúc khách hàng hoàn thành việc chọn ảnh.',
       'Photographer hỗ trợ chỉnh sửa tối đa 3 lần theo Concept/Style ban đầu. Mọi yêu cầu chỉnh sửa quá số lần hoặc thay đổi Concept/Style khác sẽ tính thêm phí.',
     ],
@@ -222,6 +223,13 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
   const [activeModal, setActiveModal] = useState(null);
   // previewImage: { src, alt } | null
   const [previewImage, setPreviewImage] = useState(null);
+  // Delay nội dung nặng để GooeyNav animation chạy xong trước (~650ms)
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 650);
+    return () => clearTimeout(t);
+  }, []);
 
   const handleContact = (product) => {
     window.open('https://zalo.me/0348007036', '_blank', 'noopener,noreferrer');
@@ -282,7 +290,14 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                 <strong>Ghi chú:</strong> {activeModal.product.pricingDetail.note}
               </div>
               <div className="contact-modal-purchase" style={{ marginTop: 24 }}>
-                <span className="contact-modal-price" style={{ whiteSpace: "pre-line", lineHeight: 1.4 }}>{activeModal.product.priceLine}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  {activeModal.product.originalPrice && (
+                    <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '13px' }}>
+                      {activeModal.product.originalPrice}
+                    </span>
+                  )}
+                  <span className="contact-modal-price" style={{ whiteSpace: "pre-line", lineHeight: 1.4 }}>{activeModal.product.priceLine}</span>
+                </div>
                 <button className="contact-modal-btn" onClick={() => handleContact(activeModal.product)}>
                   TƯ VẤN & BÁO GIÁ ZALO
                 </button>
@@ -344,7 +359,8 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
           </p>
         </div>
 
-        <div className="contact-glass-folders-grid">
+        {/* Delay mount GlassFolder đến khi GooeyNav animation xong (~650ms) */}
+        {ready && <div className="contact-glass-folders-grid">
           {shopProducts.map((product, idx) => {
             const folderFiles = [
               {
@@ -369,6 +385,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                   <GlassFolder
                     label={product.title}
                     meta={product.priceLine}
+                    originalMeta={product.originalPrice}
                     tone={folderTone}
                     art={product.art}
                     files={folderFiles}
@@ -383,6 +400,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                   <GlassFolder
                     label={product.title}
                     meta={product.priceLine}
+                    originalMeta={product.originalPrice}
                     tone={folderTone}
                     art={product.art}
                     files={folderFiles}
@@ -399,12 +417,21 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                   onClick={() => setActiveModal({ type: 'pricing', product })}
                 >
                   <span className="contact-folder-quick-title">Bảng giá</span>
-                  <span className="contact-folder-price-tag" style={{ whiteSpace: "pre-line", textAlign: "right", lineHeight: 1.35 }}>{product.priceLine}</span>
+                  <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
+                    <span className="contact-folder-price-tag" style={{ whiteSpace: "pre-line", textAlign: "right", lineHeight: 1.35 }}>
+                      {product.originalPrice && (
+                        <span style={{ textDecoration: 'line-through', opacity: 0.6, fontSize: '11px', display: 'block', marginBottom: '1px' }}>
+                          {product.originalPrice}
+                        </span>
+                      )}
+                      {product.priceLine}
+                    </span>
+                  </div>
                 </button>
               </div>
             );
           })}
-        </div>
+        </div>}
 
         <section className="contact-terms" aria-labelledby="contact-terms-title">
           <h2 className="contact-terms-title" id="contact-terms-title">

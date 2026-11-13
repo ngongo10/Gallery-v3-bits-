@@ -9,10 +9,10 @@
   overflow: hidden;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   opacity: 0;
-  transform: translateX(100%);
+  transform: translateY(100%);
   transition:
-    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
     background-color 0.4s ease;
 }
 
@@ -22,7 +22,7 @@
 
 .gallery-page.gallery-page--entered {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
   filter: none;
 }
 
@@ -308,53 +308,29 @@
   display: none;
 }
 
-/* === Staggered Fade-Up Entrance on Gallery Mount & Scroll === */
-/* All image wrappers start invisible */
+/* === No scroll fade-up: images appear instantly === */
+/* (Fade-up animation removed — images display immediately on load) */
 .chry-image-wrapper.medium-size,
 .chry-mobile-item .chry-image-wrapper {
-  opacity: 0;
-  transform: translateY(72px) scale(0.97);
-  filter: blur(8px);
-  transition:
-    opacity   1.1s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 1.1s cubic-bezier(0.16, 1, 0.3, 1),
-    filter    0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity, filter;
-}
-
-/* Revealed: gallery entered AND item scrolled into view OR is first 3 items */
-/* Desktop: .chry-image-column > div.chry-image-wrapper (the div IS the wrapper) */
-/* Mobile: .chry-mobile-stream > div.chry-mobile-item > div.chry-image-wrapper */
-.gallery-page--entered .chry-image-wrapper.is-in-view,
-.gallery-page--entered .chry-image-column > div:nth-child(1),
-.gallery-page--entered .chry-image-column > div:nth-child(2),
-.gallery-page--entered .chry-image-column > div:nth-child(3),
-.gallery-page--entered .chry-mobile-stream > div:nth-child(1) .chry-image-wrapper,
-.gallery-page--entered .chry-mobile-stream > div:nth-child(2) .chry-image-wrapper,
-.gallery-page--entered .chry-mobile-stream > div:nth-child(3) .chry-image-wrapper,
-.gallery-page--entered .chry-mobile-stream .chry-mobile-item.is-in-view .chry-image-wrapper {
   opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: blur(0);
+  transform: none;
+  filter: none;
 }
 
-/* Hero cover image: skip fade-up animation entirely — it already flew in via hero transition */
-.chry-mobile-item.hero-revealed .chry-image-wrapper {
+/* Hero slot: hidden while hero overlay is flying — no image visible underneath */
+.chry-mobile-item.hero-slot-hidden .chry-image-wrapper,
+.chry-image-wrapper.hero-slot-hidden {
+  visibility: hidden !important;
+}
+
+/* Hero cover image: fully visible once landed */
+.chry-mobile-item.hero-revealed .chry-image-wrapper,
+.chry-mobile-item.hero-revealed .chry-gallery-image {
   opacity: 1 !important;
-  transform: translateY(0) scale(1) !important;
-  filter: blur(0) !important;
+  transform: none !important;
+  filter: none !important;
   transition: none !important;
-}
-
-/* Stagger delays for first visible desktop items */
-.gallery-page--entered .chry-image-column > div:nth-child(1) {
-  transition-delay: 0.05s;
-}
-.gallery-page--entered .chry-image-column > div:nth-child(2) {
-  transition-delay: 0.22s;
-}
-.gallery-page--entered .chry-image-column > div:nth-child(3) {
-  transition-delay: 0.38s;
+  visibility: visible !important;
 }
 
 .chry-image-wrapper.medium-size {
@@ -629,14 +605,14 @@
 @media (max-width: 768px) {
   .gallery-page {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateY(100%);
     filter: none;
-    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+    transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.85s ease;
   }
 
   .gallery-page.gallery-page--entered {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 
   .gallery-blurred-bg {
@@ -678,7 +654,7 @@
 
   .gallery-back-btn {
     top: auto;
-    bottom: 24px;
+    bottom: 42px;
     right: 20px;
     left: auto;
     transform: none !important;

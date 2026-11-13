@@ -9,11 +9,17 @@ import HeroOverlay from './components/HeroOverlay';
 
 import './App.css';
 
+// Preload tất cả lazy pages ngay khi app khởi động
+// Giúp hiệu ứng nav/hero chạy ngay lập tức, không bị block bởi chunk loading
+const _galleryPreload = import('./pages/GalleryPage');
+const _aboutPreload = import('./pages/AboutPage');
+const _contactPreload = import('./pages/ContactPage');
+
 const GooeyNav = lazy(() => import('./components/GooeyNav'));
 const ModeToggle = lazy(() => import('./components/ModeToggle'));
-const GalleryPage = lazy(() => import('./pages/GalleryPage'));
-const AboutPage = lazy(() => import('./pages/AboutPage'));
-const ContactPage = lazy(() => import('./pages/ContactPage'));
+const GalleryPage = lazy(() => _galleryPreload);
+const AboutPage = lazy(() => _aboutPreload);
+const ContactPage = lazy(() => _contactPreload);
 
 /** Must match OptionWheel reel-spin exit (~1100ms). */
 const HOME_EXIT_MS = 1200;
@@ -215,6 +221,10 @@ function App() {
     // Luon quay ve trang Home (index 0) cho ca mobile va desktop
     setCurrentPage('home');
     setNavActiveIndex(0);
+
+    // Kích hoạt sự kiện trượt nhẹ sang phải của vòng quay Home
+    window.dispatchEvent(new CustomEvent('gallery-backed-to-home'));
+
     setTimeout(() => {
       setIsExitingHome(false);
       setSelectedCategory(null);

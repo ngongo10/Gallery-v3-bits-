@@ -12,36 +12,16 @@ try:
 except Exception:
     requests = None
 
-# Auto load .env if present
-env_file = Path('.env')
-if env_file.exists():
-    for line in env_file.read_text(encoding='utf-8-sig').splitlines():
-        line = line.strip()
-        if not line or line.startswith('#') or '=' not in line:
-            continue
-        k, v = line.split('=', 1)
-        k, v = k.strip(), v.strip().strip('"').strip("'")
-        if k:
-            os.environ[k] = v
-
 CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME')
 API_KEY = os.getenv('CLOUDINARY_API_KEY')
 API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
 DEST = Path('src/data/portfolio.js')
 IMAGE_EXTS = {'.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif'}
 
+if not CLOUD_NAME or not API_KEY or not API_SECRET:
+    sys.exit('Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in the environment.')
 
-def require_cloudinary_credentials():
-    global CLOUD_NAME, API_KEY, API_SECRET, AUTH_HEADER
-    CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME')
-    API_KEY = os.getenv('CLOUDINARY_API_KEY')
-    API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
-    if not CLOUD_NAME or not API_KEY or not API_SECRET:
-        raise RuntimeError('Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in the environment.')
-    AUTH_HEADER = 'Basic ' + base64.b64encode(f'{API_KEY}:{API_SECRET}'.encode()).decode()
-
-
-AUTH_HEADER = 'Basic ' + base64.b64encode(f'{API_KEY}:{API_SECRET}'.encode()).decode() if API_KEY and API_SECRET else ''
+AUTH_HEADER = 'Basic ' + base64.b64encode(f'{API_KEY}:{API_SECRET}'.encode()).decode()
 
 
 def request_json(url, data=None):
@@ -148,271 +128,189 @@ def slugify(name):
     return slug or 'album'
 
 
-def normalize_folder_name(name):
-    value = (name or '').strip().strip('/')
-    if value.startswith('images/'):
-        value = value.split('/', 1)[1]
-    return value.strip('/')
-
-
-def canonical_folder_name(name):
-    return normalize_folder_name(name).casefold()
-
-
-# Top-level parent folders that define mode
-MODE_PARENTS = {'art': 'art', 'memories': 'memories'}
-
-
-def resource_mode(resource):
-    """Return 'art' or 'memories' based on the top-level parent folder."""
-    if not resource:
-        return 'art'
-    asset_folder = (resource.get('asset_folder') or resource.get('folder') or '').strip().strip('/')
-    if '/' in asset_folder:
-        parent = asset_folder.split('/', 1)[0].strip().casefold()
-        return MODE_PARENTS.get(parent, 'art')
-    return 'art'
-
-
-def resource_folder_name(resource):
-    """Return album name only, stripping the parent mode prefix (ART/ or MEMORIES/)."""
-    if not resource:
-        return ''
-
-    asset_folder = (resource.get('asset_folder') or resource.get('folder') or '').strip().strip('/')
-    if asset_folder:
-        # Strip parent mode prefix e.g. "ART/Portrait" -> "Portrait"
-        if '/' in asset_folder:
-            asset_folder = asset_folder.split('/', 1)[1].strip('/')
-        return normalize_folder_name(asset_folder) if asset_folder else ''
-
-    public_id = (resource.get('public_id') or '').strip().strip('/')
-    if '/' in public_id:
-        parts = public_id.split('/')
-        # If 3+ parts (e.g. ART/Portrait/filename), return parts[1]
-        if len(parts) >= 3:
-            return parts[1].strip('/')
-        return parts[0].strip('/')
-    return ''
-
-
-def derive_folder_names_from_resources(resources):
-    names = {}
-    for resource in resources or []:
-        # Only include resources that belong to a known mode parent (ART/ or MEMORIES/)
-        asset_folder = (resource.get('asset_folder') or resource.get('folder') or '').strip().strip('/')
-        if '/' not in asset_folder:
-            # Root-level or unknown parent — skip
-            continue
-        parent = asset_folder.split('/', 1)[0].strip().casefold()
-        if parent not in MODE_PARENTS:
-            continue
-        folder = resource_folder_name(resource)
-        if not folder or canonical_folder_name(folder) in {'images', 'video'}:
-            continue
-        key = canonical_folder_name(folder)
-        names.setdefault(key, folder)
-    return sorted(names.values(), key=lambda value: value.casefold())
-
-
-def filter_live_folders(raw_folders, resources):
-    live_folders = derive_folder_names_from_resources(resources)
-    live_keys = {canonical_folder_name(name) for name in live_folders}
-    cleaned = []
-    seen = set()
-
-    for name in raw_folders or []:
-        normalized = normalize_folder_name(name)
-        if not normalized:
-            continue
-        key = canonical_folder_name(normalized)
-        if live_keys and key not in live_keys:
-            continue
-        if key in seen:
-            continue
-        cleaned.append(normalized)
-        seen.add(key)
-
-    if cleaned:
-        return sorted(cleaned, key=lambda value: value.casefold())
-    if live_folders:
-        return live_folders
-    return []
-
-
 def js_string(value):
-    return json.dumps(value, ensure_ascii=False)
+    return '"' + value.replace('\\', '\\\\').replace('"', '\\"') + '"'
 
 
-def main():
-    require_cloudinary_credentials()
+raw_folders = list_folders()
+# Normalize folder names returned by the API. Cloudinary may return names
+# like "images/Dreamcore"; we want the top-level folder label (e.g. "Dreamcore")
+# and also keep the original prefix to use when listing resources.
+folders = []
+folder_prefix_map = {}
+for name in raw_folders:
+    if name.startswith('images/'):
+        rest = name.split('/', 1)[1]
+        # only include immediate children of `images/`
+        if '/' not in rest:
+            folders.append(rest)
+            folder_prefix_map[rest] = name
+    elif '/' not in name:
+        folders.append(name)
+        folder_prefix_map[name] = name
 
-    raw_folders = list_folders()
-    all_resources = search_all_images()
+# If Cloudinary /folders/list returns nothing, fall back to listing all
+# resources and derive top-level folders from the `public_id` (the part
+# before the first `/`). This supports accounts where folders may not be
+# returned via the folders endpoint or the API key doesn't surface them.
+resources_cache = None
+if not folders:
+    print('No folders returned by /folders/list; falling back to scanning resources...', file=sys.stderr)
+    # List all resources (no fixed prefix) and group by returned `asset_folder`
+    # or derive folder from the `public_id` when missing. Use the Search API
+    # as a reliable fallback when the simple list endpoint returns empty.
+    all_resources = list_images()
     if not all_resources:
-        all_resources = list_images()
+        all_resources = search_all_images()
+    derived = set()
+    # First try to group by the explicit `asset_folder` field returned by the
+    # Admin API (e.g. "images/Dreamcore"). If not present, fall back to
+    # deriving from public_id (the part before the first '/').
+    folder_map = {}
+    for r in all_resources:
+        af = r.get('asset_folder') or r.get('folder') or ''
+        if af:
+            if af.startswith('images/'):
+                key = af.split('/', 1)[1]
+                derived.add(key)
+                folder_map.setdefault(key, []).append(r)
+            elif '/' not in af:
+                derived.add(af)
+                folder_map.setdefault(af, []).append(r)
+            else:
+                # deeper path, take immediate child
+                key = af.split('/', 1)[0]
+                derived.add(key)
+                folder_map.setdefault(key, []).append(r)
+        else:
+            pid = r.get('public_id', '')
+            if '/' in pid:
+                key = pid.split('/', 1)[0]
+                derived.add(key)
+                folder_map.setdefault(key, []).append(r)
 
-    folders = filter_live_folders(raw_folders, all_resources)
+    folders = sorted(derived, key=lambda value: value.lower())
+    # Keep a cache of resources so we don't re-request per-folder
+    if folders:
+        resources_cache = {}
+        for f in folders:
+            resources_cache[f] = folder_map.get(f, [])
 
-    if not folders:
-        print('No live folders found in Cloudinary; writing empty src/data/portfolio.js', file=sys.stderr)
-        lines = [
-            '// Portfolio data generated from Cloudinary folders',
-            f'// Generated: {datetime.utcnow().isoformat()}Z',
-            "const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';",
-            'const cloudinaryUrl = (path) => {',
-            '  if (!path.startsWith("/")) return path;',
-            '  const publicPath = path.startsWith("/images/") ? path.substring(8) : path.substring(1);',
-            '  return `${CLOUDINARY_BASE_URL}/${encodeURI(publicPath)}`;',
-            '};',
-            '',
-            'export const categories = [];',
-            '',
-            'export const allItems = [];',
-            '',
-        ]
-        DEST.write_text('\n'.join(lines) + '\n', encoding='utf-8')
-        print(f'Wrote empty {DEST}')
-        return
-
-    folder_prefix_map = {}
-    for folder_name in folders:
-        folder_prefix_map[folder_name] = folder_name
-
-    resources_cache = {}
-    for folder_name in folders:
-        folder_key = canonical_folder_name(folder_name)
-        selected = []
-        seen_public_ids = set()
-        for resource in all_resources:
-            resource_name = resource_folder_name(resource)
-            if canonical_folder_name(resource_name) != folder_key:
-                continue
-            public_id = resource.get('public_id')
-            if public_id in seen_public_ids:
-                continue
-            seen_public_ids.add(public_id)
-            selected.append(resource)
-
-        resources_cache[folder_name] = selected
-
-    categories = []
-    all_items = []
-    used_ids = set()
-
-    for folder_name in folders:
-        cat_id_base = slugify(folder_name)
-        cat_id = cat_id_base
-        suffix = 1
-        while cat_id in used_ids:
-            cat_id = f'{cat_id_base}-{suffix}'
-            suffix += 1
-        used_ids.add(cat_id)
-
-        resources = resources_cache.get(folder_name, [])
-        if not resources:
-            continue
-
-        # Determine mode from first resource in this folder
-        cat_mode = resource_mode(resources[0]) if resources else 'art'
-
-        items = []
-        for index, resource in enumerate(resources):
-            public_id = resource['public_id']
-            public_path = f'/{public_id}'
-            item_id = f'{cat_id}-{index}'
-            caption = f'{folder_name} #{index + 1}'
-
-            items.append({
-                'id': item_id,
-                'image': public_path,
-                'caption': caption,
-            })
-
-            all_items.append({
-                'id': item_id,
-                'image': public_path,
-                'title': caption,
-                'category': cat_id,
-                'categoryLabel': folder_name,
-                'mode': cat_mode,
-            })
-
-        # Determine mode from first resource in this folder (already done above)
-
-        categories.append({
-            'id': cat_id,
-            'label': folder_name,
-            'mode': cat_mode,
-            'cover': items[0]['image'],
-            'items': items,
-        })
-
-    # Preserve existing metadata (description, storyText) from old portfolio.js
-    old_descriptions = {
-        'run-away': 'Hồi Ký 1:\nMột chuyến đi tự thân tới 1 vài điểm du lịch tại thái nguyên.',
-        'tiec-bai-bien': 'Chỉ là 1 bộ ảnh Cosplayer.',
-    }
-    old_story_texts = {
-        'run-away-7': 'Có thể phải hơn thế nữa',
-    }
-
+if not folders:
+    # If no folders found, write an empty portfolio.js to remove stale references
+    print('No root folders found in Cloudinary; writing empty src/data/portfolio.js', file=sys.stderr)
     lines = [
         '// Portfolio data generated from Cloudinary folders',
         f'// Generated: {datetime.utcnow().isoformat()}Z',
-        '',
-        "const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';",
+        "const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/a9rfzg6k/image/upload/f_auto,q_auto';",
         'const cloudinaryUrl = (path) => {',
         '  if (!path.startsWith("/")) return path;',
         '  const publicPath = path.startsWith("/images/") ? path.substring(8) : path.substring(1);',
         '  return `${CLOUDINARY_BASE_URL}/${encodeURI(publicPath)}`;',
         '};',
         '',
-        'export const categories = [',
+        'export const categories = [];',
+        '',
+        'export const allItems = [];',
+        '',
     ]
-
-    for category in categories:
-        cid = category["id"]
-        cat_mode = category.get("mode", "art")
-        lines.append('  {')
-        lines.append(f'    "id": {js_string(cid)},')
-        lines.append(f'    "label": {js_string(category["label"])},')
-        lines.append(f'    "mode": {js_string(cat_mode)},')
-        if cid in old_descriptions:
-            lines.append(f'    "description": {js_string(old_descriptions[cid])},')
-        lines.append(f'    "cover": cloudinaryUrl({js_string(category["cover"])}) ,')
-        lines.append('    "items": [')
-        for item in category['items']:
-            iid = item["id"]
-            lines.append('      {')
-            lines.append(f'        "id": {js_string(iid)},')
-            lines.append(f'        "image": cloudinaryUrl({js_string(item["image"])}) ,')
-            lines.append(f'        "caption": {js_string(item["caption"])},')
-            if iid in old_story_texts:
-                lines.append(f'        "storyText": {js_string(old_story_texts[iid])},')
-            lines.append('      },')
-        lines.append('    ]')
-        lines.append('  },')
-
-    lines.append('];')
-    lines.append('')
-    lines.append('export const allItems = [')
-
-    for item in all_items:
-        lines.append('  {')
-        lines.append(f'    "id": {js_string(item["id"])},')
-        lines.append(f'    "image": cloudinaryUrl({js_string(item["image"])}) ,')
-        lines.append(f'    "title": {js_string(item["title"])},')
-        lines.append(f'    "category": {js_string(item["category"])},')
-        lines.append(f'    "categoryLabel": {js_string(item["categoryLabel"])},')
-        lines.append(f'    "mode": {js_string(item.get("mode", "art"))},')
-        lines.append('  },')
-
-    lines.append('];')
-
     DEST.write_text('\n'.join(lines) + '\n', encoding='utf-8')
-    print(f'Updated {DEST} with {len(categories)} categories and {len(all_items)} items.')
+    print(f'Wrote empty {DEST}')
+    # Continue execution (categories will be empty)
 
+categories = []
+all_items = []
+used_ids = set()
 
-if __name__ == '__main__':
-    main()
+for folder_name in folders:
+    cat_id_base = slugify(folder_name)
+    cat_id = cat_id_base
+    suffix = 1
+    while cat_id in used_ids:
+        cat_id = f'{cat_id_base}-{suffix}'
+        suffix += 1
+    used_ids.add(cat_id)
+
+    # Use cached resources when we derived folders from a full resource scan
+    if resources_cache is not None:
+        resources = resources_cache.get(folder_name, [])
+    else:
+        prefix = folder_prefix_map.get(folder_name, folder_name)
+        resources = list_images(prefix)
+    if not resources:
+        continue
+
+    items = []
+    for index, resource in enumerate(resources):
+        public_id = resource['public_id']
+        public_path = f'/{public_id}'
+        item_id = f'{cat_id}-{index}'
+        caption = f'{folder_name} #{index + 1}'
+
+        items.append({
+            'id': item_id,
+            'image': public_path,
+            'caption': caption,
+        })
+
+        all_items.append({
+            'id': item_id,
+            'image': public_path,
+            'title': caption,
+            'category': cat_id,
+            'categoryLabel': folder_name,
+        })
+
+    categories.append({
+        'id': cat_id,
+        'label': folder_name,
+        'cover': items[0]['image'],
+        'items': items,
+    })
+
+lines = [
+    '// Portfolio data generated from Cloudinary folders',
+    f'// Generated: {datetime.utcnow().isoformat()}Z',
+    '',
+    "const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/a9rfzg6k/image/upload/f_auto,q_auto';",
+    'const cloudinaryUrl = (path) => {',
+    '  if (!path.startsWith("/")) return path;',
+    '  const publicPath = path.startsWith("/images/") ? path.substring(8) : path.substring(1);',
+    '  return `${CLOUDINARY_BASE_URL}/${encodeURI(publicPath)}`;',
+    '};',
+    '',
+    'export const categories = [',
+]
+
+for category in categories:
+    lines.append('  {')
+    lines.append(f'    "id": {js_string(category["id"])},')
+    lines.append(f'    "label": {js_string(category["label"])},')
+    lines.append(f'    "cover": cloudinaryUrl({js_string(category["cover"])}) ,')
+    lines.append('    "items": [')
+    for item in category['items']:
+        lines.append('      {')
+        lines.append(f'        "id": {js_string(item["id"])},')
+        lines.append(f'        "image": cloudinaryUrl({js_string(item["image"])}) ,')
+        lines.append(f'        "caption": {js_string(item["caption"])},')
+        lines.append('      },')
+    lines.append('    ]')
+    lines.append('  },')
+
+lines.append('];')
+lines.append('')
+lines.append('export const allItems = [')
+
+for item in all_items:
+    lines.append('  {')
+    lines.append(f'    "id": {js_string(item["id"])},')
+    lines.append(f'    "image": cloudinaryUrl({js_string(item["image"])}) ,')
+    lines.append(f'    "title": {js_string(item["title"])},')
+    lines.append(f'    "category": {js_string(item["category"])},')
+    lines.append(f'    "categoryLabel": {js_string(item["categoryLabel"])},')
+    lines.append('  },')
+
+lines.append('];')
+
+DEST.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+print(f'Updated {DEST} with {len(categories)} categories and {len(all_items)} items.')

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { FlexCarousel } from "./FlexCarousel";
 import { Particles } from "./ui/Particles";
 import { buildSrc } from "../utils/cloudinary";
@@ -9,6 +9,19 @@ export default function MobileWorksWheelHome({
   onCategorySelect,
   theme = "light",
 }) {
+  const carouselEngineRef = useRef(null);
+
+  // Lắng nghe sự kiện back từ Gallery về Home để tự động trượt nhẹ sang phải
+  useEffect(() => {
+    const handleGalleryBack = () => {
+      setTimeout(() => {
+        carouselEngineRef.current?.nudgeRight?.();
+      }, 350);
+    };
+
+    window.addEventListener("gallery-backed-to-home", handleGalleryBack);
+    return () => window.removeEventListener("gallery-backed-to-home", handleGalleryBack);
+  }, []);
   const carouselItems = useMemo(() => {
     const artCats = categories.filter((c) => c.mode === "art");
     const sourceCats = artCats.length > 0 ? artCats : categories;
@@ -63,6 +76,7 @@ export default function MobileWorksWheelHome({
         style={{ transform: "translateY(5%)" }}
       >
         <FlexCarousel
+          carouselRef={carouselEngineRef}
           items={carouselItems}
           preset="arch"
           dispersion={2.5}

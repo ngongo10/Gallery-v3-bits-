@@ -118,7 +118,7 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
   const [liftedPhotoIndex, setLiftedPhotoIndex] = useState(null);
   const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth <= 768 : false));
   const [heroSlotHidden, setHeroSlotHidden] = useState(Boolean(heroSrc));
-  const [heroRevealed, setHeroRevealed] = useState(Boolean(heroSrc));
+  const [heroRevealed, setHeroRevealed] = useState(false); // false until hero lands
   const heroSlotRef = useRef(null);
   const slotReportedRef = useRef(false);
 
@@ -206,8 +206,7 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
 
     setHeroSlotHidden(true);
 
-    // Chờ 680ms để trang Gallery hoàn tất trượt translateX(100% -> 0) ổn định
-    // (CSS transition là 650ms, đợi 680ms đảm bảo trang đứng im hoàn toàn trước khi đo)
+    // Chờ 980ms để trang Gallery hoàn tất trượt translateY(100% -> 0) ổn định
     setTimeout(() => {
       const slotEl = heroSlotRef.current;
       if (!slotEl) return;
@@ -233,6 +232,18 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
             rect = targetEl.getBoundingClientRect();
           }
 
+          // Đảm bảo căn giữa màn hình tuyệt đối trên Mobile nếu ảnh bị lệch bounding do margin/padding
+          if (isMobile && rect) {
+            const screenW = window.innerWidth;
+            const centeredLeft = Math.max(0, (screenW - rect.width) / 2);
+            rect = {
+              left: centeredLeft,
+              top: rect.top,
+              width: rect.width,
+              height: rect.height,
+            };
+          }
+
           slotReportedRef.current = true;
           onSlotReady?.({
             left: rect.left,
@@ -241,13 +252,20 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
             height: rect.height,
           });
 
-          // Sau khi hoàn thành bay & căn chỉnh, kích hoạt land
+          // Sau khi hoàn thành bay & căn chỉnh (Fly + 2 con trỏ zoom: 380 + 150 + 450 + 400 ~ 1380ms), kích hoạt land
           setTimeout(() => {
-            onHeroLand?.();
+            // 1. Kích hoạt hiện ảnh gallery thật và class is-in-view ngay lập tức
             setHeroSlotHidden(false);
+            setHeroRevealed(true);
             const slotItemEl = heroSlotRef.current;
-            if (slotItemEl) slotItemEl.classList.add('is-in-view');
-          }, 1100);
+            if (slotItemEl) {
+              slotItemEl.classList.add('is-in-view');
+              slotItemEl.classList.add('hero-revealed');
+            }
+
+            // 2. Chuyển HeroOverlay sang phase 'land' để phát sáng và fade out nhường chỗ cho ảnh thật
+            onHeroLand?.();
+          }, 1380);
         };
 
         const imgEl = slotEl.querySelector('img');
@@ -261,8 +279,9 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
     }, 680);
   }, [heroSrc, category, onSlotReady, onHeroLand]);
 
-  // Scroll spy (update active index by IntersectionObserver on left column)
+  // Scroll spy (update active index by IntersectionObserver on left column / mobile stream)
   useEffect(() => {
+    const scrollContainer = leftColRef.current;
     const observers = [];
     imageRefs.current.forEach((el, index) => {
       if (!el) return;
@@ -275,7 +294,11 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
             }
           });
         },
-        { root: isMobile ? null : leftColRef.current, threshold: 0.3 }
+        {
+          root: scrollContainer || null,
+          threshold: 0.05,
+          rootMargin: '100px 0px 100px 0px',
+        }
       );
       observer.observe(el);
       observers.push(observer);
@@ -396,13 +419,18 @@ const GalleryPage = ({ category, onBack, theme, heroSrc, rawCover, onSlotReady, 
                     imageRefs.current[i] = el;
                     if (i === heroSlotIdx) heroSlotRef.current = el;
                   }}
-                  className={`chry-mobile-item${i === heroSlotIdx ? ' is-in-view' : ''}${i === heroSlotIdx && heroRevealed ? ' hero-revealed' : ''}`}
-                  style={i === heroSlotIdx && heroSlotHidden ? { visibility: 'hidden' } : undefined}
+                  className={`chry-mobile-item${i === heroSlotIdx && heroRevealed ? ' hero-revealed' : ''}`}
                 >
                   <div
                     className="chry-image-wrapper medium-size"
                     onClick={(e) => handleOpenLightbox(i, e)}
-                    style={{ cursor: 'pointer' }}
+                  style={{
+                      cursor: 'pointer',
+                      // Ẩn slot cover cho đến khi hero đáp xong
+                      ...(i === heroSlotIdx && heroSlotHidden
+                        ? { visibility: 'hidden' }
+                        : {}),
+                    }}
                   >
                     <img
                       src={getOptimizedUrl(photo.image, true)}

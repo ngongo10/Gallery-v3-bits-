@@ -13,7 +13,7 @@ export const categories = [
     "id": "chan-dung",
     "label": "Chân Dung",
     "mode": "art",
-    "cover": cloudinaryUrl("/20210505-DSC00820") ,
+    "cover": cloudinaryUrl("/Still_2026-09-05_010136_1.4.1") ,
     "items": [
       {
         "id": "chan-dung-0",
@@ -161,7 +161,7 @@ export const categories = [
     "id": "tiec-bai-bien-cos",
     "label": "Tiệc Bãi Biển (cos)",
     "mode": "art",
-    "cover": cloudinaryUrl("/20210504-DSC00542") ,
+    "cover": cloudinaryUrl("/20210505-DSC00939") ,
     "items": [
       {
         "id": "tiec-bai-bien-cos-0",

@@ -32,7 +32,7 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
     }
     const fr = fromRectRef.current || r;
 
-    // ── Phase 1: PEEL & FLOAT ──────────────────────────────────────────────
+    // ── Phase 1: PEEL & FLOAT (Tự nhiên, không chói sáng) ───────────────────
     if (phase === 'peel') {
       setCropState({ active: false, adjusting: false, visible: false });
 
@@ -43,97 +43,77 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
         top: `${fr.top}px`,
         width: `${fr.width}px`,
         height: `${fr.height}px`,
-        objectFit: 'cover',
+        objectFit: 'contain',
         borderRadius: '16px',
         zIndex: 9999,
         pointerEvents: 'none',
-        boxShadow: '0 4px 15px rgba(0,0,0,0.25)',
+        boxShadow: '0 8px 25px rgba(0,0,0,0.25)',
+        filter: 'none',
         opacity: 1,
         transition: 'none',
         willChange: 'left, top, width, height, box-shadow, opacity, transform',
       });
 
-      // Nhấc bổng lơ lửng, ghim cố định trên không gian (loại bỏ rotateX/rotateY để không bị đường chéo aliasing trên mobile)
+      // Nhấc lơ lửng nhẹ nhàng, màu sắc trung thực gốc
       requestAnimationFrame(() => {
         setStyle(prev => prev ? {
           ...prev,
-          transform: 'scale(1.04) translateY(-8px)',
+          transform: 'scale(1.04) translateY(-6px)',
           transformOrigin: 'center center',
-          boxShadow: '0 28px 60px rgba(0,0,0,0.55), 0 0 25px rgba(255,255,255,0.2)',
+          boxShadow: '0 18px 45px rgba(0,0,0,0.35)',
+          filter: 'none',
           transition: 'transform 360ms cubic-bezier(0.16,1,0.3,1), box-shadow 360ms ease',
         } : null);
       });
     }
 
-    // ── Phase 2: FLY & CROP ADJUSTMENT ─────────────────────────────────────
+    // ── Phase 2: FLY & CROP ADJUSTMENT (Con trỏ xuất hiện VÀ ngắm CO DÃN TRONG LÚC ZOOM) ────
     if (phase === 'fly' && toRect) {
-      // Bước 2.1: Bay tới trung tâm vị trí đích nhưng giữ nguyên kích thước ban đầu,
-      // 2 Góc ngắm ⌜ ⌟ xuất hiện bám vào 2 góc đối xứng của bức ảnh
-      const targetCenterX = toRect.left + toRect.width / 2;
-      const targetCenterY = toRect.top + toRect.height / 2;
+      // Bật 2 con trỏ ngắm ngay lập tức khi bắt đầu di chuyển
+      setCropState({ active: true, adjusting: false, visible: true });
 
-      // Vị trí pre-snap: Căn giữa theo vị trí đích nhưng kích thước là fr (ảnh gốc)
-      const preLeft = targetCenterX - fr.width / 2;
-      const preTop = targetCenterY - fr.height / 2;
+      // Kích hoạt co dãn kích thước đồng thời cùng 2 con trỏ
+      requestAnimationFrame(() => {
+        // Con trỏ căng góc co dãn
+        setCropState(cs => ({ ...cs, adjusting: true }));
 
-      setStyle(prev => prev ? {
-        ...prev,
-        left: `${preLeft}px`,
-        top: `${preTop}px`,
-        width: `${fr.width}px`,
-        height: `${fr.height}px`,
-        transform: 'scale(1) translateY(0px)',
-        borderRadius: '8px',
-        boxShadow: '0 20px 45px rgba(0,0,0,0.45)',
-        transition: [
-          'left 420ms cubic-bezier(0.16,1,0.3,1)',
-          'top 420ms cubic-bezier(0.16,1,0.3,1)',
-          'transform 420ms cubic-bezier(0.16,1,0.3,1)',
-          'box-shadow 420ms ease',
-        ].join(', '),
-      } : null);
+        // Cả khung ảnh vừa bay vừa zoom co kích thước về đúng kích thước ảnh gốc
+        setStyle(prev => prev ? {
+          ...prev,
+          left: `${toRect.left}px`,
+          top: `${toRect.top}px`,
+          width: `${toRect.width}px`,
+          height: `${toRect.height}px`,
+          transform: 'scale(1) translateY(0px)',
+          borderRadius: '4px',
+          boxShadow: '0 15px 35px rgba(0,0,0,0.35)',
+          filter: 'brightness(1) contrast(1)',
+          transition: [
+            'left 520ms cubic-bezier(0.2, 0.9, 0.3, 1.05)',
+            'top 520ms cubic-bezier(0.2, 0.9, 0.3, 1.05)',
+            'width 520ms cubic-bezier(0.2, 0.9, 0.3, 1.05)',
+            'height 520ms cubic-bezier(0.2, 0.9, 0.3, 1.05)',
+            'transform 520ms cubic-bezier(0.2, 0.9, 0.3, 1.05)',
+            'filter 520ms ease',
+            'box-shadow 520ms ease',
+            'border-radius 520ms ease',
+          ].join(', '),
+        } : null);
+      });
 
-      // Hiển thị 2 con trỏ ngắm căn chỉnh ⌜ ⌟
+      // Khi kết thúc hành trình bay & zoom (khoảng 520ms), ẩn 2 con trỏ ngắm
       const t1 = setTimeout(() => {
-        setCropState({ active: true, adjusting: false, visible: true });
-
-        // Bước 2.2: 2 Con trỏ thực hiện thao tác kéo/co ảnh vừa khít kích thước thực tế
-        const t2 = setTimeout(() => {
-          setCropState(cs => ({ ...cs, adjusting: true }));
-
-          setStyle(prev => prev ? {
-            ...prev,
-            left: `${toRect.left}px`,
-            top: `${toRect.top}px`,
-            width: `${toRect.width}px`,
-            height: `${toRect.height}px`,
-            transition: [
-              'left 450ms cubic-bezier(0.2, 0.9, 0.3, 1.1)',
-              'top 450ms cubic-bezier(0.2, 0.9, 0.3, 1.1)',
-              'width 450ms cubic-bezier(0.2, 0.9, 0.3, 1.1)',
-              'height 450ms cubic-bezier(0.2, 0.9, 0.3, 1.1)',
-            ].join(', '),
-          } : null);
-
-          // Bước 2.3: Ẩn 2 con trỏ sau khi căn chỉnh hoàn tất
-          const t3 = setTimeout(() => {
-            setCropState(cs => ({ ...cs, visible: false }));
-          }, 480);
-
-          return () => clearTimeout(t3);
-        }, 150);
-
-        return () => clearTimeout(t2);
-      }, 380);
+        setCropState(cs => ({ ...cs, visible: false }));
+      }, 540);
 
       return () => clearTimeout(t1);
     }
 
-    // ── Phase 3: LAND & GLOW ───────────────────────────────────────────────
+    // ── Phase 3: LAND (Đáp phẳng tĩnh lặng, không chói lóa) ───────────────
     if (phase === 'land' && toRect) {
       setCropState({ active: false, adjusting: false, visible: false });
 
-      // Phát sáng viền (Glow Pulse) khi đã vào đúng khung
+      // Định vị phẳng tự nhiên không bóng chói
       setStyle(prev => prev ? {
         ...prev,
         left: `${toRect.left}px`,
@@ -142,21 +122,22 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
         height: `${toRect.height}px`,
         transform: 'scale(1)',
         borderRadius: '2px',
-        boxShadow: '0 0 35px rgba(255, 255, 255, 0.95), 0 0 70px rgba(180, 210, 255, 0.55)',
-        transition: 'box-shadow 300ms ease, border-radius 300ms ease',
+        boxShadow: 'none',
+        filter: 'none',
+        transition: 'border-radius 200ms ease',
       } : null);
 
       landTimerRef.current = setTimeout(() => {
         setStyle(prev => prev ? {
           ...prev,
           opacity: 0,
-          transition: 'opacity 250ms ease',
+          transition: 'opacity 180ms ease',
         } : null);
         setTimeout(() => {
           setStyle(null);
           onLandDone?.();
-        }, 260);
-      }, 350);
+        }, 190);
+      }, 150);
     }
 
     return () => {
@@ -189,11 +170,12 @@ export default function HeroOverlay({ heroTransition, toRect, phase, onLandDone 
         style={{
           width: '100%',
           height: '100%',
-          objectFit: cropState.adjusting ? 'contain' : 'cover',
+          objectFit: 'contain',
           borderRadius: style.borderRadius || '8px',
           boxShadow: style.boxShadow,
+          filter: style.filter,
           opacity: style.opacity ?? 1,
-          transition: 'box-shadow 300ms ease, opacity 250ms ease, border-radius 300ms ease',
+          transition: 'box-shadow 300ms ease, opacity 250ms ease, border-radius 300ms ease, filter 450ms ease',
           display: 'block',
         }}
       />

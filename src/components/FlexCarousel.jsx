@@ -290,6 +290,7 @@ export const FlexCarousel = ({
   captureWheel = true,
   onChange,
   onSelect,
+  carouselRef,
   className = '',
   style
 }) => {
@@ -1247,8 +1248,17 @@ export const FlexCarousel = ({
         dirty = true;
         start();
       },
+      nudgeRight: () => {
+        const s = settingsRef.current;
+        if (!s) return;
+        step(metrics(s), 1);
+        start();
+      },
       setItems
     };
+    if (carouselRef) {
+      carouselRef.current = engineRef.current;
+    }
 
     resize();
     setItems(itemsRef.current);

@@ -70,7 +70,8 @@ export type FolderMenuItem = {
 export type GlassFolderProps = {
   label?: string
   /** The second line. Defaults to the number of files, which rolls as you add. */
-  meta?: string
+  meta?: React.ReactNode
+  originalMeta?: string
   /** `light` is milk glass, `dark` is smoked glass. */
   tone?: "light" | "dark"
   /** What the back panel holds. A preset, your own recipe, or `none` for a plain frosted back. */
@@ -514,6 +515,7 @@ const SAMPLE_FILES: FolderFile[] = [
 export default function GlassFolder({
   label = "My Files",
   meta,
+  originalMeta,
   tone = "light",
   art = "aurora",
   seed = 3,
@@ -762,7 +764,12 @@ export default function GlassFolder({
             />
             <div className="gf-label">
               <span className="gf-title">{label}</span>
-              <span className="gf-meta" key={metaLine}>
+              {originalMeta && (
+                <span className="gf-original-meta" style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '11px', lineHeight: 1.1 }}>
+                  {originalMeta}
+                </span>
+              )}
+              <span className="gf-meta">
                 {metaLine}
               </span>
             </div>
