@@ -240,6 +240,92 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
   const isDark = theme === 'dark';
   const folderTone = isDark ? 'dark' : 'light';
 
+  // Hiển thị giá trên mặt trước của Folder
+  const renderFolderMeta = (product) => {
+    if (product.id === 'pkg-chup') {
+      return (
+        <span style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-start' }}>
+          <span>399.000 🐟 / buổi</span>
+          <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '11px', lineHeight: 1.1 }}>
+            189.000🐟/h
+          </span>
+          <span>Ưu đãi chỉ từ 149.000🐟/h</span>
+        </span>
+      );
+    }
+    if (product.id === 'pkg-theo-yeu-cau') {
+      return (
+        <span style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-start' }}>
+          <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '11px', lineHeight: 1.1 }}>
+            Từ 499.000 🐟
+          </span>
+          <span>Ưu đãi chỉ từ 259.000 🐟</span>
+        </span>
+      );
+    }
+    return <span>{product.priceLine}</span>;
+  };
+
+  // Hiển thị giá trên nút Bảng giá
+  const renderPriceTag = (product) => {
+    if (product.id === 'pkg-chup') {
+      return (
+        <span className="contact-folder-price-tag" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: 1.35, gap: '2px' }}>
+          <span>399.000 🐟 / buổi</span>
+          <span style={{ textDecoration: 'line-through', opacity: 0.6, fontSize: '11px', lineHeight: 1.1 }}>
+            189.000🐟/h
+          </span>
+          <span>Ưu đãi chỉ từ 149.000🐟/h</span>
+        </span>
+      );
+    }
+    if (product.id === 'pkg-theo-yeu-cau') {
+      return (
+        <span className="contact-folder-price-tag" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: 1.35, gap: '2px' }}>
+          <span style={{ textDecoration: 'line-through', opacity: 0.6, fontSize: '11px', lineHeight: 1.1 }}>
+            Từ 499.000 🐟
+          </span>
+          <span>Ưu đãi chỉ từ 259.000 🐟</span>
+        </span>
+      );
+    }
+    return (
+      <span className="contact-folder-price-tag" style={{ whiteSpace: "pre-line", textAlign: "right", lineHeight: 1.35 }}>
+        {product.priceLine}
+      </span>
+    );
+  };
+
+  // Hiển thị giá trong popup Modal
+  const renderModalPrice = (product) => {
+    if (product.id === 'pkg-chup') {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+          <span className="contact-modal-price" style={{ fontSize: '15px' }}>399.000 🐟 / buổi</span>
+          <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '13px', lineHeight: 1.2 }}>
+            189.000🐟/h
+          </span>
+          <span className="contact-modal-price" style={{ fontSize: '16px' }}>Ưu đãi chỉ từ 149.000🐟/h</span>
+        </div>
+      );
+    }
+    if (product.id === 'pkg-theo-yeu-cau') {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+          <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '13px', lineHeight: 1.2 }}>
+            Từ 499.000 🐟
+          </span>
+          <span className="contact-modal-price" style={{ fontSize: '16px' }}>Ưu đãi chỉ từ 259.000 🐟</span>
+        </div>
+      );
+    }
+    return (
+      <span className="contact-modal-price" style={{ whiteSpace: "pre-line", lineHeight: 1.4 }}>
+        {product.priceLine}
+      </span>
+    );
+  };
+
   const handleSheetSelect = (product, fileIndex) => {
     if (fileIndex === 0) {
       // (1) Mở trực tiếp ảnh mẫu gắn kèm của gói
@@ -292,14 +378,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                 <strong>Ghi chú:</strong> {activeModal.product.pricingDetail.note}
               </div>
               <div className="contact-modal-purchase" style={{ marginTop: 24 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  {activeModal.product.originalPrice && (
-                    <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '13px' }}>
-                      {activeModal.product.originalPrice}
-                    </span>
-                  )}
-                  <span className="contact-modal-price" style={{ whiteSpace: "pre-line", lineHeight: 1.4 }}>{activeModal.product.priceLine}</span>
-                </div>
+                {renderModalPrice(activeModal.product)}
                 <button className="contact-modal-btn" onClick={() => handleContact(activeModal.product)}>
                   TƯ VẤN & BÁO GIÁ ZALO
                 </button>
@@ -386,8 +465,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                 <div className="contact-folder-desktop-view">
                   <GlassFolder
                     label={product.title}
-                    meta={product.priceLine}
-                    originalMeta={product.originalPrice}
+                    meta={renderFolderMeta(product)}
                     tone={folderTone}
                     art={product.art}
                     files={folderFiles}
@@ -401,8 +479,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                 <div className="contact-folder-mobile-view">
                   <GlassFolder
                     label={product.title}
-                    meta={product.priceLine}
-                    originalMeta={product.originalPrice}
+                    meta={renderFolderMeta(product)}
                     tone={folderTone}
                     art={product.art}
                     files={folderFiles}
@@ -419,16 +496,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
                   onClick={() => setActiveModal({ type: 'pricing', product })}
                 >
                   <span className="contact-folder-quick-title">Bảng giá</span>
-                  <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
-                    <span className="contact-folder-price-tag" style={{ whiteSpace: "pre-line", textAlign: "right", lineHeight: 1.35 }}>
-                      {product.originalPrice && (
-                        <span style={{ textDecoration: 'line-through', opacity: 0.6, fontSize: '11px', display: 'block', marginBottom: '1px' }}>
-                          {product.originalPrice}
-                        </span>
-                      )}
-                      {product.priceLine}
-                    </span>
-                  </div>
+                  {renderPriceTag(product)}
                 </button>
               </div>
             );

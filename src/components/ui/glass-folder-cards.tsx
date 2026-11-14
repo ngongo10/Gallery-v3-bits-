@@ -764,11 +764,6 @@ export default function GlassFolder({
             />
             <div className="gf-label">
               <span className="gf-title">{label}</span>
-              {originalMeta && (
-                <span className="gf-original-meta" style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '11px', lineHeight: 1.1 }}>
-                  {originalMeta}
-                </span>
-              )}
               <span className="gf-meta">
                 {metaLine}
               </span>
