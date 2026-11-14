@@ -64,7 +64,10 @@ const OptionWheel = ({
   const onChangeRef = useRef(onChange);
   const onItemClickRef = useRef(onItemClick);
   const selectedRef = useRef(defaultSelected);
-  const wheelTimerRef = useRef(null);
+  const wheelAccumRef = useRef(0);
+  const lastWheelStepTimeRef = useRef(0);
+  const lastWheelEventTimeRef = useRef(0);
+  const wheelStepTimerRef = useRef(null);
   const dragRef = useRef(null);
   const dragMovedRef = useRef(false);
   const dragHistoryRef = useRef([]);
@@ -94,7 +97,8 @@ const OptionWheel = ({
     soundUrl,
     soundVolume,
     orientation,
-    hideLabels
+    hideLabels,
+    exiting
   };
 
   const isHorizontal = orientation === 'horizontal';
@@ -263,24 +267,74 @@ const OptionWheel = ({
   );
 
   useEffect(() => {
-    const el = rootRef.current;
-    if (!el) return;
     const onWheel = e => {
+      if (cfgRef.current.exiting) return;
+
+      // Normalize delta across browsers and devices
+      let rawDelta = e.deltaY;
+      if (e.deltaMode === 1) rawDelta *= 30; // lines
+      else if (e.deltaMode === 2) rawDelta *= 100; // pages
+
+      if (Math.abs(rawDelta) < 1) return;
+
       e.preventDefault();
       const cfg = cfgRef.current;
-      const rawDelta = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
-      // Proportional step — follows scroll speed naturally
-      const step = rawDelta / (cfg.rowH * 1.8);
-      // Clamp to prevent wild jumps from trackpad flicks
-      const clampedStep = Math.max(-2.5, Math.min(2.5, step));
-      applyTarget(targetRef.current + clampedStep, false);
-      if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
-      wheelTimerRef.current = setTimeout(() => applyTarget(targetRef.current, true), 200);
+      const now = performance.now();
+
+      // Reset accumulator if user paused scrolling for > 220ms
+      if (now - lastWheelEventTimeRef.current > 220) {
+        wheelAccumRef.current = 0;
+      }
+      lastWheelEventTimeRef.current = now;
+
+      // Threshold: 50px (standard notch is 100-120, so 1 notch triggers 1 step cleanly)
+      const THRESHOLD = 50;
+      const COOLDOWN_MS = 160;
+
+      // Cap accumulator so rapid spinning doesn't queue up a backlog of runaway steps
+      const maxAccum = THRESHOLD * 1.5;
+      wheelAccumRef.current = Math.max(-maxAccum, Math.min(maxAccum, wheelAccumRef.current + rawDelta));
+
+      const doStep = direction => {
+        const curSnapped = Math.round(targetRef.current);
+        let nextTarget = curSnapped + direction;
+        if (!cfg.loop) {
+          nextTarget = Math.max(0, Math.min(cfg.count - 1, nextTarget));
+        }
+        applyTarget(nextTarget, true);
+        lastWheelStepTimeRef.current = performance.now();
+        wheelAccumRef.current = 0;
+        if (wheelStepTimerRef.current) {
+          clearTimeout(wheelStepTimerRef.current);
+          wheelStepTimerRef.current = null;
+        }
+      };
+
+      const elapsed = now - lastWheelStepTimeRef.current;
+
+      if (Math.abs(wheelAccumRef.current) >= THRESHOLD) {
+        const direction = Math.sign(wheelAccumRef.current);
+        if (elapsed >= COOLDOWN_MS) {
+          doStep(direction);
+        } else if (!wheelStepTimerRef.current) {
+          const waitTime = Math.max(10, COOLDOWN_MS - elapsed);
+          wheelStepTimerRef.current = setTimeout(() => {
+            wheelStepTimerRef.current = null;
+            if (Math.abs(wheelAccumRef.current) >= THRESHOLD) {
+              doStep(Math.sign(wheelAccumRef.current));
+            }
+          }, waitTime);
+        }
+      }
     };
-    el.addEventListener('wheel', onWheel, { passive: false });
+
+    window.addEventListener('wheel', onWheel, { passive: false });
     return () => {
-      el.removeEventListener('wheel', onWheel);
-      if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
+      window.removeEventListener('wheel', onWheel);
+      if (wheelStepTimerRef.current) {
+        clearTimeout(wheelStepTimerRef.current);
+        wheelStepTimerRef.current = null;
+      }
     };
   }, [applyTarget]);
 
@@ -315,9 +369,14 @@ const OptionWheel = ({
         history.push({ val: isHoriz ? e.clientX : e.clientY, t: now });
         if (history.length > 5) history.shift();
 
-        // Step sensitivity: in horizontal watch dial, 70px drag moves 1 index
-        const stepPx = isHoriz ? 70 : cfgRef.current.rowH;
-        const newPos = drag.start + delta / stepPx;
+        // Step sensitivity: in horizontal watch dial, 70px drag moves 1 index.
+        // In vertical PC desktop wheel, use ~120px so dragging feels weighted, stable, and not overly sensitive!
+        const stepPx = isHoriz ? 70 : Math.max(cfgRef.current.rowH * 1.6, 120);
+        let newPos = drag.start + delta / stepPx;
+        if (!cfgRef.current.loop) {
+          // Subtle elastic resistance past boundaries
+          newPos = Math.max(-0.35, Math.min(cfgRef.current.count - 0.65, newPos));
+        }
         posRef.current = newPos;
         targetRef.current = newPos;
 
@@ -338,24 +397,34 @@ const OptionWheel = ({
   const handlePointerEnd = useCallback(() => {
     if (!dragRef.current) return;
     const isHoriz = cfgRef.current.orientation === 'horizontal';
+    const cfg = cfgRef.current;
     dragRef.current = null;
     setIsDragging(false);
     if (dragMovedRef.current) {
       const history = dragHistoryRef.current;
       let velocity = 0;
-      const stepPx = isHoriz ? 70 : cfgRef.current.rowH;
+      const stepPx = isHoriz ? 70 : Math.max(cfg.rowH * 1.6, 120);
       if (history.length >= 2) {
         const recent = history[history.length - 1];
         const older = history[Math.max(0, history.length - 3)];
         const dt = (recent.t - older.t) / 1000;
-        if (dt > 0.005) {
+        if (dt > 0.008) {
           velocity = -(recent.val - older.val) / stepPx / dt;
         }
       }
-      velocity = Math.max(-25, Math.min(25, velocity));
-      const momentumDistance = velocity * 0.12;
-      const projected = posRef.current + momentumDistance;
-      const snapped = Math.round(projected);
+
+      // If user was slowly dragging/positioning, velocity is low (< 3.5):
+      // Snap directly to the nearest item where they stopped (0 momentum overshoot)!
+      // If user flicked with intention, advance by at most 1 item.
+      let momentum = 0;
+      if (Math.abs(velocity) >= 3.5) {
+        momentum = Math.sign(velocity) * 0.6;
+      }
+      const projected = posRef.current + momentum;
+      let snapped = Math.round(projected);
+      if (!cfg.loop) {
+        snapped = Math.max(0, Math.min(cfg.count - 1, snapped));
+      }
       applyTarget(snapped, true);
     }
   }, [applyTarget]);
