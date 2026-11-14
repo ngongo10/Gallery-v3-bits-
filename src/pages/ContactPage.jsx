@@ -54,20 +54,20 @@ const shopProducts = [
     id: 'pkg-theo-yeu-cau',
     title: 'Gói chụp theo yêu cầu',
     subtitle: 'Dành cho các yêu cầu chụp ảnh có concept, kế hoạch hoặc quy mô riêng.',
-    originalPrice: 'Từ 499.000 🐟',
-    priceLine: 'Ưu đãi chỉ từ 259.000 🐟',
+    originalPrice: 'Theo giờ chỉ từ 259.000 🐟',
+    priceLine: 'Ưu đãi chỉ từ 209.000 🐟',
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1788545041/Still_2026-09-05_010136_1.3.1.jpg',
     art: 'aurora',
     defaultAlbumId: 'ky-yeu',
     pricingDetail: {
       title: 'Bảng Giá & Quy Trình — Concept Theo Yêu Cầu',
-      tag: 'Tùy biến dự án · Gốc từ 499.000 🐟 → Ưu đãi từ 259.000 🐟',
+      tag: 'Tùy biến dự án · Từ 499.000 🐟 · Theo giờ: Gốc 259.000 🐟 → Ưu đãi 209.000 🐟',
       items: [
         'Xây dựng Concept riêng: Trao đổi phong cách, bảng màu (color palette), trang phục và đạo cụ phù hợp.',
         'Chọn lọc địa điểm & bối cảnh đặc biệt: Studio chuyên nghiệp, ngoại cảnh thiên nhiên, kiến trúc độc đáo.',
         'Chăm chút từng khung hình: Đo sáng chính xác, định hình mood & tone theo chuẩn Lookbook quốc tế.',
         'Hậu kỳ chuyên sâu: Retouch tỉ mỉ từng chi tiết da (high-end frequency separation), căn chỉnh phom dáng tự nhiên.',
-        '🎁 CHÍNH SÁCH ƯU ĐÃI: Giá gốc từ 499.000 🐟. ĐẶC BIỆT: Ưu đãi chỉ từ 259.000 🐟 khi trao đổi concept sớm hoặc đồng ý hỗ trợ photo sử dụng hình ảnh quảng bá.',
+        '🎁 CHÍNH SÁCH ƯU ĐÃI: Giá gốc từ 499.000 🐟. ĐẶC BIỆT: Ưu đãi theo giờ chỉ từ 209.000 🐟 khi trao đổi concept sớm hoặc đồng ý hỗ trợ photo sử dụng hình ảnh quảng bá.',
       ],
       note: 'Phù hợp: Thời trang (Fashion Lookbook), Kỷ yếu concept cao cấp, Brand Ambassador, Profile doanh nhân.',
     },
@@ -256,10 +256,11 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
     if (product.id === 'pkg-theo-yeu-cau') {
       return (
         <span style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-start' }}>
+          <span>Từ 499.000 🐟</span>
           <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '11px', lineHeight: 1.1 }}>
-            Từ 499.000 🐟
+            Theo giờ chỉ từ 259.000 🐟
           </span>
-          <span>Ưu đãi chỉ từ 259.000 🐟</span>
+          <span>Ưu đãi chỉ từ 209.000 🐟</span>
         </span>
       );
     }
@@ -282,10 +283,11 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
     if (product.id === 'pkg-theo-yeu-cau') {
       return (
         <span className="contact-folder-price-tag" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: 1.35, gap: '2px' }}>
+          <span>Từ 499.000 🐟</span>
           <span style={{ textDecoration: 'line-through', opacity: 0.6, fontSize: '11px', lineHeight: 1.1 }}>
-            Từ 499.000 🐟
+            Theo giờ chỉ từ 259.000 🐟
           </span>
-          <span>Ưu đãi chỉ từ 259.000 🐟</span>
+          <span>Ưu đãi chỉ từ 209.000 🐟</span>
         </span>
       );
     }
@@ -312,10 +314,11 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
     if (product.id === 'pkg-theo-yeu-cau') {
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+          <span className="contact-modal-price" style={{ fontSize: '15px' }}>Từ 499.000 🐟</span>
           <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '13px', lineHeight: 1.2 }}>
-            Từ 499.000 🐟
+            Theo giờ chỉ từ 259.000 🐟
           </span>
-          <span className="contact-modal-price" style={{ fontSize: '16px' }}>Ưu đãi chỉ từ 259.000 🐟</span>
+          <span className="contact-modal-price" style={{ fontSize: '16px' }}>Ưu đãi chỉ từ 209.000 🐟</span>
         </div>
       );
     }
