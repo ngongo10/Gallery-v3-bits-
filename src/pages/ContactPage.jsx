@@ -12,13 +12,13 @@ const shopProducts = [
     title: 'Gói chụp cơ bản',
     subtitle: 'Phù hợp với các nhu cầu chụp ảnh cá nhân, đời sống, kỷ niệm và concept đơn giản.',
     priceLine: '399.000 🐟 / buổi\nƯu đãi chỉ từ 149.000🐟/h',
-    originalPrice: '189.000🐟/h',
+    originalPrice: 'Theo giờ chỉ từ 189.000🐟/h',
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1790935995/DSC00990.avif',
     art: 'glacier',
     defaultAlbumId: 'chan-dung',
     pricingDetail: {
       title: 'Bảng Giá & Chi Tiết Dịch Vụ — Chụp Ảnh Cá Nhân / Lifestyle',
-      tag: 'Gói trọn buổi: 399.000🐟/Buổi (~4 tiếng) · Giá theo giờ: Gốc 189.000🐟/h → Ưu đãi 149.000🐟/h',
+      tag: 'Gói trọn buổi: 399.000 🐟 / buổi · Giá theo giờ: Gốc 189.000🐟/h → Ưu đãi 149.000🐟/h',
       items: [
         'Thời gian chụp: 01 buổi chụp thoải mái (~4 tiếng) hoặc book linh hoạt theo giờ.',
         'Địa điểm: Quán cafe, công viên, đường phố Sài Gòn theo concept yêu thích.',
@@ -54,20 +54,20 @@ const shopProducts = [
     id: 'pkg-theo-yeu-cau',
     title: 'Gói chụp theo yêu cầu',
     subtitle: 'Dành cho các yêu cầu chụp ảnh có concept, kế hoạch hoặc quy mô riêng.',
-    originalPrice: 'Theo giờ chỉ từ 259.000 🐟',
-    priceLine: 'Ưu đãi chỉ từ 209.000 🐟',
+    originalPrice: 'Theo giờ chỉ từ 259.000🐟/h',
+    priceLine: 'Ưu đãi chỉ từ 209.000🐟/h',
     image: 'https://res.cloudinary.com/g55oyjhn/image/upload/v1788545041/Still_2026-09-05_010136_1.3.1.jpg',
     art: 'aurora',
     defaultAlbumId: 'ky-yeu',
     pricingDetail: {
       title: 'Bảng Giá & Quy Trình — Concept Theo Yêu Cầu',
-      tag: 'Tùy biến dự án · Từ 499.000 🐟 · Theo giờ: Gốc 259.000 🐟 → Ưu đãi 209.000 🐟',
+      tag: 'Tùy biến dự án · Từ 499.000🐟/buổi · Theo giờ: Gốc 259.000🐟/h → Ưu đãi 209.000🐟/h',
       items: [
         'Xây dựng Concept riêng: Trao đổi phong cách, bảng màu (color palette), trang phục và đạo cụ phù hợp.',
         'Chọn lọc địa điểm & bối cảnh đặc biệt: Studio chuyên nghiệp, ngoại cảnh thiên nhiên, kiến trúc độc đáo.',
         'Chăm chút từng khung hình: Đo sáng chính xác, định hình mood & tone theo chuẩn Lookbook quốc tế.',
         'Hậu kỳ chuyên sâu: Retouch tỉ mỉ từng chi tiết da (high-end frequency separation), căn chỉnh phom dáng tự nhiên.',
-        '🎁 CHÍNH SÁCH ƯU ĐÃI: Giá gốc từ 499.000 🐟. ĐẶC BIỆT: Ưu đãi theo giờ chỉ từ 209.000 🐟 khi trao đổi concept sớm hoặc đồng ý hỗ trợ photo sử dụng hình ảnh quảng bá.',
+        '🎁 CHÍNH SÁCH ƯU ĐÃI: Giá gốc từ 499.000🐟/buổi. ĐẶC BIỆT: Ưu đãi theo giờ chỉ từ 209.000🐟/h khi trao đổi concept sớm hoặc đồng ý hỗ trợ photo sử dụng hình ảnh quảng bá.',
       ],
       note: 'Phù hợp: Thời trang (Fashion Lookbook), Kỷ yếu concept cao cấp, Brand Ambassador, Profile doanh nhân.',
     },
@@ -247,7 +247,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
         <span style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-start' }}>
           <span>399.000 🐟 / buổi</span>
           <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '11px', lineHeight: 1.1 }}>
-            189.000🐟/h
+            Theo giờ chỉ từ 189.000🐟/h
           </span>
           <span>Ưu đãi chỉ từ 149.000🐟/h</span>
         </span>
@@ -256,11 +256,11 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
     if (product.id === 'pkg-theo-yeu-cau') {
       return (
         <span style={{ display: 'flex', flexDirection: 'column', gap: '2px', alignItems: 'flex-start' }}>
-          <span>Từ 499.000 🐟</span>
+          <span>Từ 499.000🐟/buổi</span>
           <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '11px', lineHeight: 1.1 }}>
-            Theo giờ chỉ từ 259.000 🐟
+            Theo giờ chỉ từ 259.000🐟/h
           </span>
-          <span>Ưu đãi chỉ từ 209.000 🐟</span>
+          <span>Ưu đãi chỉ từ 209.000🐟/h</span>
         </span>
       );
     }
@@ -274,7 +274,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
         <span className="contact-folder-price-tag" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: 1.35, gap: '2px' }}>
           <span>399.000 🐟 / buổi</span>
           <span style={{ textDecoration: 'line-through', opacity: 0.6, fontSize: '11px', lineHeight: 1.1 }}>
-            189.000🐟/h
+            Theo giờ chỉ từ 189.000🐟/h
           </span>
           <span>Ưu đãi chỉ từ 149.000🐟/h</span>
         </span>
@@ -283,11 +283,11 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
     if (product.id === 'pkg-theo-yeu-cau') {
       return (
         <span className="contact-folder-price-tag" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: 1.35, gap: '2px' }}>
-          <span>Từ 499.000 🐟</span>
+          <span>Từ 499.000🐟/buổi</span>
           <span style={{ textDecoration: 'line-through', opacity: 0.6, fontSize: '11px', lineHeight: 1.1 }}>
-            Theo giờ chỉ từ 259.000 🐟
+            Theo giờ chỉ từ 259.000🐟/h
           </span>
-          <span>Ưu đãi chỉ từ 209.000 🐟</span>
+          <span>Ưu đãi chỉ từ 209.000🐟/h</span>
         </span>
       );
     }
@@ -305,7 +305,7 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
           <span className="contact-modal-price" style={{ fontSize: '15px' }}>399.000 🐟 / buổi</span>
           <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '13px', lineHeight: 1.2 }}>
-            189.000🐟/h
+            Theo giờ chỉ từ 189.000🐟/h
           </span>
           <span className="contact-modal-price" style={{ fontSize: '16px' }}>Ưu đãi chỉ từ 149.000🐟/h</span>
         </div>
@@ -314,11 +314,11 @@ const ContactPage = ({ theme = 'light', onCategorySelect }) => {
     if (product.id === 'pkg-theo-yeu-cau') {
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-          <span className="contact-modal-price" style={{ fontSize: '15px' }}>Từ 499.000 🐟</span>
+          <span className="contact-modal-price" style={{ fontSize: '15px' }}>Từ 499.000🐟/buổi</span>
           <span style={{ textDecoration: 'line-through', opacity: 0.5, fontSize: '13px', lineHeight: 1.2 }}>
-            Theo giờ chỉ từ 259.000 🐟
+            Theo giờ chỉ từ 259.000🐟/h
           </span>
-          <span className="contact-modal-price" style={{ fontSize: '16px' }}>Ưu đãi chỉ từ 209.000 🐟</span>
+          <span className="contact-modal-price" style={{ fontSize: '16px' }}>Ưu đãi chỉ từ 209.000🐟/h</span>
         </div>
       );
     }
