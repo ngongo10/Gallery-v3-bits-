@@ -1,5 +1,5 @@
 // Portfolio data generated from Cloudinary folders
-// Generated: 2026-11-15T20:15:31.358055Z
+// Generated: 2026-11-16T07:29:19.034714Z
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/g55oyjhn/image/upload/f_auto,q_auto,c_limit';
 const cloudinaryUrl = (path) => {
@@ -168,108 +168,103 @@ export const categories = [
       },
       {
         "id": "ky-yeu-17",
-        "image": cloudinaryUrl("/DSC01889") ,
+        "image": cloudinaryUrl("/DSC01890") ,
         "caption": "Kỷ Yếu #18",
       },
       {
         "id": "ky-yeu-18",
-        "image": cloudinaryUrl("/DSC01890") ,
+        "image": cloudinaryUrl("/DSC01901") ,
         "caption": "Kỷ Yếu #19",
       },
       {
         "id": "ky-yeu-19",
-        "image": cloudinaryUrl("/DSC01901") ,
+        "image": cloudinaryUrl("/DSC01902") ,
         "caption": "Kỷ Yếu #20",
       },
       {
         "id": "ky-yeu-20",
-        "image": cloudinaryUrl("/DSC01902") ,
+        "image": cloudinaryUrl("/DSC01908") ,
         "caption": "Kỷ Yếu #21",
       },
       {
         "id": "ky-yeu-21",
-        "image": cloudinaryUrl("/DSC01908") ,
+        "image": cloudinaryUrl("/DSC01910") ,
         "caption": "Kỷ Yếu #22",
       },
       {
         "id": "ky-yeu-22",
-        "image": cloudinaryUrl("/DSC01910") ,
+        "image": cloudinaryUrl("/DSC01917") ,
         "caption": "Kỷ Yếu #23",
       },
       {
         "id": "ky-yeu-23",
-        "image": cloudinaryUrl("/DSC01917") ,
+        "image": cloudinaryUrl("/DSC01929") ,
         "caption": "Kỷ Yếu #24",
       },
       {
         "id": "ky-yeu-24",
-        "image": cloudinaryUrl("/DSC01929") ,
+        "image": cloudinaryUrl("/DSC01933") ,
         "caption": "Kỷ Yếu #25",
       },
       {
         "id": "ky-yeu-25",
-        "image": cloudinaryUrl("/DSC01933") ,
+        "image": cloudinaryUrl("/DSC01937") ,
         "caption": "Kỷ Yếu #26",
       },
       {
         "id": "ky-yeu-26",
-        "image": cloudinaryUrl("/DSC01937") ,
+        "image": cloudinaryUrl("/DSC01942") ,
         "caption": "Kỷ Yếu #27",
       },
       {
         "id": "ky-yeu-27",
-        "image": cloudinaryUrl("/DSC01942") ,
+        "image": cloudinaryUrl("/DSC01943") ,
         "caption": "Kỷ Yếu #28",
       },
       {
         "id": "ky-yeu-28",
-        "image": cloudinaryUrl("/DSC01943") ,
+        "image": cloudinaryUrl("/DSC01947") ,
         "caption": "Kỷ Yếu #29",
       },
       {
         "id": "ky-yeu-29",
-        "image": cloudinaryUrl("/DSC01947") ,
+        "image": cloudinaryUrl("/DSC01949") ,
         "caption": "Kỷ Yếu #30",
       },
       {
         "id": "ky-yeu-30",
-        "image": cloudinaryUrl("/DSC01949") ,
+        "image": cloudinaryUrl("/DSC01963") ,
         "caption": "Kỷ Yếu #31",
       },
       {
         "id": "ky-yeu-31",
-        "image": cloudinaryUrl("/DSC01963") ,
+        "image": cloudinaryUrl("/DSC01968") ,
         "caption": "Kỷ Yếu #32",
       },
       {
         "id": "ky-yeu-32",
-        "image": cloudinaryUrl("/DSC01968") ,
+        "image": cloudinaryUrl("/DSC01984") ,
         "caption": "Kỷ Yếu #33",
       },
       {
         "id": "ky-yeu-33",
-        "image": cloudinaryUrl("/DSC01984") ,
+        "image": cloudinaryUrl("/DSC02028") ,
         "caption": "Kỷ Yếu #34",
       },
       {
         "id": "ky-yeu-34",
-        "image": cloudinaryUrl("/DSC02028") ,
+        "image": cloudinaryUrl("/DSC02039") ,
         "caption": "Kỷ Yếu #35",
       },
       {
         "id": "ky-yeu-35",
-        "image": cloudinaryUrl("/DSC02039") ,
+        "image": cloudinaryUrl("/DSC02049") ,
         "caption": "Kỷ Yếu #36",
       },
       {
         "id": "ky-yeu-36",
-        "image": cloudinaryUrl("/DSC02049") ,
-        "caption": "Kỷ Yếu #37",
-      },
-      {
-        "id": "ky-yeu-37",
         "image": cloudinaryUrl("/DSC02049-2") ,
-        "caption": "Kỷ Yếu #38",
+        "caption": "Kỷ Yếu #37",
       },
     ]
   },
@@ -898,7 +893,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-17",
-    "image": cloudinaryUrl("/DSC01889") ,
+    "image": cloudinaryUrl("/DSC01890") ,
     "title": "Kỷ Yếu #18",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -906,7 +901,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-18",
-    "image": cloudinaryUrl("/DSC01890") ,
+    "image": cloudinaryUrl("/DSC01901") ,
     "title": "Kỷ Yếu #19",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -914,7 +909,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-19",
-    "image": cloudinaryUrl("/DSC01901") ,
+    "image": cloudinaryUrl("/DSC01902") ,
     "title": "Kỷ Yếu #20",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -922,7 +917,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-20",
-    "image": cloudinaryUrl("/DSC01902") ,
+    "image": cloudinaryUrl("/DSC01908") ,
     "title": "Kỷ Yếu #21",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -930,7 +925,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-21",
-    "image": cloudinaryUrl("/DSC01908") ,
+    "image": cloudinaryUrl("/DSC01910") ,
     "title": "Kỷ Yếu #22",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -938,7 +933,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-22",
-    "image": cloudinaryUrl("/DSC01910") ,
+    "image": cloudinaryUrl("/DSC01917") ,
     "title": "Kỷ Yếu #23",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -946,7 +941,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-23",
-    "image": cloudinaryUrl("/DSC01917") ,
+    "image": cloudinaryUrl("/DSC01929") ,
     "title": "Kỷ Yếu #24",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -954,7 +949,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-24",
-    "image": cloudinaryUrl("/DSC01929") ,
+    "image": cloudinaryUrl("/DSC01933") ,
     "title": "Kỷ Yếu #25",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -962,7 +957,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-25",
-    "image": cloudinaryUrl("/DSC01933") ,
+    "image": cloudinaryUrl("/DSC01937") ,
     "title": "Kỷ Yếu #26",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -970,7 +965,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-26",
-    "image": cloudinaryUrl("/DSC01937") ,
+    "image": cloudinaryUrl("/DSC01942") ,
     "title": "Kỷ Yếu #27",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -978,7 +973,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-27",
-    "image": cloudinaryUrl("/DSC01942") ,
+    "image": cloudinaryUrl("/DSC01943") ,
     "title": "Kỷ Yếu #28",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -986,7 +981,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-28",
-    "image": cloudinaryUrl("/DSC01943") ,
+    "image": cloudinaryUrl("/DSC01947") ,
     "title": "Kỷ Yếu #29",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -994,7 +989,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-29",
-    "image": cloudinaryUrl("/DSC01947") ,
+    "image": cloudinaryUrl("/DSC01949") ,
     "title": "Kỷ Yếu #30",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -1002,7 +997,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-30",
-    "image": cloudinaryUrl("/DSC01949") ,
+    "image": cloudinaryUrl("/DSC01963") ,
     "title": "Kỷ Yếu #31",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -1010,7 +1005,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-31",
-    "image": cloudinaryUrl("/DSC01963") ,
+    "image": cloudinaryUrl("/DSC01968") ,
     "title": "Kỷ Yếu #32",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -1018,7 +1013,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-32",
-    "image": cloudinaryUrl("/DSC01968") ,
+    "image": cloudinaryUrl("/DSC01984") ,
     "title": "Kỷ Yếu #33",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -1026,7 +1021,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-33",
-    "image": cloudinaryUrl("/DSC01984") ,
+    "image": cloudinaryUrl("/DSC02028") ,
     "title": "Kỷ Yếu #34",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -1034,7 +1029,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-34",
-    "image": cloudinaryUrl("/DSC02028") ,
+    "image": cloudinaryUrl("/DSC02039") ,
     "title": "Kỷ Yếu #35",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -1042,7 +1037,7 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-35",
-    "image": cloudinaryUrl("/DSC02039") ,
+    "image": cloudinaryUrl("/DSC02049") ,
     "title": "Kỷ Yếu #36",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
@@ -1050,16 +1045,8 @@ export const allItems = [
   },
   {
     "id": "ky-yeu-36",
-    "image": cloudinaryUrl("/DSC02049") ,
-    "title": "Kỷ Yếu #37",
-    "category": "ky-yeu",
-    "categoryLabel": "Kỷ Yếu",
-    "mode": "art",
-  },
-  {
-    "id": "ky-yeu-37",
     "image": cloudinaryUrl("/DSC02049-2") ,
-    "title": "Kỷ Yếu #38",
+    "title": "Kỷ Yếu #37",
     "category": "ky-yeu",
     "categoryLabel": "Kỷ Yếu",
     "mode": "art",
